@@ -5001,6 +5001,18 @@ img { max-width: 100%; height: auto; }
   }
 }
 
+/* Hide mobile nav elements on desktop (they use display:flex in mobile media query) */
+.mobile-nav-bar,
+.mobile-nav-toggle,
+.mobile-book-btn,
+.mobile-overlay,
+.mobile-panel,
+.mobile-panel-header,
+.mobile-panel-links,
+.mobile-panel-cta {
+  display: none;
+}
+
 /* ====== MAIN NAVIGATION - Premium Floating Pill ====== */
 
 .main-nav {
