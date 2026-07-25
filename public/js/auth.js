@@ -1,5 +1,6 @@
 const FAM = window.FAM || {};
 FAM.Auth = (() => {
+  'use strict';
 
   const API_BASE = '/api/v1/auth';
   const STORAGE_KEY = 'fam_auth';

@@ -672,14 +672,27 @@
 
   /* === Trip Type === */
   function bindTripCards() {
-    document.querySelectorAll('.bk-trip-card').forEach(function(card) {
-      card.addEventListener('click', function() {
-        document.querySelectorAll('.bk-trip-card').forEach(function(c) { c.classList.remove('selected'); });
-        card.classList.add('selected');
-        state.tripType = card.getAttribute('data-trip');
-        var next = document.getElementById('bk-next');
-        if (next) next.textContent = 'Get AI Recommendation →';
+    var container = document.getElementById('bk-trip-cards') || document.querySelector('.bk-trip-cards');
+    if (!container) {
+      document.querySelectorAll('.bk-trip-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+          document.querySelectorAll('.bk-trip-card').forEach(function(c) { c.classList.remove('selected'); });
+          card.classList.add('selected');
+          state.tripType = card.getAttribute('data-trip');
+          var next = document.getElementById('bk-next');
+          if (next) next.textContent = 'Get AI Recommendation →';
+        });
       });
+      return;
+    }
+    container.addEventListener('click', function(e) {
+      var card = e.target.closest('.bk-trip-card');
+      if (!card) return;
+      container.querySelectorAll('.bk-trip-card').forEach(function(c) { c.classList.remove('selected'); });
+      card.classList.add('selected');
+      state.tripType = card.getAttribute('data-trip');
+      var next = document.getElementById('bk-next');
+      if (next) next.textContent = 'Get AI Recommendation →';
     });
   }
 
@@ -773,7 +786,6 @@
       renderCalendar('-out');
       updateCalSummary();
       bindTripCards();
-      bindTripCards(); // Bind again to avoid issues
     }, 100);
   }
 

@@ -20,16 +20,15 @@
     document.addEventListener('mousemove', function(e) {
       mouseX = e.clientX / window.innerWidth;
       mouseY = e.clientY / window.innerHeight;
-      el.style.left = e.clientX + 'px';
-      el.style.top = e.clientY + 'px';
+      el.style.transform = 'translate3d(' + e.clientX + 'px, ' + e.clientY + 'px, 0) translate(-50%, -50%)';
       if (!el.classList.contains('visible')) {
         el.classList.add('visible');
       }
-    });
+    }, { passive: true });
 
     document.addEventListener('mouseleave', function() {
       el.classList.remove('visible');
-    });
+    }, { passive: true });
   }
 
   function createParticles() {
@@ -76,20 +75,25 @@
     if (!isDesktop || reducedMotion) return;
     var btns = document.querySelectorAll('.hero-btn-primary, .hero-btn-secondary');
     btns.forEach(function(btn) {
+      var ticking = false;
       btn.addEventListener('mousemove', function(e) {
-        var rect = btn.getBoundingClientRect();
-        var x = e.clientX - rect.left - rect.width / 2;
-        var y = e.clientY - rect.top - rect.height / 2;
-        var dist = Math.sqrt(x * x + y * y);
-        var maxDist = 100;
-        if (dist > maxDist) return;
-        var strength = (1 - dist / maxDist) * 6;
-        var angle = Math.atan2(y, x);
-        btn.style.transform = 'translate3d(' + Math.cos(angle) * strength + 'px, ' + Math.sin(angle) * strength + 'px, 0)';
-      });
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function() {
+          var rect = btn.getBoundingClientRect();
+          var x = e.clientX - rect.left - rect.width / 2;
+          var y = e.clientY - rect.top - rect.height / 2;
+          var dist = Math.sqrt(x * x + y * y);
+          if (dist > 100) { ticking = false; return; }
+          var strength = (1 - dist / 100) * 6;
+          var angle = Math.atan2(y, x);
+          btn.style.transform = 'translate3d(' + Math.cos(angle) * strength + 'px, ' + Math.sin(angle) * strength + 'px, 0)';
+          ticking = false;
+        });
+      }, { passive: true });
       btn.addEventListener('mouseleave', function() {
         btn.style.transform = '';
-      });
+      }, { passive: true });
     });
   }
 
@@ -151,6 +155,6 @@
 
   window.addEventListener('resize', function() {
     isDesktop = window.innerWidth >= 1024;
-  });
+  }, { passive: true });
 
 })(window);

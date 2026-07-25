@@ -9,7 +9,6 @@
 
   let currentMode = 'green';
   let snowflakes = [];
-  let snowInterval;
   let prefersReducedMotion = false;
 
   const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -63,7 +62,7 @@
     var el = document.createElement('div');
     el.className = 'leaf seasonal-leaf';
     el.style.cssText =
-      'position:fixed;pointer-events:none;z-index:50;font-size:18px;opacity:0.5;animation:leafFloat linear infinite;user-select:none;';
+      'position:fixed;pointer-events:none;z-index:50;font-size:18px;opacity:0.5;animation:leafSway linear infinite;user-select:none;';
     el.style.left = Math.random() * 100 + '%';
     el.style.animationDuration = 8 + Math.random() * 10 + 's';
     var size = 14 + Math.random() * 12;
@@ -134,46 +133,58 @@
       if (glow) glow.remove();
     }
 
-    updateActiveButton(mode);
+    updateActiveButton(mode, animate);
     try { localStorage.setItem(STORAGE_KEY, mode); } catch (e) { /* no-op */ }
   }
 
-  /* --- Toggle UI --- */
+  /* --- Toggle UI (icon-only) --- */
   function buildToggle() {
-    var toggle = document.createElement('div');
+    if (document.getElementById('seasonal-toggle')) return;
+    var toggle = document.createElement('button');
     toggle.className = 'seasonal-toggle';
+    toggle.id = 'seasonal-toggle';
+    toggle.setAttribute('aria-label', 'Switch to Winter Mode');
 
-    var greenBtn = document.createElement('button');
-    greenBtn.className = 'seasonal-toggle-btn';
-    greenBtn.setAttribute('data-mode', 'green');
-    greenBtn.innerHTML = '<span>🌿</span> Green';
+    var icon = document.createElement('span');
+    icon.className = 'seasonal-toggle-icon leaf';
+    icon.textContent = '\uD83C\uDF3F';
+    toggle.appendChild(icon);
 
-    var winterBtn = document.createElement('button');
-    winterBtn.className = 'seasonal-toggle-btn';
-    winterBtn.setAttribute('data-mode', 'winter');
-    winterBtn.innerHTML = '<span>❄</span> Winter';
-
-    toggle.appendChild(greenBtn);
-    toggle.appendChild(winterBtn);
-
-    greenBtn.addEventListener('click', function () {
-      applyMode('green', true);
-    });
-    winterBtn.addEventListener('click', function () {
-      applyMode('winter', true);
+    toggle.addEventListener('click', function () {
+      var newMode = currentMode === 'green' ? 'winter' : 'green';
+      applyMode(newMode, true);
     });
 
     document.body.appendChild(toggle);
   }
 
-  function updateActiveButton(mode) {
-    var btns = document.querySelectorAll('.seasonal-toggle-btn');
-    btns.forEach(function (btn) {
-      btn.classList.remove('active');
-      if (btn.getAttribute('data-mode') === mode) {
-        btn.classList.add('active');
+  function updateActiveButton(mode, animate) {
+    var toggle = document.getElementById('seasonal-toggle');
+    if (!toggle) return;
+    var icon = toggle.querySelector('.seasonal-toggle-icon');
+    if (!icon) return;
+
+    function setIcon() {
+      if (mode === 'green') {
+        icon.textContent = '\uD83C\uDF3F';
+        icon.className = 'seasonal-toggle-icon leaf';
+        toggle.setAttribute('aria-label', 'Switch to Winter Mode');
+      } else {
+        icon.textContent = '\u2744\uFE0F';
+        icon.className = 'seasonal-toggle-icon snowflake';
+        toggle.setAttribute('aria-label', 'Switch to Green Mode');
       }
-    });
+    }
+
+    if (animate && !prefersReducedMotion) {
+      icon.classList.add('switching');
+      setTimeout(function () {
+        setIcon();
+        icon.classList.remove('switching');
+      }, 150);
+    } else {
+      setIcon();
+    }
   }
 
   /* --- Handle resize for mobile cleanup --- */
@@ -189,9 +200,47 @@
     }
   }
 
+  /* --- Scroll-based visibility --- */
+  function initScrollBehavior() {
+    var toggle = document.getElementById('seasonal-toggle');
+    if (!toggle) return;
+    if (toggle._scrollInit) return;
+    toggle._scrollInit = true;
+
+    var ticking = false;
+
+    function onScroll() {
+      var hero = document.querySelector('[data-scroll-hero], .hero-root');
+      if (!hero) {
+        toggle.classList.remove('hidden');
+        ticking = false;
+        return;
+      }
+      var rect = hero.getBoundingClientRect();
+      if (rect.bottom <= 0) {
+        toggle.classList.add('hidden');
+      } else {
+        toggle.classList.remove('hidden');
+      }
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(onScroll);
+      }
+    }, { passive: true });
+
+    onScroll();
+  }
+
   /* --- Init --- */
   function init() {
+    if (document.getElementById('seasonal-toggle')) return;
+
     buildToggle();
+    initScrollBehavior();
 
     var saved = 'green';
     try { var stored = localStorage.getItem(STORAGE_KEY); if (stored) saved = stored; } catch (e) { /* */ }
@@ -206,4 +255,6 @@
   } else {
     init();
   }
+
+  window.initSeasonal = init;
 })();

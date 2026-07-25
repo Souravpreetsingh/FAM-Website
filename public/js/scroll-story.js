@@ -19,7 +19,7 @@
       syncTouch: true,
       touchMultiplier: 1.5,
     });
-    if (typeof gsap !== 'undefined') {
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add(function(time) {
         lenis.raf(time * 1000);
@@ -55,13 +55,13 @@
     document.body.appendChild(bar);
     if (lenis) {
       lenis.on('scroll', function(e) {
-        bar.style.width = (e.progress * 100) + '%';
+        bar.style.transform = 'scaleX(' + e.progress + ')';
       });
     } else {
       window.addEventListener('scroll', function() {
         var h = document.documentElement;
         var p = (h.scrollTop || document.body.scrollTop) / (h.scrollHeight - h.clientHeight);
-        bar.style.width = (p * 100) + '%';
+        bar.style.transform = 'scaleX(' + p + ')';
       }, { passive: true });
     }
   }
@@ -130,7 +130,6 @@
     var y = parseFloat(el.style.top);
     var duration = 8 + Math.random() * 6;
     var delay = Math.random() * 4;
-    var startX = x;
     var startTime = null;
     function step(t) {
       if (!startTime) startTime = t;

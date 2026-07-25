@@ -7,6 +7,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preload" as="image" href="/images/hero/luxury-hero.jpg" />
   <title>Flamingo aur Maina | Boutique Stays in Jibhi</title>
   <meta property="og:title" content="Flamingo aur Maina | Boutique Stays in Jibhi" />
@@ -48,16 +49,18 @@
   <meta name="description" content="A sanctuary of refined luxury and untold stories amidst nature's embrace. Boutique stays in Jibhi, Himachal Pradesh." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null" />
   <noscript>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </noscript>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link rel="stylesheet" href="css/style.css?v=11" />
-  <link rel="stylesheet" href="css/scroll-story.css?v=1" />
-  <link rel="stylesheet" href="css/transitions.css?v=1" />
+  <link rel="stylesheet" href="css/style.css?v=14" />
+  <link rel="stylesheet" href="css/scroll-story.css?v=3" />
+  <link rel="stylesheet" href="css/transitions.css?v=3" />
   
 <script id="tailwind-config">
 tailwind.config = {
@@ -140,7 +143,7 @@ tailwind.config = {
 </script>
 
   <style>
-    body { font-family: 'Inter', sans-serif; background: #f8f4ec; color: #1a1c1a; }
+    body { margin: 0; font-family: 'Inter', sans-serif; background: #f8f4ec; color: #1a1c1a; }
     .glass-panel {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(16px);
@@ -149,8 +152,9 @@ tailwind.config = {
     }
   </style>
 </head>
-<body class="antialiased overflow-x-hidden">
-<div id="pt-overlay"></div>
+<body class="antialiased overflow-x-hidden bg-background text-on-surface" style="background:#f8f4ec">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<div id="pt-overlay" aria-hidden="true"></div>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
@@ -163,8 +167,8 @@ if ('serviceWorker' in navigator) {
 <script type="module" src="//instant.page/5.2.0"></script>
 
   <!-- ====== NAVBAR ====== -->
-  <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300" id="main-nav">
-    <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto rounded-full">
+  <nav class="main-nav" id="main-nav">
+    <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto">
       <div class="flex items-center gap-4">
         <a href="/" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
       </div>
@@ -175,47 +179,55 @@ if ('serviceWorker' in navigator) {
         <a href="/pages/explore" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Explore</a>
         <a href="/pages/gallery" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Gallery</a>
         <a href="/pages/amenities" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Amenities</a>
+        <a href="#contact" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Contact</a>
         <div class="flex items-center gap-3">
-          <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
+          <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" aria-label="Sign in to your account" data-direct-nav>Sign In</button>
           <a href="/pages/booking.html" class="nav-book-btn" data-direct-nav aria-label="Book your stay at FAM">Book Your Stay</a>
         </div>
-      </div>
-      <div class="flex items-center gap-4">
-        <button class="lg:hidden text-primary p-2" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button>
       </div>
     </div>
   </nav>
 
-  <!-- ====== MOBILE MENU ====== -->
-  <div class="mobile-menu-overlay" id="mobile-overlay" aria-hidden="true"></div>
-  <div class="mobile-menu-panel" id="mobile-panel" role="dialog" aria-modal="true" aria-label="Navigation menu">
-    <div class="mobile-menu-header">
-      <span class="font-headline-md text-xl text-primary">Menu</span>
-      <button class="mobile-menu-close" id="mobile-close" aria-label="Close navigation menu">
-        <span class="material-symbols-outlined">close</span>
+  <!-- ====== MOBILE NAV BAR (below 769px) ====== -->
+  <div class="mobile-nav-bar" id="mobile-nav-bar">
+    <a href="/" class="mobile-nav-logo">Flamingo aur Maina</a>
+    <a href="/pages/booking.html" class="mobile-book-btn" data-direct-nav aria-label="Book Now">Book Now</a>
+    <button class="mobile-nav-toggle" id="mobile-menu-btn" aria-label="Open menu" aria-expanded="false">
+      <span class="menu-icon-line"></span>
+      <span class="menu-icon-line"></span>
+      <span class="menu-icon-line"></span>
+    </button>
+  </div>
+
+  <!-- ====== MOBILE OVERLAY ====== -->
+  <div class="mobile-overlay" id="mobile-overlay" aria-hidden="true"></div>
+
+  <!-- ====== MOBILE PANEL ====== -->
+  <div class="mobile-panel" id="mobile-panel" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <div class="mobile-panel-header">
+      <button class="mobile-panel-close" id="mobile-panel-close" aria-label="Close menu">
+        <div class="mobile-panel-close-wrap">
+          <span class="close-icon-line"></span>
+          <span class="close-icon-line"></span>
+        </div>
       </button>
     </div>
-    <nav class="mobile-menu-links" aria-label="Mobile navigation">
-      <a href="/" class="mobile-menu-link">Home</a>
-      <a href="/pages/rooms" class="mobile-menu-link">Rooms</a>
-      <a href="/pages/life" class="mobile-menu-link">Life at FAM</a>
-      <a href="/pages/explore" class="mobile-menu-link">Explore</a>
-      <a href="/pages/gallery" class="mobile-menu-link">Gallery</a>
-      <a href="/pages/amenities" class="mobile-menu-link">Amenities</a>
-      <div class="mobile-menu-cta-group">
-        <button type="button" onclick="window.location.href='/pages/login'" class="nav-mobile-signin">Sign In</button>
-        <a href="/pages/booking.html" class="nav-mobile-book" data-direct-nav>Book Your Stay</a>
-      </div>
+    <nav class="mobile-panel-links" aria-label="Mobile navigation">
+      <a href="/" class="mobile-panel-link" style="--i:0">Home</a>
+      <a href="/pages/rooms" class="mobile-panel-link" style="--i:1">Rooms</a>
+      <a href="/pages/amenities" class="mobile-panel-link" style="--i:2">Amenities</a>
+      <a href="/pages/gallery" class="mobile-panel-link" style="--i:3">Gallery</a>
+      <a href="/pages/life" class="mobile-panel-link" style="--i:4">About</a>
+      <a href="#contact" class="mobile-panel-link" style="--i:5">Contact</a>
     </nav>
-    <div class="mobile-menu-footer">
-      <a href="tel:9876575673" class="mobile-menu-phone">
-        <span class="material-symbols-outlined text-lg">phone</span>
-        Property Manager: 98765 75673
-      </a>
+    <div class="mobile-panel-cta">
+      <a href="/pages/booking.html" class="mobile-panel-book-btn" data-direct-nav>Book Your Stay</a>
+      <button type="button" onclick="window.location.href='/pages/login'" class="mobile-panel-signin-btn" data-direct-nav>Sign In</button>
     </div>
   </div>
 
-  <main>
+<div id="page-content">
+  <main id="main-content">
   <!-- ====== CINEMATIC SCROLL HERO ====== -->
   <section class="hero-root" id="hero" data-scroll-hero>
     <canvas id="hero-canvas" class="hero-canvas"></canvas>
@@ -283,7 +295,7 @@ if ('serviceWorker' in navigator) {
   </section>
 
   <!-- ====== STORY CHAPTER 2 ====== -->
-  <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-16 md:py-24">
+  <section id="story-chapter" class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-16 md:py-24">
     <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center reveal">
       <div class="md:col-span-5 md:pr-12 mb-8 md:mb-0">
         <span class="font-label-sm text-accent-gold uppercase tracking-widest mb-4 block">Chapter 01</span>
@@ -297,7 +309,7 @@ if ('serviceWorker' in navigator) {
   </section>
 
   <!-- ====== OUR VISION ====== -->
-  <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-section-gap text-center reveal">
+  <section id="our-vision" class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-section-gap text-center reveal">
     <span class="font-label-sm text-accent-gold uppercase tracking-widest mb-4 block">Our Vision</span>
     <h2 class="font-headline-lg text-3xl md:text-5xl text-primary mb-8 max-w-3xl mx-auto">Creating a Place Where Every Traveller Feels at Home</h2>
     <div class="max-w-4xl mx-auto space-y-6 text-on-surface-variant font-body-lg text-body-lg leading-relaxed">
@@ -359,9 +371,9 @@ if ('serviceWorker' in navigator) {
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- Flamingo 1 -->
-      <div class="bg-surface-container-low rounded-2xl overflow-hidden reveal border border-outline-variant/20 hover:shadow-xl transition-all duration-500">
+      <div class="bg-surface-container-low rounded-[20px] overflow-hidden reveal border border-outline-variant/20 hover:shadow-xl transition-all duration-300">
         <div class="h-56 overflow-hidden">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrzL8aFnw29G--xO0xB7cJw5bUF6iErudebJK_udr_C-zjP4VVlPtTWtaytwm4XB9bodkmUPBFKrwg5wyEST0zHHzbh0yonox_YJAvHikynJjdiUhZFewW5B-CsIt8NgwdA3jZp77wdsLitsm4LimVKuNeWhudbzgqJBAT5IPUysrbNaWPH2y-7GiKzxfxaF6_4Lm1WjF9TxgQVW_6qgR5P0LdecGYW9beSuPCGHckRsHLUSsMdykqIEYZNHQqm2lcRClynYC64wM" alt="Flamingo 1" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrzL8aFnw29G--xO0xB7cJw5bUF6iErudebJK_udr_C-zjP4VVlPtTWtaytwm4XB9bodkmUPBFKrwg5wyEST0zHHzbh0yonox_YJAvHikynJjdiUhZFewW5B-CsIt8NgwdA3jZp77wdsLitsm4LimVKuNeWhudbzgqJBAT5IPUysrbNaWPH2y-7GiKzxfxaF6_4Lm1WjF9TxgQVW_6qgR5P0LdecGYW9beSuPCGHckRsHLUSsMdykqIEYZNHQqm2lcRClynYC64wM" alt="Flamingo 1" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
         </div>
         <div class="p-6">
           <div class="flex items-center gap-2 mb-3">
@@ -375,9 +387,9 @@ if ('serviceWorker' in navigator) {
       </div>
 
       <!-- Flamingo 2 -->
-      <div class="bg-surface-container-low rounded-2xl overflow-hidden reveal border border-outline-variant/20 hover:shadow-xl transition-all duration-500" style="transition-delay:80ms">
+      <div class="bg-surface-container-low rounded-[20px] overflow-hidden reveal border border-outline-variant/20 hover:shadow-xl transition-all duration-300" style="transition-delay:80ms">
         <div class="h-56 overflow-hidden">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4nlrjlGhGlQ1VJgZIpTbY7YapqlA_1BMfRG6-4JTpuKR5FIr-kCoGL2oLmf0vKEa4o4eCj4Cax_Lhik-W4Ye44HUpjMiiaBTCiS4heB0TPb8hgsU22edlGNxbK_RfEKDi2WEB3RurNCgyGvmQBNRG_vhq3OHgc8qMsHP7unAqt2hCjeV_YhoLtev37NNelTZhQ53GsVmZZ6GcvkW7TCoFrfGKEjGOS9l8v2N3WY6nXIvyOgDh09t3w0iWhvsIqOAURwZoWjIGhDI" alt="Flamingo 2" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4nlrjlGhGlQ1VJgZIpTbY7YapqlA_1BMfRG6-4JTpuKR5FIr-kCoGL2oLmf0vKEa4o4eCj4Cax_Lhik-W4Ye44HUpjMiiaBTCiS4heB0TPb8hgsU22edlGNxbK_RfEKDi2WEB3RurNCgyGvmQBNRG_vhq3OHgc8qMsHP7unAqt2hCjeV_YhoLtev37NNelTZhQ53GsVmZZ6GcvkW7TCoFrfGKEjGOS9l8v2N3WY6nXIvyOgDh09t3w0iWhvsIqOAURwZoWjIGhDI" alt="Flamingo 2" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
         </div>
         <div class="p-6">
           <div class="flex items-center gap-2 mb-3">
@@ -390,26 +402,10 @@ if ('serviceWorker' in navigator) {
         </div>
       </div>
 
-      <!-- Flamingo 3 -->
-      <div class="bg-surface-container-low rounded-2xl overflow-hidden reveal border border-outline-variant/20 hover:shadow-xl transition-all duration-500" style="transition-delay:160ms">
-        <div class="h-56 overflow-hidden">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCI3D7XP8c2d9NoG6DCIaUFiJyZlKrabk2SD7ICCgHWNCu1PIHQ01YENmMI9CIfj1BNXL1d1F-k5cyS3XktNDhDdgsUGREW3RwIN3ejOroEEohHh1n01W2yxlmNIlR4zd_GsAoZ9mt9eQwcVAKctuAikc_KpHc0hV0sSIbLtOs3Gu44ScfhirNpqTGya3Tw7klCmACZaVm60KtTAhqi_mzWYZBoTUjvvQsUsOWO71h3e8WqVaQpot4tDSeDxURzBy6v_H0A9G-l28" alt="Flamingo 3" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
-        </div>
-        <div class="p-6">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="font-label-sm text-xs bg-surface py-1 px-3 rounded-full text-on-surface-variant">4 Guests</span>
-            <span class="font-label-sm text-xs bg-surface py-1 px-3 rounded-full text-on-surface-variant">Duplex</span>
-          </div>
-          <h3 class="font-headline-md text-xl text-primary mb-1">Flamingo 3</h3>
-          <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;6,000 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="/pages/booking.html" class="btn-primary text-sm py-2 px-5">Book Now</a>
-        </div>
-      </div>
-
       <!-- Maina 1 -->
-      <div class="bg-surface-container-low rounded-2xl overflow-hidden reveal border border-outline-variant/20 hover:shadow-xl transition-all duration-500" style="transition-delay:240ms">
+      <div class="bg-surface-container-low rounded-[20px] overflow-hidden reveal border border-outline-variant/20 hover:shadow-xl transition-all duration-300" style="transition-delay:160ms">
         <div class="h-56 overflow-hidden">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiQQONzA8cxam44mhr-1ZivCdFCx8PU3hSQHSau4f24KnX5qrBsnrMNHMX5XmVgUd_uT2Hwy2W2bS4g2FHoPP0dn0-Bbdpcr1AOr0ps0rLKCSUGGfxMaihy-5FpNBv7iivXEdlVstvuVdEKryGYf3MhSDa_YShGMYyKa59nr28zb8EubJ-NsRApoEnq90zhgI48v8mG4Mp87tFyfNCcqFg1ISXOkOJONAPEvrRv-oHWr_qjWmb2k5sDLZNbXuAubSNWKPYgjfn7eQ" alt="Maina 1" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiQQONzA8cxam44mhr-1ZivCdFCx8PU3hSQHSau4f24KnX5qrBsnrMNHMX5XmVgUd_uT2Hwy2W2bS4g2FHoPP0dn0-Bbdpcr1AOr0ps0rLKCSUGGfxMaihy-5FpNBv7iivXEdlVstvuVdEKryGYf3MhSDa_YShGMYyKa59nr28zb8EubJ-NsRApoEnq90zhgI48v8mG4Mp87tFyfNCcqFg1ISXOkOJONAPEvrRv-oHWr_qjWmb2k5sDLZNbXuAubSNWKPYgjfn7eQ" alt="Maina 1" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
         </div>
         <div class="p-6">
           <div class="flex items-center gap-2 mb-3">
@@ -419,38 +415,6 @@ if ('serviceWorker' in navigator) {
           <h3 class="font-headline-md text-xl text-primary mb-1">Maina 1</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;2,500 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
           <a href="/pages/booking.html" class="btn-primary text-sm py-2 px-5">Book Now</a>
-        </div>
-      </div>
-
-      <!-- Maina 2 -->
-      <div class="bg-surface-container-low rounded-2xl overflow-hidden reveal border border-outline-variant/20 hover:shadow-xl transition-all duration-500" style="transition-delay:320ms">
-        <div class="h-56 overflow-hidden">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4nlrjlGhGlQ1VJgZIpTbY7YapqlA_1BMfRG6-4JTpuKR5FIr-kCoGL2oLmf0vKEa4o4eCj4Cax_Lhik-W4Ye44HUpjMiiaBTCiS4heB0TPb8hgsU22edlGNxbK_RfEKDi2WEB3RurNCgyGvmQBNRG_vhq3OHgc8qMsHP7unAqt2hCjeV_YhoLtev37NNelTZhQ53GsVmZZ6GcvkW7TCoFrfGKEjGOS9l8v2N3WY6nXIvyOgDh09t3w0iWhvsIqOAURwZoWjIGhDI" alt="Maina 2" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
-        </div>
-        <div class="p-6">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="font-label-sm text-xs bg-surface py-1 px-3 rounded-full text-on-surface-variant">2 Guests</span>
-            <span class="font-label-sm text-xs bg-surface py-1 px-3 rounded-full text-on-surface-variant">Private Room</span>
-          </div>
-          <h3 class="font-headline-md text-xl text-primary mb-1">Maina 2</h3>
-          <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;2,000 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="/pages/booking.html" class="btn-primary text-sm py-2 px-5">Book Now</a>
-        </div>
-      </div>
-
-      <!-- Maina 3 -->
-      <div class="bg-surface-container-low rounded-2xl overflow-hidden reveal border border-outline-variant/20 hover:shadow-xl transition-all duration-500" style="transition-delay:400ms">
-        <div class="h-56 overflow-hidden">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiQQONzA8cxam44mhr-1ZivCdFCx8PU3hSQHSau4f24KnX5qrBsnrMNHMX5XmVgUd_uT2Hwy2W2bS4g2FHoPP0dn0-Bbdpcr1AOr0ps0rLKCSUGGfxMaihy-5FpNBv7iivXEdlVstvuVdEKryGYf3MhSDa_YShGMYyKa59nr28zb8EubJ-NsRApoEnq90zhgI48v8mG4Mp87tFyfNCcqFg1ISXOkOJONAPEvrRv-oHWr_qjWmb2k5sDLZNbXuAubSNWKPYgjfn7eQ" alt="Maina 3" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
-        </div>
-        <div class="p-6">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="font-label-sm text-xs bg-surface py-1 px-3 rounded-full text-on-surface-variant">2 Guests</span>
-            <span class="font-label-sm text-xs bg-surface py-1 px-3 rounded-full text-on-surface-variant">Private Room</span>
-          </div>
-          <h3 class="font-headline-md text-xl text-primary mb-1">Maina 3</h3>
-          <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;2,500 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="/pages/rooms" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
     </div>
@@ -937,7 +901,7 @@ if ('serviceWorker' in navigator) {
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
       <div class="space-y-8">
-        <div class="bg-surface-container-low rounded-2xl p-8 border border-outline-variant/20">
+        <div class="bg-surface-container-low rounded-[20px] p-8 border border-outline-variant/20 transition-all duration-300">
           <h3 class="font-headline-md text-xl text-primary mb-4">Address</h3>
           <p class="text-on-surface-variant font-body-md leading-relaxed">
             Opposite Forest Rest House,<br/>
@@ -946,7 +910,7 @@ if ('serviceWorker' in navigator) {
             Himachal Pradesh 175123
           </p>
         </div>
-        <div class="bg-surface-container-low rounded-2xl p-8 border border-outline-variant/20">
+        <div class="bg-surface-container-low rounded-[20px] p-8 border border-outline-variant/20 transition-all duration-300">
           <h3 class="font-headline-md text-xl text-primary mb-4">Coordinates</h3>
           <p class="text-on-surface-variant font-body-md">
             31&deg; 34' 43.6598" N<br/>
@@ -959,19 +923,67 @@ if ('serviceWorker' in navigator) {
         </div>
       </div>
       <div class="space-y-8">
-        <div class="bg-surface-container-low rounded-2xl p-8 border border-outline-variant/20">
+        <div class="bg-surface-container-low rounded-[20px] p-8 border border-outline-variant/20 transition-all duration-300">
           <h3 class="font-headline-md text-xl text-primary mb-4">Property Manager</h3>
           <a href="tel:9876575673" class="text-2xl md:text-3xl font-headline-md text-accent-gold hover:text-primary transition-colors block mb-2">98765 75673</a>
         </div>
-        <div class="bg-surface-container-low rounded-2xl p-8 border border-outline-variant/20">
+        <div class="bg-surface-container-low rounded-[20px] p-8 border border-outline-variant/20 transition-all duration-300">
           <h3 class="font-headline-md text-xl text-primary mb-4">Founder</h3>
           <a href="tel:9877381864" class="text-2xl md:text-3xl font-headline-md text-accent-gold hover:text-primary transition-colors block mb-2">98773 81864</a>
         </div>
-        <div class="bg-surface-container-low rounded-2xl p-8 border border-outline-variant/20">
+        <div class="bg-surface-container-low rounded-[20px] p-8 border border-outline-variant/20 transition-all duration-300">
           <h3 class="font-headline-md text-xl text-primary mb-4">Email</h3>
           <a href="mailto:flamingoaurmaina@gmail.com" class="text-lg font-body-md text-accent-gold hover:text-primary transition-colors break-all">flamingoaurmaina@gmail.com</a>
         </div>
+        <div class="bg-surface-container-low rounded-[20px] p-8 border border-outline-variant/20 transition-all duration-300">
+          <h3 class="font-headline-md text-xl text-primary mb-4">Reception Hours</h3>
+          <div class="space-y-3 text-on-surface-variant font-body-md">
+            <div class="flex justify-between items-center"><span class="text-sm">Check-in</span><span class="text-primary font-headline-md text-base">2:00 PM</span></div>
+            <div class="flex justify-between items-center"><span class="text-sm">Check-out</span><span class="text-primary font-headline-md text-base">11:00 AM</span></div>
+            <div class="flex justify-between items-center"><span class="text-sm">Front Desk</span><span class="text-primary font-headline-md text-base">24/7</span></div>
+          </div>
+        </div>
       </div>
+    </div>
+    <div class="mt-16 text-center">
+      <span class="font-label-sm text-accent-gold uppercase tracking-widest mb-6 block">Follow Us</span>
+      <div class="flex justify-center gap-5">
+        <a href="https://www.instagram.com/flamingoaurmaina?igsh=ejFucDV1MWkzam5x" target="_blank" rel="noopener noreferrer" class="social-circle flex items-center justify-center w-12 h-12 rounded-full border-2 border-outline-variant/20 text-on-surface-variant hover:text-accent-gold hover:border-accent-gold transition-all duration-300" aria-label="Visit Flamingo aur Maina on Instagram">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="javascript:void(0)" class="social-circle flex items-center justify-center w-12 h-12 rounded-full border-2 border-outline-variant/20 text-on-surface-variant hover:text-accent-gold hover:border-accent-gold transition-all duration-300" aria-label="Facebook" title="Follow us on Facebook">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="javascript:void(0)" class="social-circle flex items-center justify-center w-12 h-12 rounded-full border-2 border-outline-variant/20 text-on-surface-variant hover:text-accent-gold hover:border-accent-gold transition-all duration-300" aria-label="YouTube" title="Follow us on YouTube">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.94 2C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== MAP SECTION ====== -->
+  <section id="map-section" class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-section-gap reveal">
+    <div class="text-center mb-10">
+      <span class="font-label-sm text-accent-gold uppercase tracking-widest mb-4 block">Find Us</span>
+      <h2 class="font-headline-lg text-3xl md:text-5xl text-primary mb-4">Our Location</h2>
+      <p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mx-auto">Nestled in the heart of Jibhi, surrounded by nature.</p>
+    </div>
+    <div class="fam-map-container rounded-[20px] overflow-hidden shadow-xl">
+      <iframe src="https://www.google.com/maps?q=31.5787944,77.3668959&output=embed" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="FAM Location on Google Maps" class="w-full"></iframe>
+    </div>
+  </section>
+
+  <!-- ====== NEWSLETTER ====== -->
+  <section id="newsletter-section" class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-section-gap reveal">
+    <div class="newsletter-card max-w-xl mx-auto rounded-[20px] p-8 md:p-12 border border-outline-variant/20 text-center">
+      <span class="font-label-sm text-accent-gold uppercase tracking-widest mb-4 block">Stay Connected</span>
+      <h2 class="font-headline-lg text-3xl md:text-4xl text-primary mb-4">Join Our Newsletter</h2>
+      <p class="font-body-lg text-body-lg text-on-surface-variant mb-8">Get exclusive updates, seasonal offers, and stories from FAM.</p>
+      <form class="newsletter-form flex flex-col sm:flex-row gap-4 max-w-md mx-auto" onsubmit="event.preventDefault(); this.querySelector('.newsletter-msg').classList.remove('hidden'); this.querySelector('button').disabled=true;">
+        <input type="email" placeholder="Your email address" required class="newsletter-input flex-1 px-6 py-4 rounded-full border border-outline-variant/30 bg-surface text-on-surface placeholder:text-on-surface-variant/50 font-body-md text-base outline-none transition-colors focus:border-accent-gold focus:ring-1 focus:ring-accent-gold" aria-label="Email address">
+        <button type="submit" class="newsletter-btn px-8 py-4 bg-primary text-on-primary rounded-full font-label-sm text-sm uppercase tracking-widest hover:bg-primary-container transition-all duration-300 whitespace-nowrap">Subscribe</button>
+      </form>
+      <p class="newsletter-msg hidden text-accent-gold font-body-md text-sm mt-4">Thank you for subscribing!</p>
     </div>
   </section>
 
@@ -983,6 +995,7 @@ if ('serviceWorker' in navigator) {
   </section>
 
   </main>
+  </div>
 
   <!-- ====== FOOTER ====== -->
   <footer class="bg-charcoal text-on-primary">
@@ -1005,15 +1018,15 @@ if ('serviceWorker' in navigator) {
             <h4 class="font-label-sm uppercase tracking-widest text-on-primary/40 text-xs mb-2">Connect</h4>
             <a href="/pages/amenities" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Amenities</a>
             <a href="#contact" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Contact Us</a>
-            <a href="#" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Instagram</a>
+            <a href="https://www.instagram.com/flamingoaurmaina?igsh=ejFucDV1MWkzam5x" target="_blank" rel="noopener noreferrer" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm" aria-label="Visit Flamingo aur Maina on Instagram">Instagram</a>
           </div>
         </div>
       </div>
       <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-on-primary/40 font-body-md">
         <p>&copy; 2024 Flamingo aur Maina. All rights reserved.</p>
         <div class="flex gap-6">
-          <a href="#" class="hover:text-on-primary transition-colors">Privacy Policy</a>
-          <a href="#" class="hover:text-on-primary transition-colors">Terms of Service</a>
+          <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Privacy Policy</a>
+          <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Terms of Service</a>
         </div>
       </div>
     </div>
@@ -1035,7 +1048,7 @@ if ('serviceWorker' in navigator) {
   <script src="js/hero-frame-animation.js"></script>
   <script src="js/scroll-story.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    function initHomePage() {
       if (typeof initFogShaders === 'function' && window.innerWidth >= 1024) {
         initFogShaders();
       }
@@ -1043,71 +1056,76 @@ if ('serviceWorker' in navigator) {
         FAM.Animations.init({ gsap: false, lenis: false });
       }
       initMobileMenu();
+      initMobileReveal();
 
-      var nav = document.getElementById('main-nav');
-      if (nav) {
-        var onScroll = function() {
-          nav.classList.toggle('scrolled', window.scrollY > 100);
-        };
-        window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll();
-      }
-
-      setTimeout(function() {
-        var overlay = document.getElementById('pt-overlay');
-        if (overlay) {
-          var cur = window.getComputedStyle(overlay).opacity;
-          if (parseFloat(cur) > 0.01) {
-            overlay.style.transition = 'opacity 0.4s ease';
-            overlay.style.opacity = '0';
-          } else {
-            overlay.style.display = 'none';
-          }
-          setTimeout(function() { overlay.style.display = 'none'; }, 500);
+      if (!window._navScrollInit) {
+        window._navScrollInit = true;
+        var nav = document.getElementById('main-nav');
+        if (nav) {
+          var onScroll = function() {
+            nav.classList.toggle('scrolled', window.scrollY > 100);
+          };
+          window.addEventListener('scroll', onScroll, { passive: true });
+          onScroll();
         }
-      }, 400);
-    });
+      }
+    }
+    document.addEventListener('DOMContentLoaded', initHomePage);
+    window.__pageInit = initHomePage;
   </script>
 
   <script>
-  function initMobileMenu() {
-    var btn = document.getElementById('mobile-menu-btn');
-    var panel = document.getElementById('mobile-panel');
-    var overlay = document.getElementById('mobile-overlay');
-    var closeBtn = document.getElementById('mobile-close');
-    if (!btn || !panel || !overlay) return;
-
-    function open() {
-      panel.classList.add('open');
-      overlay.classList.add('open');
-      document.body.classList.add('mobile-menu-open');
-      btn.setAttribute('aria-expanded', 'true');
+  function initMobileReveal() {
+    if (window.innerWidth > 768) return;
+    var els = document.querySelectorAll('.reveal-mobile');
+    if (!els.length) return;
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.15 });
+      els.forEach(function(el) { obs.observe(el); });
     }
-    function close() {
-      panel.classList.remove('open');
-      overlay.classList.remove('open');
-      document.body.classList.remove('mobile-menu-open');
-      btn.setAttribute('aria-expanded', 'false');
-    }
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      if (panel.classList.contains('open')) close(); else open();
-    });
-    if (closeBtn) closeBtn.addEventListener('click', close);
-    if (overlay) overlay.addEventListener('click', close);
-    if (panel) {
-      panel.querySelectorAll('.mobile-menu-link').forEach(function(link) {
-        link.addEventListener('click', close);
-      });
-    }
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && panel && panel.classList.contains('open')) close();
-    });
   }
+  function initMobileMenu() {} /* handled by mobile-nav.js */
   </script>
 
 
-  <script src="js/transitions.js"></script>
+  <script src="js/mobile-nav.js"></script>
+  <script src="js/page-transitions.js"></script>
   <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
+
+<div id="booking-modal" class="booking-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Book your stay">
+  <div class="booking-modal-overlay"></div>
+  <div class="booking-modal-panel">
+    <div class="booking-modal-header">
+      <span class="booking-modal-title">&#x1F4C5; Check Availability</span>
+      <button class="booking-modal-close" id="booking-modal-close" aria-label="Close booking">&#x2715;</button>
+    </div>
+    <div class="booking-modal-body" id="booking-modal-body">
+      <div class="booking-form">
+        <div class="booking-field">
+          <label class="booking-label">Check-in</label>
+          <input type="date" class="booking-input" id="modal-checkin" min="" />
+        </div>
+        <div class="booking-field">
+          <label class="booking-label">Check-out</label>
+          <input type="date" class="booking-input" id="modal-checkout" min="" />
+        </div>
+        <div class="booking-field">
+          <label class="booking-label">Guests</label>
+          <div class="booking-guests">
+            <button class="booking-guest-btn" id="modal-guest-minus" aria-label="Remove guest">&#x2212;</button>
+            <span class="booking-guest-count" id="modal-guest-count">2</span>
+            <button class="booking-guest-btn" id="modal-guest-plus" aria-label="Add guest">+</button>
+          </div>
+        </div>
+        <button class="booking-cta" id="modal-booking-cta">Check Availability</button>
+        <p class="booking-footer-text">Full room selection &amp; booking details in next step</p>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

@@ -178,6 +178,8 @@
     }
   }
 
+  var timeCheckInterval;
+
   /* --- Init --- */
   function init() {
     try {
@@ -191,7 +193,7 @@
     buildControl();
     applyMode(getMode(), true);
 
-    setInterval(function () {
+    timeCheckInterval = setInterval(function () {
       var newAuto = detectTime();
       if (newAuto !== currentAuto) {
         currentAuto = newAuto;

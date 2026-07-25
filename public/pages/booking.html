@@ -4,21 +4,29 @@
   <style>#pt-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;background:#f8f4ec;opacity:0}</style>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Book your boutique mountain stay at Flamingo aur Maina in Jibhi, Himachal Pradesh. Select your room, dates, and preferences." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <title>Book Your Stay - Flamingo aur Maina</title>
   <meta property="og:title" content="Book Your Stay - Flamingo aur Maina" />
   <meta property="og:description" content="Select your perfect room at Flamingo aur Maina in Jibhi, Himachal Pradesh." />
   <meta property="og:url" content="https://flamingoaurmaina.netlify.app/pages/booking" />
   <meta property="og:image" content="https://flamingoaurmaina.netlify.app/images/hero/luxury-hero.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Book Your Stay - Flamingo aur Maina" />
+  <meta name="twitter:description" content="Select your perfect room at Flamingo aur Maina in Jibhi." />
+  <meta name="twitter:image" content="https://flamingoaurmaina.netlify.app/images/hero/luxury-hero.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null" />
   <noscript>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </noscript>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link rel="stylesheet" href="/css/style.css?v=10" />
+  <link rel="stylesheet" href="/css/style.css?v=14" />
 
 <script id="tailwind-config">
 tailwind.config = {
@@ -103,7 +111,7 @@ tailwind.config = {
 </script>
 
   <style>
-    body { font-family: 'Inter', sans-serif; background: #f8f4ec; color: #1a1c1a; }
+    body { margin: 0; font-family: 'Inter', sans-serif; background: #f8f4ec; color: #1a1c1a; }
     .glass-panel {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(16px);
@@ -113,7 +121,7 @@ tailwind.config = {
 
     .room-card {
       cursor: pointer;
-      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.3s ease;
       transform: translateY(0);
     }
     .room-card:hover {
@@ -128,7 +136,7 @@ tailwind.config = {
     .room-card .check-wrap {
       opacity: 0;
       transform: scale(0.8);
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.3s ease;
     }
     .room-card.selected .check-wrap {
       opacity: 1;
@@ -160,26 +168,30 @@ tailwind.config = {
     }
 
     .counter-btn {
-      width: 32px; height: 32px;
+      width: 44px; height: 44px;
       display: flex; align-items: center; justify-content: center;
       border-radius: 50%;
       border: 1px solid rgba(65,73,66,0.25);
       background: transparent;
       cursor: pointer;
       color: #414942;
-      font-size: 16px;
+      font-size: 18px;
       transition: all 0.3s ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
     .counter-btn:hover { border-color: #C9A86A; color: #C9A86A; }
     .counter-btn:disabled { opacity: 0.2; cursor: not-allowed; }
+    .counter-btn:focus-visible { outline: 2px solid #C9A86A; outline-offset: 2px; }
+    input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid #C9A86A; outline-offset: 1px; }
   </style>
 </head>
-<body class="antialiased overflow-x-hidden">
-<div id="pt-overlay"></div>
+<body class="antialiased overflow-x-hidden bg-background text-on-surface" style="background:#f8f4ec">
+<div id="pt-overlay" aria-hidden="true"></div>
 
   <!-- ====== NAVBAR ====== -->
-  <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300" id="main-nav">
-    <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto rounded-full">
+  <nav class="main-nav" id="main-nav">
+    <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto">
       <div class="flex items-center gap-4">
         <a href="/" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
       </div>
@@ -190,43 +202,46 @@ tailwind.config = {
         <a href="/pages/explore" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Explore</a>
         <a href="/pages/gallery" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Gallery</a>
         <a href="/pages/amenities" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Amenities</a>
+        <a href="/#contact" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Contact</a>
         <div class="flex items-center gap-3">
-          <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
+          <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" aria-label="Sign in to your account" data-direct-nav>Sign In</button>
           <button type="button" onclick="window.location.href='booking.html'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
         </div>
-      </div>
-      <div class="flex items-center gap-4">
-        <button class="lg:hidden text-primary p-2" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button>
       </div>
     </div>
   </nav>
 
-  <!-- ====== MOBILE MENU ====== -->
-  <div class="mobile-menu-overlay" id="mobile-overlay" aria-hidden="true"></div>
-  <div class="mobile-menu-panel" id="mobile-panel" role="dialog" aria-modal="true" aria-label="Navigation menu">
-    <div class="mobile-menu-header">
-      <span class="font-headline-md text-xl text-primary">Menu</span>
-      <button class="mobile-menu-close" id="mobile-close" aria-label="Close navigation menu">
-        <span class="material-symbols-outlined">close</span>
+  <div class="mobile-nav-bar" id="mobile-nav-bar">
+    <a href="/" class="mobile-nav-logo">Flamingo aur Maina</a>
+    <a href="/pages/booking.html" class="mobile-book-btn" data-direct-nav aria-label="Book Now">Book Now</a>
+    <button class="mobile-nav-toggle" id="mobile-menu-btn" aria-label="Open menu" aria-expanded="false">
+      <span class="menu-icon-line"></span>
+      <span class="menu-icon-line"></span>
+      <span class="menu-icon-line"></span>
+    </button>
+  </div>
+  <div class="mobile-overlay" id="mobile-overlay" aria-hidden="true"></div>
+  <div class="mobile-panel" id="mobile-panel" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <div class="mobile-panel-header">
+      <button class="mobile-panel-close" id="mobile-panel-close" aria-label="Close menu">
+        <div class="mobile-panel-close-wrap">
+          <span class="close-icon-line"></span>
+          <span class="close-icon-line"></span>
+        </div>
       </button>
     </div>
-    <nav class="mobile-menu-links" aria-label="Mobile navigation">
-      <a href="/" class="mobile-menu-link">Home</a>
-      <a href="/pages/rooms" class="mobile-menu-link">Rooms</a>
-      <a href="/pages/life" class="mobile-menu-link">Life at FAM</a>
-      <a href="/pages/explore" class="mobile-menu-link">Explore</a>
-      <a href="/pages/gallery" class="mobile-menu-link">Gallery</a>
-      <a href="/pages/amenities" class="mobile-menu-link">Amenities</a>
-      <div class="mobile-menu-cta-group">
-        <button type="button" onclick="window.location.href='/pages/login'" class="nav-mobile-signin">Sign In</button>
-        <button type="button" onclick="window.location.href='booking.html'" class="nav-mobile-book">Book Your Stay</button>
-      </div>
+    <nav class="mobile-panel-links" aria-label="Mobile navigation">
+      <a href="/" class="mobile-panel-link" style="--i:0">Home</a>
+      <a href="/pages/rooms" class="mobile-panel-link" style="--i:1">Rooms</a>
+      <a href="/pages/life" class="mobile-panel-link" style="--i:2">Life at FAM</a>
+      <a href="/pages/explore" class="mobile-panel-link" style="--i:3">Explore</a>
+      <a href="/pages/gallery" class="mobile-panel-link" style="--i:4">Gallery</a>
+      <a href="/pages/amenities" class="mobile-panel-link" style="--i:5">Amenities</a>
+      <a href="/#contact" class="mobile-panel-link" style="--i:6">Contact</a>
     </nav>
-    <div class="mobile-menu-footer">
-      <a href="tel:9876575673" class="mobile-menu-phone">
-        <span class="material-symbols-outlined text-lg">phone</span>
-        Property Manager: 98765 75673
-      </a>
+    <div class="mobile-panel-cta">
+      <a href="/pages/booking.html" class="mobile-panel-book-btn" data-direct-nav>Book Your Stay</a>
+      <button type="button" onclick="window.location.href='/pages/login'" class="mobile-panel-signin-btn" data-direct-nav>Sign In</button>
     </div>
   </div>
 
@@ -240,6 +255,7 @@ tailwind.config = {
     </div>
   </div>
 
+<div id="page-content">
   <main>
     <!-- Hero with dynamic step title -->
     <section class="relative h-[35vh] min-h-[300px] overflow-hidden">
@@ -257,7 +273,7 @@ tailwind.config = {
     </section>
 
     <!-- Wizard Section -->
-    <section class="max-w-[1200px] mx-auto px-4 md:px-8 pb-24 -mt-8 relative z-10">
+    <section class="max-w-[1200px] mx-auto px-4 md:px-8 pb-24 -mt-8 relative z-10 booking-wizard-section">
 
       <!-- Step Indicator -->
       <div class="flex items-center justify-center gap-1 md:gap-3 mb-8" id="step-indicator"></div>
@@ -337,9 +353,13 @@ tailwind.config = {
           <div class="relative rounded-[24px] bg-surface-container-low border border-outline-variant/20 p-6 md:p-8">
             <h3 class="font-display text-lg text-primary font-semibold mb-6">Your Details</h3>
             <div class="space-y-4">
-              <input id="input-name" placeholder="Full Name" class="w-full bg-white border border-outline-variant/30 rounded-2xl px-4 py-3.5 text-primary font-body text-sm placeholder:text-on-surface-variant/30 outline-none focus:border-accent-gold/50 transition-all" />
-              <input id="input-email" placeholder="Email" type="email" class="w-full bg-white border border-outline-variant/30 rounded-2xl px-4 py-3.5 text-primary font-body text-sm placeholder:text-on-surface-variant/30 outline-none focus:border-accent-gold/50 transition-all" />
-              <input id="input-phone" placeholder="Phone" type="tel" class="w-full bg-white border border-outline-variant/30 rounded-2xl px-4 py-3.5 text-primary font-body text-sm placeholder:text-on-surface-variant/30 outline-none focus:border-accent-gold/50 transition-all" />
+              <label for="input-name" class="sr-only">Full Name</label>
+              <input id="input-name" placeholder="Full Name" autocomplete="name" class="w-full bg-white border border-outline-variant/30 rounded-2xl px-4 py-3.5 text-primary font-body text-sm placeholder:text-on-surface-variant/30 outline-none focus:border-accent-gold/50 transition-all" />
+              <label for="input-email" class="sr-only">Email</label>
+              <input id="input-email" placeholder="Email" type="email" autocomplete="email" class="w-full bg-white border border-outline-variant/30 rounded-2xl px-4 py-3.5 text-primary font-body text-sm placeholder:text-on-surface-variant/30 outline-none focus:border-accent-gold/50 transition-all" />
+              <label for="input-phone" class="sr-only">Phone</label>
+              <input id="input-phone" placeholder="Phone" type="tel" autocomplete="tel" class="w-full bg-white border border-outline-variant/30 rounded-2xl px-4 py-3.5 text-primary font-body text-sm placeholder:text-on-surface-variant/30 outline-none focus:border-accent-gold/50 transition-all" />
+              <label for="input-requests" class="sr-only">Special Requests</label>
               <textarea id="input-requests" placeholder="Special Requests (optional)" rows="3" class="w-full bg-white border border-outline-variant/30 rounded-2xl px-4 py-3.5 text-primary font-body text-sm placeholder:text-on-surface-variant/30 outline-none focus:border-accent-gold/50 transition-all resize-none"></textarea>
             </div>
           </div>
@@ -482,6 +502,7 @@ tailwind.config = {
       </div>
     </section>
   </main>
+  </div>
 
   <!-- ====== FOOTER ====== -->
   <footer class="bg-charcoal text-on-primary">
@@ -503,16 +524,16 @@ tailwind.config = {
           <div class="flex flex-col gap-4">
             <h4 class="font-label-sm uppercase tracking-widest text-on-primary/40 text-xs mb-2">Connect</h4>
             <a href="/pages/amenities" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Amenities</a>
-            <a href="#contact" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Contact Us</a>
-            <a href="#" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Instagram</a>
+            <a href="/#contact" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Contact Us</a>
+            <a href="https://www.instagram.com/flamingoaurmaina?igsh=ejFucDV1MWkzam5x" target="_blank" rel="noopener noreferrer" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm" aria-label="Visit Flamingo aur Maina on Instagram">Instagram</a>
           </div>
         </div>
       </div>
       <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-on-primary/40 font-body-md">
         <p>&copy; 2024 Flamingo aur Maina. All rights reserved.</p>
         <div class="flex gap-6">
-          <a href="#" class="hover:text-on-primary transition-colors">Privacy Policy</a>
-          <a href="#" class="hover:text-on-primary transition-colors">Terms of Service</a>
+          <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Privacy Policy</a>
+          <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Terms of Service</a>
         </div>
       </div>
     </div>
@@ -546,6 +567,20 @@ tailwind.config = {
       image: 'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&q=80',
       amenities: ['Garden Access', 'Queen Bed', 'Workspace', 'Wi-Fi', 'Heater', 'Hot Water', 'Natural Light'] }
   ];
+
+  // ====== AMENITY ICON MAP ======
+  var AMENITY_ICONS = {
+    'Wi-Fi': 'wifi', 'Mountain View': 'landscape', 'King Bed': 'king_bed',
+    'Queen Bed': 'king_bed', 'Private Balcony': 'balcony', 'Living Room': 'living',
+    'Heater': 'local_fire_department', 'Hot Water': 'water_drop', 'Premium Toiletries': 'spa',
+    'Skylight': 'light_mode', 'Attic Charm': 'roofing', 'Sunrise View': 'wb_sunny',
+    'Duplex Layout': 'staircase', 'Forest View': 'forest', 'Reading Nook': 'menu_book',
+    'Compact Design': 'space_dashboard', 'Garden Access': 'yard', 'Workspace': 'desk',
+    'Natural Light': 'sunny', 'Coffee': 'coffee', 'Parking': 'local_parking',
+    'Room Service': 'room_service', 'Private Bathroom': 'bathtub', 'Heating': 'thermostat'
+  };
+  var HOTEL_INFO = { checkIn: '2:00 PM', checkOut: '11:00 AM' };
+  var CANCELLATION = 'Free cancellation up to 7 days before check-in. 50% refund 3–7 days before check-in. No refund within 3 days.';
 
   // ====== STATE ======
   var STEPS = ['room', 'dates', 'guests', 'info', 'review', 'payment', 'confirmation'];
@@ -650,7 +685,7 @@ tailwind.config = {
     var sel = booking.room && booking.room.id === room.id;
     return '<div class="room-card page-fade-in bg-surface-container-low rounded-[20px] overflow-hidden border border-outline-variant/20' + (sel ? ' selected' : '') + '" data-id="' + room.id + '" style="animation-delay:' + delay + 'ms">' +
       '<div class="relative h-56 md:h-64 overflow-hidden">' +
-        '<img src="' + room.image + '" alt="' + room.name + '" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />' +
+        '<img src="' + room.image + '" alt="' + room.name + '" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />' +
         '<div class="absolute inset-0 bg-gradient-to-t from-surface/80 via-surface/20 to-transparent"></div>' +
         '<div class="absolute top-4 right-4 z-10 check-wrap">' +
           '<div class="px-3 py-1.5 rounded-full bg-accent-gold text-surface font-body text-[10px] font-bold tracking-[0.15em] uppercase">Selected</div>' +
@@ -680,19 +715,83 @@ tailwind.config = {
     '</div>';
   }
 
+  // ====== MOBILE ROOM CARD BUILDER ======
+  function buildMobileRoomCard(room, index) {
+    var delay = index * 80;
+    var sel = booking.room && booking.room.id === room.id;
+    var amenityIcons = room.amenities.map(function(a) {
+      var icon = AMENITY_ICONS[a] || 'check_circle';
+      return '<div class="m-amenity"><span class="material-symbols-outlined">' + icon + '</span><span>' + a + '</span></div>';
+    }).join('');
+    var rulesHtml = 'Check-in: ' + HOTEL_INFO.checkIn + '<br>Check-out: ' + HOTEL_INFO.checkOut + '<br>No smoking · No parties · Quiet hours after 10 PM';
+    return '<div class="room-card' + (sel ? ' selected' : '') + '" data-id="' + room.id + '" style="animation-delay:' + delay + 'ms">' +
+      '<div class="m-card-image">' +
+        '<img src="' + room.image + '" alt="' + room.name + '" loading="lazy" />' +
+        '<div class="m-price-badge">₹' + room.price.toLocaleString('en-IN') + '<span>/night</span></div>' +
+      '</div>' +
+      '<div class="m-card-body">' +
+        '<h3 class="m-room-name">' + room.name + '</h3>' +
+        '<div class="m-room-meta">' + room.type + ' <span class="m-meta-dot">·</span> ' + room.capacity + ' Guest' + (room.capacity > 1 ? 's' : '') + '</div>' +
+        '<div class="m-card-toggle" aria-expanded="false">' +
+          '<span>Details</span><span class="material-symbols-outlined m-toggle-icon">expand_more</span>' +
+        '</div>' +
+        '<div class="m-card-details">' +
+          '<p class="m-desc">' + room.desc + '</p>' +
+          '<div class="m-section-label">Amenities</div>' +
+          '<div class="m-amenities">' + amenityIcons + '</div>' +
+          '<div class="m-section-label">House Rules</div>' +
+          '<div class="m-rules-text">' + rulesHtml + '</div>' +
+          '<div class="m-section-label">Cancellation</div>' +
+          '<p class="m-rules-text">' + CANCELLATION + '</p>' +
+          '<div class="m-section-label">Maximum Occupancy</div>' +
+          '<p class="m-rules-text">' + room.capacity + ' guests maximum including adults and children. Infants under 2 stay free.</p>' +
+        '</div>' +
+        '<button class="m-select-btn">Select Room</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  var _isMobileView = false;
+
   function renderRooms() {
     var grid = document.getElementById('room-grid');
-    grid.innerHTML = ROOMS.map(function(r, i) { return buildRoomCard(r, i); }).join('');
+    _isMobileView = window.innerWidth <= 768;
+    var builder = _isMobileView ? buildMobileRoomCard : buildRoomCard;
+    grid.innerHTML = ROOMS.map(function(r, i) { return builder(r, i); }).join('');
+
+    if (booking.room) {
+      document.querySelectorAll('.room-card').forEach(function(c) {
+        c.classList.toggle('selected', c.dataset.id === booking.room.id);
+      });
+    }
+
     document.querySelectorAll('.room-card').forEach(function(card) {
       card.addEventListener('click', function(e) {
-        if (e.target.closest('.select-btn')) return;
-        selectRoom(card.dataset.id);
+        var selectBtn = card.querySelector('.select-btn, .m-select-btn');
+        if (selectBtn && selectBtn.contains(e.target)) return;
+        if (_isMobileView) {
+          toggleCardDetails(card);
+        } else {
+          selectRoom(card.dataset.id);
+        }
       });
-      card.querySelector('.select-btn').addEventListener('click', function(e) {
-        e.stopPropagation();
-        selectRoom(card.dataset.id);
-      });
+      var btn = card.querySelector('.select-btn') || card.querySelector('.m-select-btn');
+      if (btn) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          selectRoom(card.dataset.id);
+        });
+      }
     });
+  }
+
+  function toggleCardDetails(card) {
+    var details = card.querySelector('.m-card-details');
+    var toggle = card.querySelector('.m-card-toggle');
+    if (!details) return;
+    var expanded = card.classList.toggle('expanded');
+    details.style.maxHeight = expanded ? details.scrollHeight + 'px' : '0';
+    if (toggle) toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
   }
 
   function selectRoom(id) {
@@ -890,31 +989,35 @@ tailwind.config = {
   }
 
   // ====== INIT ======
-  document.addEventListener('DOMContentLoaded', function() {
+  function initBookingPage() {
     renderRooms();
     renderCal('checkin');
     renderCal('checkout');
     goToStep(0);
 
-    // Mobile menu (shared implementation from index.html)
-    if (typeof initMobileMenu === 'function') initMobileMenu();
-
     // Navbar scroll effect
-    var nav = document.getElementById('main-nav');
-    if (nav) {
-      var onScroll = function() {
-        nav.classList.toggle('scrolled', window.scrollY > 100);
-      };
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
+    if (!window._bookingNavScrollInit) {
+      window._bookingNavScrollInit = true;
+      var nav = document.getElementById('main-nav');
+      if (nav) {
+        var onScroll = function() {
+          nav.classList.toggle('scrolled', window.scrollY > 100);
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      }
     }
 
     // Nav buttons
-    document.getElementById('btn-next').addEventListener('click', nextStep);
-    document.getElementById('btn-back').addEventListener('click', prevStep);
+    var btnNext = document.getElementById('btn-next');
+    var btnBack = document.getElementById('btn-back');
+    if (btnNext) btnNext.addEventListener('click', nextStep);
+    if (btnBack) btnBack.addEventListener('click', prevStep);
 
     // Guest counters
-    document.getElementById('adults-minus').addEventListener('click', function() {
+    var el;
+    el = document.getElementById('adults-minus');
+    if (el) el.addEventListener('click', function() {
       if (booking.adults > 1) {
         booking.adults--;
         document.getElementById('adults-count').textContent = booking.adults;
@@ -922,7 +1025,8 @@ tailwind.config = {
         updateNavState();
       }
     });
-    document.getElementById('adults-plus').addEventListener('click', function() {
+    el = document.getElementById('adults-plus');
+    if (el) el.addEventListener('click', function() {
       var maxGuests = booking.room ? booking.room.capacity : 4;
       if (booking.adults + booking.children < maxGuests) {
         booking.adults++;
@@ -931,7 +1035,8 @@ tailwind.config = {
         updateNavState();
       }
     });
-    document.getElementById('children-minus').addEventListener('click', function() {
+    el = document.getElementById('children-minus');
+    if (el) el.addEventListener('click', function() {
       if (booking.children > 0) {
         booking.children--;
         document.getElementById('children-count').textContent = booking.children;
@@ -939,7 +1044,8 @@ tailwind.config = {
         updateNavState();
       }
     });
-    document.getElementById('children-plus').addEventListener('click', function() {
+    el = document.getElementById('children-plus');
+    if (el) el.addEventListener('click', function() {
       var maxGuests = booking.room ? booking.room.capacity : 4;
       if (booking.adults + booking.children < maxGuests) {
         booking.children++;
@@ -950,12 +1056,16 @@ tailwind.config = {
     });
 
     // Form inputs
-    document.getElementById('input-name').addEventListener('input', syncForm);
-    document.getElementById('input-email').addEventListener('input', syncForm);
-    document.getElementById('input-phone').addEventListener('input', syncForm);
+    el = document.getElementById('input-name');
+    if (el) el.addEventListener('input', syncForm);
+    el = document.getElementById('input-email');
+    if (el) el.addEventListener('input', syncForm);
+    el = document.getElementById('input-phone');
+    if (el) el.addEventListener('input', syncForm);
 
     // Review → Payment button
-    document.getElementById('review-confirm-btn').addEventListener('click', function() {
+    el = document.getElementById('review-confirm-btn');
+    if (el) el.addEventListener('click', function() {
       renderPaymentTotal();
       goToStep(5);
     });
@@ -975,8 +1085,26 @@ tailwind.config = {
     });
 
     // Pay button
-    document.getElementById('pay-btn').addEventListener('click', handlePayment);
-  });
+    el = document.getElementById('pay-btn');
+    if (el) el.addEventListener('click', handlePayment);
+
+    // Mobile resize handler — re-render rooms when crossing 768px boundary
+    if (!window._bookingResizeInit) {
+      window._bookingResizeInit = true;
+      var _lastWidth = window.innerWidth;
+      window.addEventListener('resize', function() {
+        var w = window.innerWidth;
+        if ((_lastWidth <= 768 && w > 768) || (_lastWidth > 768 && w <= 768)) {
+          _lastWidth = w;
+          renderRooms();
+        } else {
+          _lastWidth = w;
+        }
+      });
+    }
+  }
+  document.addEventListener('DOMContentLoaded', initBookingPage);
+  window.__pageInit = initBookingPage;
 
   function updateGuestTotal() {
     var total = booking.adults + booking.children;
@@ -984,8 +1112,10 @@ tailwind.config = {
   }
   </script>
 
+  <script src="/js/mobile-nav.js"></script>
+  <script src="/js/seasonal.js"></script>
   <script src="/js/animations.js"></script>
-  <script src="/js/transitions.js"></script>
+  <script src="/js/page-transitions.js"></script>
   <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
   <script>
   if ('serviceWorker' in navigator) {

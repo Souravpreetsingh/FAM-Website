@@ -1,8 +1,6 @@
 (function () {
   'use strict';
 
-  console.log('[hero-frame] Script loaded');
-
   var CONFIG = {
     total: 240,
     padding: 3,
@@ -15,6 +13,8 @@
   var frames = [];
   var totalFrames = 0;
   var currentIndex = -1;
+  var resizeTimer = null;
+  var isLoading = false;
 
   function pad(n, len) {
     var s = String(n);
@@ -29,8 +29,8 @@
   function fetchConfig() {
     return fetch('/assets/frames/frame-count.json')
       .then(function (r) { if (!r.ok) throw Error('HTTP ' + r.status); return r.json(); })
-      .then(function (cfg) { CONFIG = cfg; console.log('[hero-frame] Config loaded:', CONFIG); })
-      .catch(function (e) { console.warn('[hero-frame] Config fetch failed, using defaults:', e); });
+      .then(function (cfg) { CONFIG = cfg; })
+      .catch(function () {});
   }
 
   function loadImage(idx) {
@@ -56,22 +56,24 @@
 
   function setupCanvas() {
     canvas = document.getElementById('hero-canvas');
-    if (!canvas) { console.error('[hero-frame] #hero-canvas not found'); return false; }
+    if (!canvas) return false;
     canvas.style.setProperty('display', 'block', 'important');
     canvas.style.setProperty('visibility', 'visible', 'important');
     canvas.style.opacity = '1';
+    canvas.style.willChange = 'transform';
     ctx = canvas.getContext('2d', { alpha: false });
-    if (!ctx) { console.error('[hero-frame] 2d context failed'); return false; }
+    if (!ctx) return false;
     ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
+    ctx.imageSmoothingQuality = window.devicePixelRatio > 2 ? 'medium' : 'high';
     resizeCanvas();
-    console.log('[hero-frame] Canvas ready:', canvas.width, 'x', canvas.height);
+    ctx.fillStyle = '#1a3d28';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     return true;
   }
 
   function resizeCanvas() {
     if (!canvas) return;
-    var dpr = window.devicePixelRatio || 1;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
     var w = Math.round(window.innerWidth * dpr);
     var h = Math.round(window.innerHeight * dpr);
     if (canvas.width !== w || canvas.height !== h) {
@@ -85,8 +87,7 @@
   function drawFrame(idx) {
     if (idx === currentIndex) return;
     var img = frames[idx];
-    if (!img) { console.warn('[hero-frame] Frame', idx, 'not loaded'); return; }
-    if (!img.complete || !img.naturalWidth) { console.warn('[hero-frame] Frame', idx, 'incomplete'); return; }
+    if (!img || !img.complete || !img.naturalWidth) return;
     currentIndex = idx;
     var cw = canvas.width, ch = canvas.height;
     if (cw === 0 || ch === 0) return;
@@ -99,10 +100,7 @@
   }
 
   function initScrollBehavior() {
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-      console.warn('[hero-frame] GSAP not available');
-      return;
-    }
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
     var hero = document.querySelector('.hero-root');
     if (!hero) return;
     gsap.registerPlugin(ScrollTrigger);
@@ -121,42 +119,47 @@
         drawFrame(idx);
       }
     });
-    console.log('[hero-frame] ScrollTrigger active');
+  }
+
+  function loadBatch(start) {
+    if (start >= totalFrames || isLoading) return;
+    isLoading = true;
+    var end = Math.min(start + 6, totalFrames);
+    var promises = [];
+    for (var i = start; i < end; i++) {
+      if (i === 0) continue;
+      promises.push(loadImage(i));
+    }
+    Promise.all(promises).then(function () {
+      isLoading = false;
+      loadBatch(end);
+    });
   }
 
   function boot() {
-    console.log('[hero-frame] boot()');
-
     if (!setupCanvas()) return;
 
     fetchConfig().then(function () {
       totalFrames = CONFIG.total;
-      console.log('[hero-frame] totalFrames =', totalFrames);
 
       loadImage(0).then(function (ok) {
-        if (ok) {
-          drawFrame(0);
-          console.log('[hero-frame] Frame 001 displayed');
-        } else {
-          console.error('[hero-frame] Frame 001 FAILED');
-        }
+        if (ok) drawFrame(0);
       });
 
-      (function loadBatch(start) {
-        if (start >= totalFrames) return;
-        var end = Math.min(start + 6, totalFrames);
-        var promises = [];
-        for (var i = start; i < end; i++) {
-          if (i === 0) continue;
-          promises.push(loadImage(i));
-        }
-        Promise.all(promises).then(function () {
-          loadBatch(end);
-        });
-      })(1);
+      if (window.requestIdleCallback) {
+        requestIdleCallback(function () { loadBatch(1); }, { timeout: 3000 });
+      } else {
+        setTimeout(function () { loadBatch(1); }, 200);
+      }
 
       setTimeout(initScrollBehavior, 100);
     });
+
+    var onResize = function () {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resizeCanvas, 150);
+    };
+    window.addEventListener('resize', onResize, { passive: true });
   }
 
   if (document.readyState === 'loading') {

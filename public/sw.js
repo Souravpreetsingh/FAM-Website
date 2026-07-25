@@ -27,14 +27,15 @@ var PRECACHE_URLS = [
   '/js/mountain-time.js',
   '/js/seasonal.js',
   '/js/shader.js',
-  '/js/concierge.js'
+  '/js/concierge.js',
+  '/favicon.svg'
 ];
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.addAll(PRECACHE_URLS).catch(function(err) {
-        console.warn('[SW] Precache failed for some URLs:', err);
+        /* precache failed silently */
       });
     })
   );

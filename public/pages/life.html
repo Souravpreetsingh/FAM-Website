@@ -4,6 +4,8 @@
   <style>#pt-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;background:#f8f4ec;opacity:1;transition:opacity .5s cubic-bezier(.65,0,.35,1)}</style>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="description" content="Experience life at Flamingo aur Maina — remote work, local cuisine, forest walks, bonfire nights, and mountain tranquility in Jibhi." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <title>Life at FAM - Flamingo aur Maina</title>
   <meta property="og:title" content="Life at FAM - Flamingo aur Maina" />
   <meta property="og:description" content="More than a stay. A collection of moments. Experience life at Flamingo aur Maina in Jibhi." />
@@ -35,11 +37,13 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@500;600;700&display=swap" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null"/>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null"/>
 <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/></noscript>
-<link rel="stylesheet" href="../css/style.css?v=10" />
+<link rel="stylesheet" href="../css/style.css?v=14" />
 <script id="tailwind-config">
 tailwind.config = {
   darkMode: "class", theme: { extend: {
@@ -74,9 +78,9 @@ tailwind.config = {
   .gsap-reveal { opacity: 0; transform: translateY(30px); }
   .gsap-mask { clip-path: inset(100% 0 0 0); }
 </style>
-  <link rel="stylesheet" href="../css/transitions.css?v=1" /></head>
-<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden" style="background:#f8f4ec"><div id="pt-overlay"></div>
-  <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300" id="main-nav">
+  <link rel="stylesheet" href="../css/transitions.css?v=3" /></head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden" style="background:#f8f4ec"><div id="pt-overlay" aria-hidden="true"></div>
+  <nav class="main-nav" id="main-nav">
     <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto">
       <div class="flex items-center gap-4">
         <a href="/" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
@@ -88,44 +92,49 @@ tailwind.config = {
         <a href="/pages/explore" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Explore</a>
         <a href="/pages/gallery" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Gallery</a>
         <a href="/pages/amenities" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Amenities</a>
+        <a href="/#contact" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Contact</a>
         <div class="flex items-center gap-3">
-          <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
+          <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" aria-label="Sign in to your account" data-direct-nav>Sign In</button>
           <button type="button" onclick="window.location.href='booking.html'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
         </div>
       </div>
-      <div class="flex items-center gap-4">
-        <button class="lg:hidden text-primary p-2" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button>
-      </div>
     </div>
   </nav>
-  <!-- ====== MOBILE MENU ====== -->
-  <div class="mobile-menu-overlay" id="mobile-overlay" aria-hidden="true"></div>
-  <div class="mobile-menu-panel" id="mobile-panel" role="dialog" aria-modal="true" aria-label="Navigation menu">
-    <div class="mobile-menu-header">
-      <span class="font-headline-md text-xl text-primary">Menu</span>
-      <button class="mobile-menu-close" id="mobile-close" aria-label="Close navigation menu">
-        <span class="material-symbols-outlined">close</span>
+
+  <div class="mobile-nav-bar" id="mobile-nav-bar">
+    <a href="/" class="mobile-nav-logo">Flamingo aur Maina</a>
+    <a href="/pages/booking.html" class="mobile-book-btn" data-direct-nav aria-label="Book Now">Book Now</a>
+    <button class="mobile-nav-toggle" id="mobile-menu-btn" aria-label="Open menu" aria-expanded="false">
+      <span class="menu-icon-line"></span>
+      <span class="menu-icon-line"></span>
+      <span class="menu-icon-line"></span>
+    </button>
+  </div>
+  <div class="mobile-overlay" id="mobile-overlay" aria-hidden="true"></div>
+  <div class="mobile-panel" id="mobile-panel" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <div class="mobile-panel-header">
+      <button class="mobile-panel-close" id="mobile-panel-close" aria-label="Close menu">
+        <div class="mobile-panel-close-wrap">
+          <span class="close-icon-line"></span>
+          <span class="close-icon-line"></span>
+        </div>
       </button>
     </div>
-    <nav class="mobile-menu-links" aria-label="Mobile navigation">
-      <a href="/" class="mobile-menu-link">Home</a>
-      <a href="/pages/rooms" class="mobile-menu-link">Rooms</a>
-      <a href="/pages/life" class="mobile-menu-link">Life at FAM</a>
-      <a href="/pages/explore" class="mobile-menu-link">Explore</a>
-      <a href="/pages/gallery" class="mobile-menu-link">Gallery</a>
-      <a href="/pages/amenities" class="mobile-menu-link">Amenities</a>
-      <div class="mobile-menu-cta-group">
-        <button type="button" onclick="window.location.href='/pages/login'" class="nav-mobile-signin">Sign In</button>
-        <button type="button" onclick="window.location.href='booking.html'" class="nav-mobile-book">Book Your Stay</button>
-      </div>
+    <nav class="mobile-panel-links" aria-label="Mobile navigation">
+      <a href="/" class="mobile-panel-link" style="--i:0">Home</a>
+      <a href="/pages/rooms" class="mobile-panel-link" style="--i:1">Rooms</a>
+      <a href="/pages/life" class="mobile-panel-link" style="--i:2">Life at FAM</a>
+      <a href="/pages/explore" class="mobile-panel-link" style="--i:3">Explore</a>
+      <a href="/pages/gallery" class="mobile-panel-link" style="--i:4">Gallery</a>
+      <a href="/pages/amenities" class="mobile-panel-link" style="--i:5">Amenities</a>
+      <a href="/#contact" class="mobile-panel-link" style="--i:6">Contact</a>
     </nav>
-    <div class="mobile-menu-footer">
-      <a href="tel:9876575673" class="mobile-menu-phone">
-        <span class="material-symbols-outlined text-lg">phone</span>
-        Property Manager: 98765 75673
-      </a>
+    <div class="mobile-panel-cta">
+      <a href="booking.html" class="mobile-panel-book-btn" data-direct-nav>Book Your Stay</a>
+      <button type="button" onclick="window.location.href='/pages/login'" class="mobile-panel-signin-btn" data-direct-nav>Sign In</button>
     </div>
   </div>
+<div id="page-content">
 <main class="pt-32 md:pt-48">
 <section class="max-w-max-width mx-auto px-6 md:px-margin-desktop mb-section-gap text-center relative z-10">
 <div class="inline-block mb-6 gsap-reveal">
@@ -202,7 +211,7 @@ tailwind.config = {
 <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
 <div class="flex flex-col h-full bg-surface-container-low rounded-xl overflow-hidden shadow-sm group gsap-reveal">
 <div class="relative aspect-video overflow-hidden">
-<img alt="Remote work setup" loading="lazy" class="w-full h-full object-cover ken-burns group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/AP1WRLulLyJz-aiShKJlJZO1MNXWSNUkUmP3rWP_qUDLxspZXZBesx7_hSY9prVDL2QIktOCKrH-cHzPN-O-rOolDKJI8r2OjRFJThspcXjZVWJZB48ski_1gZ0OWJ2pwMkQywE2V_BNCQvrFzpyuuk5AHnt59sBLtsHLJ6rHJyjJYiGLV9JNO1ZhjqNF7jm12pZKnjWmSqmQAhJ2kBDd_yxp0klmAAfQfmkBHz0dl8A5d1lltUkM1A0nx4uszk"/>
+<img alt="Remote work setup" loading="lazy" class="w-full h-full object-cover ken-burns group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AP1WRLulLyJz-aiShKJlJZO1MNXWSNUkUmP3rWP_qUDLxspZXZBesx7_hSY9prVDL2QIktOCKrH-cHzPN-O-rOolDKJI8r2OjRFJThspcXjZVWJZB48ski_1gZ0OWJ2pwMkQywE2V_BNCQvrFzpyuuk5AHnt59sBLtsHLJ6rHJyjJYiGLV9JNO1ZhjqNF7jm12pZKnjWmSqmQAhJ2kBDd_yxp0klmAAfQfmkBHz0dl8A5d1lltUkM1A0nx4uszk"/>
 </div>
 <div class="p-8 md:p-12 flex-1 flex flex-col justify-center">
 <span class="font-label-sm text-label-sm uppercase tracking-widest text-muted-gray mb-4 block">Chapter 05</span>
@@ -212,7 +221,7 @@ tailwind.config = {
 </div>
 <div class="flex flex-col h-full bg-surface-container-low rounded-xl overflow-hidden shadow-sm group gsap-reveal">
 <div class="relative aspect-video overflow-hidden">
-<img alt="Jibhi exploration" loading="lazy" class="w-full h-full object-cover ken-burns group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/AP1WRLsS64bwkjJIDM4NdBig6XOGj_NbxtAoXuL-F38QNtSn7PHrhRkr6xFEGyuo5t7q-td3VyJsstyQ_MVyD9tjxAaKPaILrEblZu4oLrrtuYGK3nsJMGHJviL02m6MgNHBD4N-eob0SnkkUevBPwsInNXEewlukJu5RAsCvVTjnlasFA38tbuU5IhmAMgEJYGUAkzPUAIAyWKdojipjOXjMYbHJB-QaFV8p-ok8pQ_fg6eRr0fbye6zZUHywU"/>
+<img alt="Jibhi exploration" loading="lazy" class="w-full h-full object-cover ken-burns group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AP1WRLsS64bwkjJIDM4NdBig6XOGj_NbxtAoXuL-F38QNtSn7PHrhRkr6xFEGyuo5t7q-td3VyJsstyQ_MVyD9tjxAaKPaILrEblZu4oLrrtuYGK3nsJMGHJviL02m6MgNHBD4N-eob0SnkkUevBPwsInNXEewlukJu5RAsCvVTjnlasFA38tbuU5IhmAMgEJYGUAkzPUAIAyWKdojipjOXjMYbHJB-QaFV8p-ok8pQ_fg6eRr0fbye6zZUHywU"/>
 <div class="fog-layer"></div>
 </div>
 <div class="p-8 md:p-12 flex-1 flex flex-col justify-center">
@@ -247,6 +256,7 @@ tailwind.config = {
 <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at center, #C9A86A 0%, transparent 70%); mix-blend-mode: screen;"></div>
 </section>
 </main>
+</div>
   <footer class="bg-charcoal text-on-primary">
     <div class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-16">
       <div class="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 border-b border-on-primary/10 pb-12">
@@ -267,120 +277,93 @@ tailwind.config = {
             <h4 class="font-label-sm uppercase tracking-widest text-on-primary/40 text-xs mb-2">Connect</h4>
             <a href="/pages/amenities" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Amenities</a>
             <a href="/#contact" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Contact Us</a>
-            <a href="#" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Instagram</a>
+            <a href="https://www.instagram.com/flamingoaurmaina?igsh=ejFucDV1MWkzam5x" target="_blank" rel="noopener noreferrer" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm" aria-label="Visit Flamingo aur Maina on Instagram">Instagram</a>
           </div>
         </div>
       </div>
       <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-on-primary/40 font-body-md">
         <p>&copy; 2024 Flamingo aur Maina. All rights reserved.</p>
         <div class="flex gap-6">
-          <a href="#" class="hover:text-on-primary transition-colors">Privacy Policy</a>
-          <a href="#" class="hover:text-on-primary transition-colors">Terms of Service</a>
+          <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Privacy Policy</a>
+          <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Terms of Service</a>
         </div>
       </div>
     </div>
   </footer>
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-      if (typeof FAM !== 'undefined' && FAM.Animations) {
-        FAM.Animations.init({ gsap: true, lenis: false });
-      }
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); } });
+function initLifePage() {
+  if (typeof FAM !== 'undefined' && FAM.Animations) {
+    FAM.Animations.init({ gsap: true, lenis: false });
+  }
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); } });
   }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal-text').forEach(el => observer.observe(el));
+  document.querySelectorAll('.reveal-text').forEach(function(el) { observer.observe(el); });
 
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
-    gsap.utils.toArray('.gsap-reveal').forEach(element => {
+    gsap.utils.toArray('.gsap-reveal').forEach(function(element) {
       gsap.to(element, { scrollTrigger: { trigger: element, start: "top 85%", toggleActions: "play none none reverse" }, y: 0, opacity: 1, duration: 1, ease: "power3.out" });
     });
-    gsap.utils.toArray('.gsap-mask').forEach(element => {
+    gsap.utils.toArray('.gsap-mask').forEach(function(element) {
       gsap.to(element, { scrollTrigger: { trigger: element, start: "top 80%", toggleActions: "play none none reverse" }, clipPath: "inset(0% 0 0 0)", duration: 1.5, ease: "power4.inOut" });
     });
   }
 
-  const leafContainer = document.getElementById('leaf-container');
-  if(leafContainer && window.innerWidth >= 1024) {
-    for(let i=0; i<20; i++) {
-      let leaf = document.createElement('div');
-      leaf.className = `leaf ${Math.random() > 0.5 ? 'gold' : ''}`;
-      leaf.style.left = `${Math.random() * 100}%`;
-      leaf.style.animationDuration = `${5 + Math.random() * 10}s`;
-      leaf.style.animationDelay = `${Math.random() * 5}s`;
+  var leafContainer = document.getElementById('leaf-container');
+  if (leafContainer && window.innerWidth >= 1024 && !leafContainer._init) {
+    leafContainer._init = true;
+    for (var i = 0; i < 20; i++) {
+      var leaf = document.createElement('div');
+      leaf.className = 'leaf ' + (Math.random() > 0.5 ? 'gold' : '');
+      leaf.style.left = Math.random() * 100 + '%';
+      leaf.style.animationDuration = (5 + Math.random() * 10) + 's';
+      leaf.style.animationDelay = Math.random() * 5 + 's';
       leafContainer.appendChild(leaf);
     }
   }
 
-  const bonfireContainer = document.getElementById('bonfire-container');
-  if(bonfireContainer && window.innerWidth >= 1024) {
-    for(let i=0; i<15; i++) {
-      let ember = document.createElement('div');
+  var bonfireContainer = document.getElementById('bonfire-container');
+  if (bonfireContainer && window.innerWidth >= 1024 && !bonfireContainer._init) {
+    bonfireContainer._init = true;
+    for (var i = 0; i < 15; i++) {
+      var ember = document.createElement('div');
       ember.className = 'ember';
-      ember.style.left = `${40 + Math.random() * 20}%`;
-      ember.style.animationDuration = `${2 + Math.random() * 3}s`;
-      ember.style.animationDelay = `${Math.random() * 2}s`;
+      ember.style.left = (40 + Math.random() * 20) + '%';
+      ember.style.animationDuration = (2 + Math.random() * 3) + 's';
+      ember.style.animationDelay = Math.random() * 2 + 's';
       bonfireContainer.appendChild(ember);
     }
   }
 
-  const starContainer = document.getElementById('star-container');
-  if(starContainer && window.innerWidth >= 1024) {
-    for(let i=0; i<50; i++) {
-      let star = document.createElement('div');
+  var starContainer = document.getElementById('star-container');
+  if (starContainer && window.innerWidth >= 1024 && !starContainer._init) {
+    starContainer._init = true;
+    for (var i = 0; i < 50; i++) {
+      var star = document.createElement('div');
       star.className = 'star';
-      let size = Math.random() * 3;
-      star.style.width = `${size}px`;
-      star.style.height = `${size}px`;
-      star.style.top = `${Math.random() * 100}%`;
-      star.style.left = `${Math.random() * 100}%`;
-      star.style.setProperty('--duration', `${2 + Math.random() * 4}s`);
-      star.style.animationDelay = `${Math.random() * 2}s`;
+      var size = Math.random() * 3;
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.setProperty('--duration', (2 + Math.random() * 4) + 's');
+      star.style.animationDelay = Math.random() * 2 + 's';
       starContainer.insertBefore(star, starContainer.firstChild);
     }
   }
-  initMobileMenu();
-});
-function initMobileMenu() {
-  var btn = document.getElementById('mobile-menu-btn');
-  var panel = document.getElementById('mobile-panel');
-  var overlay = document.getElementById('mobile-overlay');
-  var closeBtn = document.getElementById('mobile-close');
-  if (!btn || !panel || !overlay) return;
-
-  function open() {
-    panel.classList.add('open');
-    overlay.classList.add('open');
-    document.body.classList.add('mobile-menu-open');
-    btn.setAttribute('aria-expanded', 'true');
-  }
-  function close() {
-    panel.classList.remove('open');
-    overlay.classList.remove('open');
-    document.body.classList.remove('mobile-menu-open');
-    btn.setAttribute('aria-expanded', 'false');
-  }
-  btn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    if (panel.classList.contains('open')) close(); else open();
-  });
-  closeBtn.addEventListener('click', close);
-  overlay.addEventListener('click', close);
-  panel.querySelectorAll('.mobile-menu-link').forEach(function(link) {
-    link.addEventListener('click', close);
-  });
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && panel.classList.contains('open')) close();
-  });
 }
+document.addEventListener('DOMContentLoaded', initLifePage);
+window.__pageInit = initLifePage;
 </script>
 <script src="../js/animations.js"></script>
 <script src="../js/seasonal.js"></script>
 <script src="../js/concierge.js"></script>
+  <script src="../js/mobile-nav.js"></script>
   <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
-  <script src="../js/transitions.js"></script>
+  <script src="../js/page-transitions.js"></script>
   <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
@@ -391,5 +374,36 @@ function initMobileMenu() {
   }
   </script>
   <script type="module" src="//instant.page/5.2.0"></script>
+<div id="booking-modal" class="booking-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Book your stay">
+  <div class="booking-modal-overlay"></div>
+  <div class="booking-modal-panel">
+    <div class="booking-modal-header">
+      <span class="booking-modal-title">&#x1F4C5; Check Availability</span>
+      <button class="booking-modal-close" id="booking-modal-close" aria-label="Close booking">&#x2715;</button>
+    </div>
+    <div class="booking-modal-body" id="booking-modal-body">
+      <div class="booking-form">
+        <div class="booking-field">
+          <label class="booking-label">Check-in</label>
+          <input type="date" class="booking-input" id="modal-checkin" min="" />
+        </div>
+        <div class="booking-field">
+          <label class="booking-label">Check-out</label>
+          <input type="date" class="booking-input" id="modal-checkout" min="" />
+        </div>
+        <div class="booking-field">
+          <label class="booking-label">Guests</label>
+          <div class="booking-guests">
+            <button class="booking-guest-btn" id="modal-guest-minus" aria-label="Remove guest">&#x2212;</button>
+            <span class="booking-guest-count" id="modal-guest-count">2</span>
+            <button class="booking-guest-btn" id="modal-guest-plus" aria-label="Add guest">+</button>
+          </div>
+        </div>
+        <button class="booking-cta" id="modal-booking-cta">Check Availability</button>
+        <p class="booking-footer-text">Full room selection &amp; booking details in next step</p>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

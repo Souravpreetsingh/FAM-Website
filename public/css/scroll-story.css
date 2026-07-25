@@ -7,13 +7,15 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 0%;
+  width: 100%;
   height: 2px;
+  transform: scaleX(0);
+  transform-origin: left center;
   background: linear-gradient(90deg, #C9A86A, #0a341d, #C9A86A);
   z-index: 10000;
   pointer-events: none;
-  transition: width 0.1s linear;
-  will-change: width;
+  transition: transform 0.1s linear;
+  will-change: transform;
 }
 
 /* --- Chapter Markers --- */

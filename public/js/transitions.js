@@ -1,4 +1,5 @@
 (function(){
+'use strict';
 var EXIT_DURATION = 600, ENTER_DELAY = 60, BUSY = false;
 
 var page = (function(){
@@ -130,8 +131,6 @@ document.querySelectorAll('button[onclick]').forEach(function(btn){
         } else {
           exitPage(function(){ window.location.href = match[1]; });
         }
-      } else {
-        try { eval(orig); } catch(_){}
       }
     });
   }
@@ -164,7 +163,7 @@ if (document.readyState === 'complete') {
 
 setTimeout(function() {
   if (BUSY) {
-    console.warn('[transitions] enterPage did not complete in 5s, forcing cleanup');
+    /* enterPage safety timeout */
     BUSY = false;
     if (overlay) { overlay.style.transition = 'none'; overlay.style.opacity = '0'; }
     document.querySelectorAll('section, .hero-root, footer').forEach(function(el) {
@@ -186,8 +185,8 @@ if (!cursor && window.matchMedia('(pointer:fine)').matches && !window.matchMedia
     cursor.classList.add('visible');
     clearTimeout(cursorTimer);
     cursorTimer = setTimeout(function(){ cursor.classList.remove('visible'); }, 2000);
-  });
-  document.addEventListener('mouseleave', function(){ cursor.classList.remove('visible'); });
+  }, { passive: true });
+  document.addEventListener('mouseleave', function(){ cursor.classList.remove('visible'); }, { passive: true });
 }
 
 document.querySelectorAll('.nav-book-btn, .nav-signin-btn, .btn-primary, .btn-secondary, .hero-btn-primary, .hero-btn-secondary, .card-btn, .explore-btn, .tp-btn, .bb-cta, .nav-mobile-signin, .nav-mobile-book, [class*="btn-"], button').forEach(function(btn){
@@ -199,10 +198,10 @@ document.querySelectorAll('.nav-book-btn, .nav-signin-btn, .btn-primary, .btn-se
       var dx = (e.clientX - r.left - r.width/2) * 0.15;
       var dy = (e.clientY - r.top - r.height/2) * 0.15;
       this.style.transform = 'translate('+dx+'px,'+dy+'px)';
-    });
+    }, { passive: true });
     btn.addEventListener('mouseleave', function(){
       this.style.transform = '';
-    });
+    }, { passive: true });
   }
 });
 
@@ -237,7 +236,6 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       scale: 1, opacity: 1, duration: 1.2, ease: 'power3.out',
       scrollTrigger: { trigger: img, start: 'top 85%', once: true }
     });
-    img.closest('.editorial-card, .experience-card, .explore-card, .img-container, [class*="card"]');
   });
   
   gsap.utils.toArray('.card-btn, .btn-primary, .btn-secondary, .hero-btn-primary, .hero-btn-secondary, .explore-btn, .tp-btn, .bb-cta').forEach(function(btn){

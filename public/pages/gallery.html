@@ -4,6 +4,8 @@
   <style>#pt-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;background:#f8f4ec;opacity:1;transition:opacity .5s cubic-bezier(.65,0,.35,1)}</style>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="description" content="Photo gallery of Flamingo aur Maina — rooms, views, nature, and experiences at our boutique stay in Jibhi, Himachal." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <title>Gallery - Flamingo aur Maina</title>
   <meta property="og:title" content="Gallery - Flamingo aur Maina" />
   <meta property="og:description" content="Immerse yourself in the visual poetry of Flamingo aur Maina. A curated collection of moments in the Himalayan mountains." />
@@ -35,11 +37,13 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null"/>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null"/>
 <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/></noscript>
-<link rel="stylesheet" href="../css/style.css?v=10" />
+<link rel="stylesheet" href="../css/style.css?v=14" />
 <script id="tailwind-config">
 tailwind.config = {
   darkMode: "class", theme: { extend: {
@@ -61,10 +65,10 @@ tailwind.config = {
   .snap-x-mandatory::-webkit-scrollbar-track { background: transparent; }
   .snap-x-mandatory::-webkit-scrollbar-thumb { background-color: rgba(10, 52, 29, 0.2); border-radius: 10px; }
 </style>
-  <link rel="stylesheet" href="../css/transitions.css?v=1" /></head>
-<body class="bg-background text-on-surface antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container" style="background:#f8f4ec"><div id="pt-overlay"></div>
-  <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300" id="main-nav">
-    <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto rounded-full">
+  <link rel="stylesheet" href="../css/transitions.css?v=3" /></head>
+<body class="bg-background text-on-surface antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container" style="background:#f8f4ec"><div id="pt-overlay" aria-hidden="true"></div>
+  <nav class="main-nav" id="main-nav">
+    <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto">
       <div class="flex items-center gap-4">
         <a href="/" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
       </div>
@@ -75,43 +79,59 @@ tailwind.config = {
         <a href="/pages/explore" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Explore</a>
         <a href="/pages/gallery" class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/30 pb-1">Gallery</a>
         <a href="/pages/amenities" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Amenities</a>
+        <a href="/#contact" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Contact</a>
         <div class="flex items-center gap-3">
-          <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
+          <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" aria-label="Sign in to your account" data-direct-nav>Sign In</button>
           <button type="button" onclick="window.location.href='booking.html'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
         </div>
       </div>
-      <div class="flex items-center gap-4">
-        <button class="lg:hidden text-primary p-2" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button>
-      </div>
     </div>
   </nav>
-  <!-- ====== MOBILE MENU ====== -->
-  <div class="mobile-menu-overlay" id="mobile-overlay" aria-hidden="true"></div>
-  <div class="mobile-menu-panel" id="mobile-panel" role="dialog" aria-modal="true" aria-label="Navigation menu">
-    <div class="mobile-menu-header">
-      <span class="font-headline-md text-xl text-primary">Menu</span>
-      <button class="mobile-menu-close" id="mobile-close" aria-label="Close navigation menu">
-        <span class="material-symbols-outlined">close</span>
+
+  <div class="mobile-nav-bar" id="mobile-nav-bar">
+    <a href="/" class="mobile-nav-logo">Flamingo aur Maina</a>
+    <a href="/pages/booking.html" class="mobile-book-btn" data-direct-nav aria-label="Book Now">Book Now</a>
+    <button class="mobile-nav-toggle" id="mobile-menu-btn" aria-label="Open menu" aria-expanded="false">
+      <span class="menu-icon-line"></span>
+      <span class="menu-icon-line"></span>
+      <span class="menu-icon-line"></span>
+    </button>
+  </div>
+  <div class="mobile-overlay" id="mobile-overlay" aria-hidden="true"></div>
+  <div class="mobile-panel" id="mobile-panel" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <div class="mobile-panel-header">
+      <button class="mobile-panel-close" id="mobile-panel-close" aria-label="Close menu">
+        <div class="mobile-panel-close-wrap">
+          <span class="close-icon-line"></span>
+          <span class="close-icon-line"></span>
+        </div>
       </button>
     </div>
-    <nav class="mobile-menu-links" aria-label="Mobile navigation">
-      <a href="/" class="mobile-menu-link">Home</a>
-      <a href="/pages/rooms" class="mobile-menu-link">Rooms</a>
-      <a href="/pages/life" class="mobile-menu-link">Life at FAM</a>
-      <a href="/pages/explore" class="mobile-menu-link">Explore</a>
-      <a href="/pages/gallery" class="mobile-menu-link">Gallery</a>
-      <a href="/pages/amenities" class="mobile-menu-link">Amenities</a>
-      <div class="mobile-menu-cta-group">
-        <button type="button" onclick="window.location.href='/pages/login'" class="nav-mobile-signin">Sign In</button>
-        <button type="button" onclick="window.location.href='booking.html'" class="nav-mobile-book">Book Your Stay</button>
-      </div>
+    <nav class="mobile-panel-links" aria-label="Mobile navigation">
+      <a href="/" class="mobile-panel-link" style="--i:0">Home</a>
+      <a href="/pages/rooms" class="mobile-panel-link" style="--i:1">Rooms</a>
+      <a href="/pages/life" class="mobile-panel-link" style="--i:2">Life at FAM</a>
+      <a href="/pages/explore" class="mobile-panel-link" style="--i:3">Explore</a>
+      <a href="/pages/gallery" class="mobile-panel-link" style="--i:4">Gallery</a>
+      <a href="/pages/amenities" class="mobile-panel-link" style="--i:5">Amenities</a>
+      <a href="/#contact" class="mobile-panel-link" style="--i:6">Contact</a>
     </nav>
-    <div class="mobile-menu-footer">
-      <a href="tel:9876575673" class="mobile-menu-phone">
-        <span class="material-symbols-outlined text-lg">phone</span>
-        Property Manager: 98765 75673
-      </a>
+    <div class="mobile-panel-cta">
+      <a href="/pages/booking.html" class="mobile-panel-book-btn" data-direct-nav>Book Your Stay</a>
+      <button type="button" onclick="window.location.href='/pages/login'" class="mobile-panel-signin-btn" data-direct-nav>Sign In</button>
     </div>
+  </div>
+  <div id="page-content">
+  <!-- ====== FULLSCREEN GALLERY OVERLAY ====== -->
+  <div id="gallery-overlay" class="gallery-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Image gallery">
+    <div class="gallery-overlay-header">
+      <span class="gallery-counter" id="gallery-counter"></span>
+      <button class="gallery-close-btn" id="gallery-close" aria-label="Close gallery"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div class="gallery-slide-wrap" id="gallery-slide-wrap">
+      <img id="gallery-image" class="gallery-image" alt="" draggable="false" />
+    </div>
+    <div class="gallery-dots" id="gallery-dots"></div>
   </div>
 <main class="pt-32 pb-section-gap">
 <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop text-center mb-24 reveal">
@@ -120,7 +140,7 @@ tailwind.config = {
 <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Immerse yourself in the visual poetry of Flamingo aur Maina. A curated collection of moments, spaces, and the majestic Himalayan backdrop that defines our sanctuary.</p>
 </section>
 <section class="w-full mb-section-gap reveal">
-<div class="relative w-full h-[60vh] md:h-[80vh] image-hover-zoom rounded-none md:rounded-lg mx-auto max-w-[1600px] md:px-8">
+<div class="gallery-trigger relative w-full h-[60vh] md:h-[80vh] image-hover-zoom rounded-none md:rounded-lg mx-auto max-w-[1600px] md:px-8">
 <img loading="lazy" alt="Flamingo aur Maina room interior" class="w-full h-full object-cover rounded-none md:rounded-lg" src="https://lh3.googleusercontent.com/aida/AP1WRLulLyJz-aiShKJlJZO1MNXWSNUkUmP3rWP_qUDLxspZXZBesx7_hSY9prVDL2QIktOCKrH-cHzPN-O-rOolDKJI8r2OjRFJThspcXjZVWJZB48ski_1gZ0OWJ2pwMkQywE2V_BNCQvrFzpyuuk5AHnt59sBLtsHLJ6rHJyjJYiGLV9JNO1ZhjqNF7jm12pZKnjWmSqmQAhJ2kBDd_yxp0klmAAfQfmkBHz0dl8A5d1lltUkM1A0nx4uszk"/>
 <div class="absolute bottom-8 right-8 bg-surface/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
 <span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">Flamingo aur Maina</span>
@@ -132,15 +152,15 @@ tailwind.config = {
 <div class="md:col-span-5 space-y-8">
 <h2 class="font-headline-lg text-headline-lg text-primary">Curated Elegance</h2>
 <p class="font-body-md text-body-md text-on-surface-variant">Every detail is meticulously crafted to blend harmoniously with the surrounding landscape, offering a tactile experience of rustic luxury.</p>
-<div class="image-hover-zoom rounded-2xl aspect-[4/5] shadow-lg">
+<div class="gallery-trigger image-hover-zoom rounded-2xl aspect-[4/5] shadow-lg">
 <img loading="lazy" alt="Morning tea served on a wooden tray with mountain view" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLu5JtDTYLXiwOcAC8VbHFMDUzcCHeA7W19jmV6RNbp4nY62htXEKml3x5md3Ou4DYivZgmo4f_gJS1k-7yNxykGWxb9gJ2O3Se_6IIFHMidIKeSIYEXvhKVK6kjOR3eHCGXxS9HEG0OI6MIldEjvrV1BfJFe_sMT_kIVu68xnoI9XJ4SwsdnC8J3opjO75Jk3_HYIlwKsZSb92SJSeZRc7qTGVmgQngtb0ajYEDQuVs1QO6YF-PyOKE21M"/>
 </div>
 </div>
 <div class="md:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-gutter mt-8 md:mt-0">
-<div class="image-hover-zoom rounded-2xl aspect-square shadow-lg mt-0 md:mt-24">
+<div class="gallery-trigger image-hover-zoom rounded-2xl aspect-square shadow-lg mt-0 md:mt-24">
 <img loading="lazy" alt="Cozy interior room with warm wooden decor" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLu-PpPSviOXym9Iwatv5ucmic1BJGfZ0DRL2XfutcUFYURrTAovevUunFo2szkVijNh7nQ7YqzVqS1_ogJXg7HO7LIsoJow13XteIWUEV5WjV5rJGW9sSno3p5RJbLi1qrjYzF7kDRsaReTakgmSdFL4u_NrlGVo2aDwgyeJkpsq1oPEWvfnwwxYVzgr5dLLHXFzmfrBXGbRjbiUNcTK2hvYnL_b433mh_KEbWNlFaGc2ZLO7fLi60BKrk"/>
 </div>
-<div class="image-hover-zoom rounded-2xl aspect-[3/4] shadow-lg">
+<div class="gallery-trigger image-hover-zoom rounded-2xl aspect-[3/4] shadow-lg">
 <img loading="lazy" alt="Evening bonfire under starry mountain sky" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLtKy_2j5mTn-V1UCutp3_jZu0Hk_o-Wey9pL7ZOVdnRJm9eRMJkty5Qmg9h9pX3GKSTUZR29_-1U5DEhl5C00VB19-S1YT8sUo6wBHfYX7QutF6_TDXb5EXL8iGSlQq82gWcMNvYpiVj-2NtsTafX8MMhAkkgvMp6ewdh7KeNc2qCbtQoJyYh-Ncco2ijmVG9FQ3ND8hQ8SRf4ViTcJlc8KsvCU5lZRReoQmVKKyBxdqpcwUBBoq0mKm5Y"/>
 </div>
 </div>
@@ -148,9 +168,53 @@ tailwind.config = {
 </section>
 <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop mb-section-gap">
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-<div class="image-hover-zoom rounded-2xl aspect-[3/4] shadow-lg reveal"><img loading="lazy" alt="Mountain view suite" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrzL8aFnw29G--xO0xB7cJw5bUF6iErudebJK_udr_C-zjP4VVlPtTWtaytwm4XB9bodkmUPBFKrwg5wyEST0zHHzbh0yonox_YJAvHikynJjdiUhZFewW5B-CsIt8NgwdA3jZp77wdsLitsm4LimVKuNeWhudbzgqJBAT5IPUysrbNaWPH2y-7GiKzxfxaF6_4Lm1WjF9TxgQVW_6qgR5P0LdecGYW9beSuPCGHckRsHLUSsMdykqIEYZNHQqm2lcRClynYC64wM"/></div>
-<div class="image-hover-zoom rounded-2xl aspect-[3/4] shadow-lg reveal" style="transition-delay:100ms"><img loading="lazy" alt="Attic bedroom" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4nlrjlGhGlQ1VJgZIpTbY7YapqlA_1BMfRG6-4JTpuKR5FIr-kCoGL2oLmf0vKEa4o4eCj4Cax_Lhik-W4Ye44HUpjMiiaBTCiS4heB0TPb8hgsU22edlGNxbK_RfEKDi2WEB3RurNCgyGvmQBNRG_vhq3OHgc8qMsHP7unAqt2hCjeV_YhoLtev37NNelTZhQ53GsVmZZ6GcvkW7TCoFrfGKEjGOS9l8v2N3WY6nXIvyOgDh09t3w0iWhvsIqOAURwZoWjIGhDI"/></div>
-<div class="image-hover-zoom rounded-2xl aspect-[3/4] shadow-lg reveal" style="transition-delay:200ms"><img loading="lazy" alt="Luxury suite" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiQQONzA8cxam44mhr-1ZivCdFCx8PU3hSQHSau4f24KnX5qrBsnrMNHMX5XmVgUd_uT2Hwy2W2bS4g2FHoPP0dn0-Bbdpcr1AOr0ps0rLKCSUGGfxMaihy-5FpNBv7iivXEdlVstvuVdEKryGYf3MhSDa_YShGMYyKa59nr28zb8EubJ-NsRApoEnq90zhgI48v8mG4Mp87tFyfNCcqFg1ISXOkOJONAPEvrRv-oHWr_qjWmb2k5sDLZNbXuAubSNWKPYgjfn7eQ"/></div>
+<div class="gallery-trigger image-hover-zoom rounded-2xl aspect-[3/4] shadow-lg reveal"><img loading="lazy" alt="Mountain view suite" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrzL8aFnw29G--xO0xB7cJw5bUF6iErudebJK_udr_C-zjP4VVlPtTWtaytwm4XB9bodkmUPBFKrwg5wyEST0zHHzbh0yonox_YJAvHikynJjdiUhZFewW5B-CsIt8NgwdA3jZp77wdsLitsm4LimVKuNeWhudbzgqJBAT5IPUysrbNaWPH2y-7GiKzxfxaF6_4Lm1WjF9TxgQVW_6qgR5P0LdecGYW9beSuPCGHckRsHLUSsMdykqIEYZNHQqm2lcRClynYC64wM"/></div>
+<div class="gallery-trigger image-hover-zoom rounded-2xl aspect-[3/4] shadow-lg reveal" style="transition-delay:100ms"><img loading="lazy" alt="Attic bedroom" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4nlrjlGhGlQ1VJgZIpTbY7YapqlA_1BMfRG6-4JTpuKR5FIr-kCoGL2oLmf0vKEa4o4eCj4Cax_Lhik-W4Ye44HUpjMiiaBTCiS4heB0TPb8hgsU22edlGNxbK_RfEKDi2WEB3RurNCgyGvmQBNRG_vhq3OHgc8qMsHP7unAqt2hCjeV_YhoLtev37NNelTZhQ53GsVmZZ6GcvkW7TCoFrfGKEjGOS9l8v2N3WY6nXIvyOgDh09t3w0iWhvsIqOAURwZoWjIGhDI"/></div>
+<div class="gallery-trigger image-hover-zoom rounded-2xl aspect-[3/4] shadow-lg reveal" style="transition-delay:200ms"><img loading="lazy" alt="Luxury suite" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiQQONzA8cxam44mhr-1ZivCdFCx8PU3hSQHSau4f24KnX5qrBsnrMNHMX5XmVgUd_uT2Hwy2W2bS4g2FHoPP0dn0-Bbdpcr1AOr0ps0rLKCSUGGfxMaihy-5FpNBv7iivXEdlVstvuVdEKryGYf3MhSDa_YShGMYyKa59nr28zb8EubJ-NsRApoEnq90zhgI48v8mG4Mp87tFyfNCcqFg1ISXOkOJONAPEvrRv-oHWr_qjWmb2k5sDLZNbXuAubSNWKPYgjfn7eQ"/></div>
+</div>
+</section>
+<section id="experiences-section" class="max-w-max-width mx-auto px-4 md:px-margin-desktop mb-section-gap reveal">
+<div class="text-center mb-8 md:mb-12">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-accent-gold mb-3 block">Experiences</span>
+<h2 class="font-headline-lg text-headline-lg text-primary">Curated Mountain Experiences</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl mx-auto mt-3">Every moment at FAM is designed to connect you with the mountains, the culture, and yourself.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="experiences-grid">
+<div class="reveal p-6 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="transition-delay:50ms">
+<span class="material-symbols-outlined text-4xl text-accent-gold mb-3 block">landscape</span>
+<h3 class="font-headline-md text-lg text-primary mb-1">Mountain Views</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Wake up to panoramic Himalayan vistas from every room.</p>
+</div>
+<div class="reveal p-6 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="transition-delay:100ms">
+<span class="material-symbols-outlined text-4xl text-accent-gold mb-3 block">coffee</span>
+<h3 class="font-headline-md text-lg text-primary mb-1">Morning Coffee</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Freshly brewed local coffee served with mountain sunrise views.</p>
+</div>
+<div class="reveal p-6 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="transition-delay:150ms">
+<span class="material-symbols-outlined text-4xl text-accent-gold mb-3 block">local_fire_department</span>
+<h3 class="font-headline-md text-lg text-primary mb-1">Bonfire Nights</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Evening bonfires with stories, music, and warm company under the stars.</p>
+</div>
+<div class="reveal p-6 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="transition-delay:200ms">
+<span class="material-symbols-outlined text-4xl text-accent-gold mb-3 block">park</span>
+<h3 class="font-headline-md text-lg text-primary mb-1">Forest Walks</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Guided walks through pine and deodar forests surrounding the property.</p>
+</div>
+<div class="reveal p-6 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="transition-delay:250ms">
+<span class="material-symbols-outlined text-4xl text-accent-gold mb-3 block">water</span>
+<h3 class="font-headline-md text-lg text-primary mb-1">Riverside Relaxation</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Unwind by the Tirthan River with the soothing sound of flowing water.</p>
+</div>
+<div class="reveal p-6 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="transition-delay:300ms">
+<span class="material-symbols-outlined text-4xl text-accent-gold mb-3 block">restaurant</span>
+<h3 class="font-headline-md text-lg text-primary mb-1">Local Cuisine</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Authentic Himachali flavors prepared with locally sourced ingredients.</p>
+</div>
+<div class="reveal p-6 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="transition-delay:350ms">
+<span class="material-symbols-outlined text-4xl text-accent-gold mb-3 block">nightlight</span>
+<h3 class="font-headline-md text-lg text-primary mb-1">Stargazing</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Crystal-clear night skies perfect for spotting constellations and shooting stars.</p>
+</div>
 </div>
 </section>
 <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop reveal">
@@ -166,6 +230,7 @@ tailwind.config = {
 </div>
 </section>
 </main>
+  </div>
   <footer class="bg-charcoal text-on-primary">
     <div class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-16">
       <div class="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 border-b border-on-primary/10 pb-12">
@@ -186,15 +251,15 @@ tailwind.config = {
             <h4 class="font-label-sm uppercase tracking-widest text-on-primary/40 text-xs mb-2">Connect</h4>
             <a href="/pages/amenities" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Amenities</a>
             <a href="/#contact" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Contact Us</a>
-            <a href="#" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Instagram</a>
+            <a href="https://www.instagram.com/flamingoaurmaina?igsh=ejFucDV1MWkzam5x" target="_blank" rel="noopener noreferrer" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm" aria-label="Visit Flamingo aur Maina on Instagram">Instagram</a>
           </div>
         </div>
       </div>
       <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-on-primary/40 font-body-md">
         <p>&copy; 2024 Flamingo aur Maina. All rights reserved.</p>
         <div class="flex gap-6">
-          <a href="#" class="hover:text-on-primary transition-colors">Privacy Policy</a>
-          <a href="#" class="hover:text-on-primary transition-colors">Terms of Service</a>
+          <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Privacy Policy</a>
+          <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Terms of Service</a>
         </div>
       </div>
     </div>
@@ -203,61 +268,164 @@ tailwind.config = {
 <script src="../js/seasonal.js"></script>
 <script src="../js/concierge.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  if (typeof FAM !== 'undefined' && FAM.Animations) { FAM.Animations.init({ gsap: false, lenis: false, cardParallax: false }); }
-  const revealElements = document.querySelectorAll('.reveal');
-  const revealOnScroll = () => {
-    const windowHeight = window.innerHeight;
-    revealElements.forEach(el => {
-      const elementTop = el.getBoundingClientRect().top;
-      if (elementTop < windowHeight - 150) el.classList.add('active');
-    });
-  };
-  window.addEventListener('scroll', revealOnScroll);
-  revealOnScroll();
-  const nav = document.getElementById('main-nav');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) { nav.classList.add('shadow-md'); } else { nav.classList.remove('shadow-md'); }
-  });
-  initMobileMenu();
-});
-</script>
-  <script>
-  function initMobileMenu() {
-    var btn = document.getElementById('mobile-menu-btn');
-    var panel = document.getElementById('mobile-panel');
-    var overlay = document.getElementById('mobile-overlay');
-    var closeBtn = document.getElementById('mobile-close');
-    if (!btn || !panel || !overlay) return;
+// ====== GALLERY IMAGES ======
+var GALLERY_IMAGES = [
+  { src: 'https://lh3.googleusercontent.com/aida/AP1WRLulLyJz-aiShKJlJZO1MNXWSNUkUmP3rWP_qUDLxspZXZBesx7_hSY9prVDL2QIktOCKrH-cHzPN-O-rOolDKJI8r2OjRFJThspcXjZVWJZB48ski_1gZ0OWJ2pwMkQywE2V_BNCQvrFzpyuuk5AHnt59sBLtsHLJ6rHJyjJYiGLV9JNO1ZhjqNF7jm12pZKnjWmSqmQAhJ2kBDd_yxp0klmAAfQfmkBHz0dl8A5d1lltUkM1A0nx4uszk', alt: 'Flamingo aur Maina room interior' },
+  { src: 'https://lh3.googleusercontent.com/aida/AP1WRLu5JtDTYLXiwOcAC8VbHFMDUzcCHeA7W19jmV6RNbp4nY62htXEKml3x5md3Ou4DYivZgmo4f_gJS1k-7yNxykGWxb9gJ2O3Se_6IIFHMidIKeSIYEXvhKVK6kjOR3eHCGXxS9HEG0OI6MIldEjvrV1BfJFe_sMT_kIVu68xnoI9XJ4SwsdnC8J3opjO75Jk3_HYIlwKsZSb92SJSeZRc7qTGVmgQngtb0ajYEDQuVs1QO6YF-PyOKE21M', alt: 'Morning tea with mountain view' },
+  { src: 'https://lh3.googleusercontent.com/aida/AP1WRLu-PpPSviOXym9Iwatv5ucmic1BJGfZ0DRL2XfutcUFYURrTAovevUunFo2szkVijNh7nQ7YqzVqS1_ogJXg7HO7LIsoJow13XteIWUEV5WjV5rJGW9sSno3p5RJbLi1qrjYzF7kDRsaReTakgmSdFL4u_NrlGVo2aDwgyeJkpsq1oPEWvfnwwxYVzgr5dLLHXFzmfrBXGbRjbiUNcTK2hvYnL_b433mh_KEbWNlFaGc2ZLO7fLi60BKrk', alt: 'Cozy room with warm wooden decor' },
+  { src: 'https://lh3.googleusercontent.com/aida/AP1WRLtKy_2j5mTn-V1UCutp3_jZu0Hk_o-Wey9pL7ZOVdnRJm9eRMJkty5Qmg9h9pX3GKSTUZR29_-1U5DEhl5C00VB19-S1YT8sUo6wBHfYX7QutF6_TDXb5EXL8iGSlQq82gWcMNvYpiVj-2NtsTafX8MMhAkkgvMp6ewdh7KeNc2qCbtQoJyYh-Ncco2ijmVG9FQ3ND8hQ8SRf4ViTcJlc8KsvCU5lZRReoQmVKKyBxdqpcwUBBoq0mKm5Y', alt: 'Evening bonfire under starry sky' },
+  { src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBrzL8aFnw29G--xO0xB7cJw5bUF6iErudebJK_udr_C-zjP4VVlPtTWtaytwm4XB9bodkmUPBFKrwg5wyEST0zHHzbh0yonox_YJAvHikynJjdiUhZFewW5B-CsIt8NgwdA3jZp77wdsLitsm4LimVKuNeWhudbzgqJBAT5IPUysrbNaWPH2y-7GiKzxfxaF6_4Lm1WjF9TxgQVW_6qgR5P0LdecGYW9beSuPCGHckRsHLUSsMdykqIEYZNHQqm2lcRClynYC64wM', alt: 'Mountain view suite' },
+  { src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA4nlrjlGhGlQ1VJgZIpTbY7YapqlA_1BMfRG6-4JTpuKR5FIr-kCoGL2oLmf0vKEa4o4eCj4Cax_Lhik-W4Ye44HUpjMiiaBTCiS4heB0TPb8hgsU22edlGNxbK_RfEKDi2WEB3RurNCgyGvmQBNRG_vhq3OHgc8qMsHP7unAqt2hCjeV_YhoLtev37NNelTZhQ53GsVmZZ6GcvkW7TCoFrfGKEjGOS9l8v2N3WY6nXIvyOgDh09t3w0iWhvsIqOAURwZoWjIGhDI', alt: 'Attic bedroom' },
+  { src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCiQQONzA8cxam44mhr-1ZivCdFCx8PU3hSQHSau4f24KnX5qrBsnrMNHMX5XmVgUd_uT2Hwy2W2bS4g2FHoPP0dn0-Bbdpcr1AOr0ps0rLKCSUGGfxMaihy-5FpNBv7iivXEdlVstvuVdEKryGYf3MhSDa_YShGMYyKa59nr28zb8EubJ-NsRApoEnq90zhgI48v8mG4Mp87tFyfNCcqFg1ISXOkOJONAPEvrRv-oHWr_qjWmb2k5sDLZNbXuAubSNWKPYgjfn7eQ', alt: 'Luxury suite' }
+];
+var _galleryIndex = 0;
+var _scrollY = 0;
 
-    function open() {
-      panel.classList.add('open');
-      overlay.classList.add('open');
-      document.body.classList.add('mobile-menu-open');
-      btn.setAttribute('aria-expanded', 'true');
+function openGallery(index) {
+  if (window.innerWidth > 768) return;
+  _galleryIndex = index;
+  _scrollY = window.scrollY;
+  updateGalleryImage();
+  document.getElementById('gallery-overlay').classList.add('open');
+  document.body.classList.add('gallery-open');
+}
+function closeGallery() {
+  document.getElementById('gallery-overlay').classList.remove('open');
+  document.body.classList.remove('gallery-open');
+  window.scrollTo(0, _scrollY);
+}
+function updateGalleryImage() {
+  var img = document.getElementById('gallery-image');
+  var data = GALLERY_IMAGES[_galleryIndex];
+  img.src = data.src;
+  img.alt = data.alt;
+  img.style.transform = 'scale(1)';
+  document.getElementById('gallery-counter').textContent = (_galleryIndex + 1) + ' / ' + GALLERY_IMAGES.length;
+  var dots = document.getElementById('gallery-dots');
+  dots.innerHTML = '';
+  for (var i = 0; i < GALLERY_IMAGES.length; i++) {
+    var dot = document.createElement('span');
+    dot.className = 'gallery-dot' + (i === _galleryIndex ? ' active' : '');
+    dots.appendChild(dot);
+  }
+}
+function galleryNav(dir) {
+  _galleryIndex = (_galleryIndex + dir + GALLERY_IMAGES.length) % GALLERY_IMAGES.length;
+  updateGalleryImage();
+}
+
+function initGalleryPage() {
+  if (typeof FAM !== 'undefined' && FAM.Animations) { FAM.Animations.init({ gsap: false, lenis: false, cardParallax: false }); }
+  var revealElements = document.querySelectorAll('.reveal');
+  var nav = document.getElementById('main-nav');
+  var scrollTicking = false;
+  function onScroll() {
+    if (!scrollTicking) {
+      scrollTicking = true;
+      requestAnimationFrame(function() {
+        var wh = window.innerHeight;
+        revealElements.forEach(function(el) {
+          if (el.getBoundingClientRect().top < wh - 150) el.classList.add('active');
+        });
+        if (nav) {
+          if (window.scrollY > 50) nav.classList.add('shadow-md'); else nav.classList.remove('shadow-md');
+        }
+        scrollTicking = false;
+      });
     }
-    function close() {
-      panel.classList.remove('open');
-      overlay.classList.remove('open');
-      document.body.classList.remove('mobile-menu-open');
-      btn.setAttribute('aria-expanded', 'false');
-    }
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      if (panel.classList.contains('open')) close(); else open();
-    });
-    closeBtn.addEventListener('click', close);
-    overlay.addEventListener('click', close);
-    panel.querySelectorAll('.mobile-menu-link').forEach(function(link) {
-      link.addEventListener('click', close);
-    });
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && panel.classList.contains('open')) close();
+  }
+
+  if (!window._galleryScrollInit) {
+    window._galleryScrollInit = true;
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+  onScroll();
+
+  // Wire up gallery clicks on mobile
+  if (window.innerWidth <= 768) {
+    document.querySelectorAll('.gallery-trigger').forEach(function(el, i) {
+      el.addEventListener('click', function(e) { e.preventDefault(); openGallery(i); });
     });
   }
-  </script>
+
+  // Gallery overlay close (remove old listeners to avoid dupes)
+  var closeBtn = document.getElementById('gallery-close');
+  if (closeBtn) {
+    var newCloseBtn = closeBtn.cloneNode(true);
+    closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+    newCloseBtn.addEventListener('click', closeGallery);
+  }
+
+  var overlayEl = document.getElementById('gallery-overlay');
+  if (overlayEl) {
+    var newOverlay = overlayEl.cloneNode(true);
+    overlayEl.parentNode.replaceChild(newOverlay, overlayEl);
+    newOverlay.addEventListener('click', function(e) {
+      if (e.target === this) closeGallery();
+    });
+  }
+
+  // Touch swipe
+  var wrap = document.getElementById('gallery-slide-wrap');
+  if (wrap && !wrap._gallerySwipeInit) {
+    wrap._gallerySwipeInit = true;
+    var _startX = 0, _startY = 0, _isSwiping = false;
+    wrap.addEventListener('touchstart', function(e) {
+      _startX = e.touches[0].clientX;
+      _startY = e.touches[0].clientY;
+      _isSwiping = true;
+    }, { passive: true });
+    wrap.addEventListener('touchmove', function(e) {
+      if (!_isSwiping) return;
+      var dx = e.touches[0].clientX - _startX;
+      var img = document.getElementById('gallery-image');
+      var scale = parseFloat(img.style.transform.replace('scale(', '').replace(')', '')) || 1;
+      if (scale > 1) return;
+      img.style.transform = 'translateX(' + (dx * 0.3) + 'px) scale(1)';
+    }, { passive: true });
+    wrap.addEventListener('touchend', function(e) {
+      if (!_isSwiping) return;
+      _isSwiping = false;
+      var dx = e.changedTouches[0].clientX - _startX;
+      var dy = e.changedTouches[0].clientY - _startY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+        galleryNav(dx > 0 ? -1 : 1);
+      } else {
+        updateGalleryImage();
+      }
+    }, { passive: true });
+
+    // Pinch-to-zoom
+    var _lastDist = 0;
+    wrap.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 2) _lastDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    }, { passive: true });
+    wrap.addEventListener('touchmove', function(e) {
+      if (e.touches.length !== 2) return;
+      var dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+      var scale = Math.max(1, Math.min(4, dist / _lastDist));
+      document.getElementById('gallery-image').style.transform = 'scale(' + scale + ')';
+    }, { passive: true });
+  }
+
+  // Keyboard nav
+  if (!window._galleryKeydownInit) {
+    window._galleryKeydownInit = true;
+    document.addEventListener('keydown', function(e) {
+      var ov = document.getElementById('gallery-overlay');
+      if (!ov || !ov.classList.contains('open')) return;
+      if (e.key === 'Escape') closeGallery();
+      if (e.key === 'ArrowLeft') galleryNav(-1);
+      if (e.key === 'ArrowRight') galleryNav(1);
+    });
+  }
+}
+document.addEventListener('DOMContentLoaded', initGalleryPage);
+window.__pageInit = initGalleryPage;
+</script>
+  <script src="../js/mobile-nav.js"></script>
   <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
-  <script src="../js/transitions.js"></script>
+  <script src="../js/page-transitions.js"></script>
   <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
@@ -268,5 +436,36 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   </script>
   <script type="module" src="//instant.page/5.2.0"></script>
+<div id="booking-modal" class="booking-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Book your stay">
+  <div class="booking-modal-overlay"></div>
+  <div class="booking-modal-panel">
+    <div class="booking-modal-header">
+      <span class="booking-modal-title">&#x1F4C5; Check Availability</span>
+      <button class="booking-modal-close" id="booking-modal-close" aria-label="Close booking">&#x2715;</button>
+    </div>
+    <div class="booking-modal-body" id="booking-modal-body">
+      <div class="booking-form">
+        <div class="booking-field">
+          <label class="booking-label">Check-in</label>
+          <input type="date" class="booking-input" id="modal-checkin" min="" />
+        </div>
+        <div class="booking-field">
+          <label class="booking-label">Check-out</label>
+          <input type="date" class="booking-input" id="modal-checkout" min="" />
+        </div>
+        <div class="booking-field">
+          <label class="booking-label">Guests</label>
+          <div class="booking-guests">
+            <button class="booking-guest-btn" id="modal-guest-minus" aria-label="Remove guest">&#x2212;</button>
+            <span class="booking-guest-count" id="modal-guest-count">2</span>
+            <button class="booking-guest-btn" id="modal-guest-plus" aria-label="Add guest">+</button>
+          </div>
+        </div>
+        <button class="booking-cta" id="modal-booking-cta">Check Availability</button>
+        <p class="booking-footer-text">Full room selection &amp; booking details in next step</p>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

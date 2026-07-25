@@ -8,6 +8,8 @@
 
   var fallbackMsg = "I'm sorry, I don't have that information yet. Please contact our Property Manager at 98765 75673 or email flamingoaurmaina@gmail.com. We'll be happy to help.";
 
+  var listenersRegistered = false;
+
   var actionCards = [
     { id:'rec-room', icon:'🏡', label:'Rooms', desc:'Find your perfect stay' },
     { id:'plan-trip', icon:'🗓️', label:'Trip', desc:'Plan your itinerary' },
@@ -165,6 +167,8 @@
   }
 
   /* === UI === */
+  var sparkleInterval;
+
   function buildButton() {
     if (document.getElementById('concierge-btn')) return;
     var btn = document.createElement('button');
@@ -180,7 +184,7 @@
     document.body.appendChild(btn);
     initMagnetic(btn);
     btn.addEventListener('click', toggle);
-    setInterval(createSparkle, 6000);
+    sparkleInterval = setInterval(createSparkle, 6000);
   }
 
   function buildPanel() {
@@ -306,8 +310,6 @@
     isOpen = true;
     var panel = document.getElementById('concierge-panel');
     panel.classList.add('open');
-    var btn = document.getElementById('concierge-btn');
-    if (btn) btn.classList.add('active');
 
     if (!hasLoaded) {
       setTimeout(function () {
@@ -332,7 +334,7 @@
     isOpen = false;
     document.getElementById('concierge-panel').classList.remove('open');
     var btn = document.getElementById('concierge-btn');
-    if (btn) btn.classList.remove('active');
+    if (btn) btn.focus();
   }
 
   function addBotMessage(text) {
@@ -524,25 +526,276 @@
     if (fn) fn();
   }
 
+  /* === Booking Modal === */
+  var bookingModalOpen = false;
+  var bookingModalInit = false;
+
+  function initBookingModalEvents() {
+    if (bookingModalInit) return;
+    bookingModalInit = true;
+
+    var closeBtn = document.getElementById('booking-modal-close');
+    if (closeBtn) closeBtn.addEventListener('click', closeBookingModal);
+
+    var modal = document.getElementById('booking-modal');
+    if (modal) {
+      var overlay = modal.querySelector('.booking-modal-overlay');
+      if (overlay) overlay.addEventListener('click', closeBookingModal);
+    }
+
+    var minus = document.getElementById('modal-guest-minus');
+    var plus = document.getElementById('modal-guest-plus');
+    var countEl = document.getElementById('modal-guest-count');
+
+    if (minus && countEl) {
+      minus.addEventListener('click', function () {
+        var v = parseInt(countEl.textContent, 10);
+        if (v > 1) countEl.textContent = v - 1;
+      });
+    }
+
+    if (plus && countEl) {
+      plus.addEventListener('click', function () {
+        var v = parseInt(countEl.textContent, 10);
+        if (v < 20) countEl.textContent = v + 1;
+      });
+    }
+
+    var cta = document.getElementById('modal-booking-cta');
+    if (cta) {
+      cta.addEventListener('click', function () {
+        var ci = document.getElementById('modal-checkin');
+        var co = document.getElementById('modal-checkout');
+        var guests = document.getElementById('modal-guest-count');
+        var params = [];
+        if (ci && ci.value) params.push('checkin=' + ci.value);
+        if (co && co.value) params.push('checkout=' + co.value);
+        if (guests) params.push('guests=' + guests.textContent);
+        var qs = params.length ? '?' + params.join('&') : '';
+        closeBookingModal();
+        setTimeout(function () {
+          window.location.href = '/pages/booking.html' + qs;
+        }, 350);
+      });
+    }
+  }
+
+  function openBookingModal() {
+    var modal = document.getElementById('booking-modal');
+    if (!modal) return;
+    if (bookingModalOpen) return;
+
+    initBookingModalEvents();
+
+    bookingModalOpen = true;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    history.pushState({ bookingModal: true }, '');
+
+    var today = new Date();
+    var y = today.getFullYear();
+    var m = String(today.getMonth() + 1).padStart(2, '0');
+    var d = String(today.getDate()).padStart(2, '0');
+    var minDate = y + '-' + m + '-' + d;
+
+    var ci = document.getElementById('modal-checkin');
+    var co = document.getElementById('modal-checkout');
+    if (ci) {
+      ci.setAttribute('min', minDate);
+      if (!ci.value) ci.value = minDate;
+    }
+    if (co) {
+      var tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      var ty = tomorrow.getFullYear();
+      var tm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+      var td = String(tomorrow.getDate()).padStart(2, '0');
+      co.setAttribute('min', minDate);
+      if (!co.value) co.value = ty + '-' + tm + '-' + td;
+    }
+  }
+
+  function closeBookingModal() {
+    var modal = document.getElementById('booking-modal');
+    if (!modal || !bookingModalOpen) return;
+
+    bookingModalOpen = false;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+
+    if (history.state && history.state.bookingModal) {
+      history.back();
+    }
+  }
+
+  /* === Booking Shortcut === */
+  function buildBookingShortcut() {
+    if (document.getElementById('booking-shortcut-btn')) return;
+
+    var btn = document.createElement('button');
+    btn.className = 'booking-shortcut-btn';
+    btn.id = 'booking-shortcut-btn';
+    btn.setAttribute('aria-label', 'Check Availability');
+    btn.innerHTML =
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
+        '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>' +
+        '<line x1="16" y1="2" x2="16" y2="6"/>' +
+        '<line x1="8" y1="2" x2="8" y2="6"/>' +
+        '<line x1="3" y1="10" x2="21" y2="10"/>' +
+        '<path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/>' +
+      '</svg>';
+    document.body.appendChild(btn);
+
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      openBookingModal();
+    });
+
+    var tooltip = document.createElement('div');
+    tooltip.className = 'booking-tooltip';
+    tooltip.id = 'booking-tooltip';
+    tooltip.textContent = '\uD83D\uDCC5 Check Availability';
+    document.body.appendChild(tooltip);
+
+    var tooltipTimer;
+    btn.addEventListener('mouseenter', function () {
+      clearTimeout(tooltipTimer);
+      tooltip.classList.add('visible');
+    });
+    btn.addEventListener('mouseleave', function () {
+      tooltipTimer = setTimeout(function () {
+        tooltip.classList.remove('visible');
+      }, 2000);
+    });
+
+    if (!localStorage.getItem('bookingTooltipSeen')) {
+      setTimeout(function () {
+        tooltip.classList.add('visible');
+        setTimeout(function () {
+          tooltip.classList.remove('visible');
+        }, 4000);
+      }, 2000);
+      localStorage.setItem('bookingTooltipSeen', 'true');
+    }
+  }
+
+  /* === Overlap Prevention === */
+  function initOverlapPrevention() {
+    if (window.innerWidth > 768) return;
+    var ticking = false;
+
+    function getCriticalSections() {
+      var sectionIds = ['ai-trip-planner', 'tp-section'];
+      var result = [];
+      sectionIds.forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) result.push(el);
+      });
+      document.querySelectorAll('section, div').forEach(function (el) {
+        var text = el.textContent || '';
+        if (text.indexOf('Find Your Perfect Stay') !== -1 && el.children.length > 2) {
+          var section = el.closest('section') || el;
+          if (result.indexOf(section) === -1) result.push(section);
+        }
+      });
+      return result;
+    }
+
+    function onScroll() {
+      var btn = document.getElementById('concierge-btn');
+      var bookBtn = document.getElementById('booking-shortcut-btn');
+      if (!btn && !bookBtn) { ticking = false; return; }
+
+      var zone = window.innerWidth < 480 ? 150 : 130;
+      var sections = getCriticalSections();
+      var hide = false;
+
+      for (var i = 0; i < sections.length; i++) {
+        var rect = sections[i].getBoundingClientRect();
+        if (rect.bottom > window.innerHeight - zone && rect.top < window.innerHeight) {
+          hide = true;
+          break;
+        }
+      }
+
+      [btn, bookBtn].forEach(function (el) {
+        if (!el) return;
+        if (hide) { el.classList.add('hide-overlap'); }
+        else { el.classList.remove('hide-overlap'); }
+      });
+
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(onScroll);
+      }
+    }, { passive: true });
+
+    onScroll();
+
+    window.addEventListener('resize', function () {
+      onScroll();
+    });
+  }
+
   function init() {
     if (document.getElementById('concierge-btn')) return;
+
+    buildBookingShortcut();
+    initOverlapPrevention();
+
+    var heroBtn = document.querySelector('.hero-btn-primary');
+    if (heroBtn) {
+      heroBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openBookingModal();
+      }, true);
+    }
 
     loadKnowledgeBase(function () {
       buildButton();
       buildPanel();
     });
 
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && isOpen) close();
-    });
-    document.addEventListener('click', function (e) {
-      if (!isOpen) return;
-      var panel = document.getElementById('concierge-panel');
-      var btnEl = document.getElementById('concierge-btn');
-      if (!panel || !btnEl) return;
-      if (!panel.contains(e.target) && !btnEl.contains(e.target)) close();
-    });
+    if (!listenersRegistered) {
+      listenersRegistered = true;
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && isOpen) close();
+        if (e.key === 'Escape' && bookingModalOpen) closeBookingModal();
+      });
+      document.addEventListener('click', function (e) {
+        if (!isOpen) return;
+        var panel = document.getElementById('concierge-panel');
+        var btnEl = document.getElementById('concierge-btn');
+        if (!panel || !btnEl) return;
+        if (!panel.contains(e.target) && !btnEl.contains(e.target)) close();
+      });
+      window.addEventListener('popstate', function () {
+        if (bookingModalOpen) {
+          bookingModalOpen = false;
+          var modal = document.getElementById('booking-modal');
+          if (modal) {
+            modal.classList.remove('open');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+          }
+        }
+      });
+    }
   }
+
+  // Re-init after SPA page transitions (concierge elements are removed from DOM)
+  document.addEventListener('page:loaded', function () {
+    if (isOpen) close();
+    init();
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
