@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html class="scroll-smooth" lang="en">
 <head>
-  <style>#pt-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;background:var(--mode-bg);opacity:1;transition:opacity .5s cubic-bezier(.65,0,.35,1)}</style>
   <meta charset="utf-8" />
-  <script>try{var m=localStorage.getItem('fam-seasonal-mode');if(m==='winter'){document.documentElement.classList.add('mode-winter')}else if(m==='green'){document.documentElement.classList.add('mode-green')}}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Explore the amenities at Flamingo aur Maina — Wi-Fi, bonfire, home-cooked meals, cab service, and more for your Jibhi mountain stay." />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -69,22 +67,21 @@ tailwind.config = {
 </script>
 </head>
 <body class="antialiased overflow-x-hidden bg-background text-on-surface">
-<div id="pt-overlay" aria-hidden="true"></div>
   <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300" id="main-nav">
     <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto rounded-full">
       <div class="flex items-center gap-4">
-        <a href="/" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
+        <a href="../index.html" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
       </div>
       <div class="hidden lg:flex items-center gap-8">
-        <a href="/" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Home</a>
-        <a href="/pages/rooms" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Rooms</a>
-        <a href="/pages/life" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Life at FAM</a>
-        <a href="/pages/explore" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Explore</a>
-        <a href="/pages/gallery" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Gallery</a>
-        <a href="/pages/amenities" class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/30 pb-1">Amenities</a>
+        <a href="../index.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Home</a>
+        <a href="rooms.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Rooms</a>
+        <a href="life.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Life at FAM</a>
+        <a href="explore.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Explore</a>
+        <a href="gallery.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Gallery</a>
+        <a href="amenities.html" class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/30 pb-1">Amenities</a>
         <div class="flex items-center gap-3">
-          <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
-          <button type="button" onclick="window.location.href='/pages/booking'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
+          <button type="button" onclick="window.location.href='login.html'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
+          <button type="button" onclick="window.location.href='rooms.html'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
         </div>
       </div>
       <div class="flex items-center gap-4">
@@ -103,15 +100,15 @@ tailwind.config = {
       </button>
     </div>
     <nav class="mobile-menu-links" aria-label="Mobile navigation">
-      <a href="/" class="mobile-menu-link">Home</a>
-      <a href="/pages/rooms" class="mobile-menu-link">Rooms</a>
-      <a href="/pages/life" class="mobile-menu-link">Life at FAM</a>
-      <a href="/pages/explore" class="mobile-menu-link">Explore</a>
-      <a href="/pages/gallery" class="mobile-menu-link">Gallery</a>
-      <a href="/pages/amenities" class="mobile-menu-link">Amenities</a>
+      <a href="../index.html" class="mobile-menu-link">Home</a>
+      <a href="rooms.html" class="mobile-menu-link">Rooms</a>
+      <a href="life.html" class="mobile-menu-link">Life at FAM</a>
+      <a href="explore.html" class="mobile-menu-link">Explore</a>
+      <a href="gallery.html" class="mobile-menu-link">Gallery</a>
+      <a href="amenities.html" class="mobile-menu-link">Amenities</a>
       <div class="mobile-menu-cta-group">
-        <button type="button" onclick="window.location.href='/pages/login'" class="nav-mobile-signin">Sign In</button>
-        <button type="button" onclick="window.location.href='/pages/booking'" class="nav-mobile-book">Book Your Stay</button>
+        <button type="button" onclick="window.location.href='login.html'" class="nav-mobile-signin">Sign In</button>
+        <button type="button" onclick="window.location.href='rooms.html'" class="nav-mobile-book">Book Your Stay</button>
       </div>
     </nav>
     <div class="mobile-menu-footer">
@@ -122,79 +119,7 @@ tailwind.config = {
     </div>
   </div>
 
-<div id="page-content">
   <main class="pt-24">
-    <section class="py-section-gap px-4 md:px-margin-desktop max-w-max-width mx-auto text-center reveal">
-      <span class="font-label-sm text-accent-gold uppercase tracking-widest mb-4 block">Comforts</span>
-      <h1 class="font-display-hero text-5xl md:text-7xl text-primary mb-6">Everything You Need</h1>
-      <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">We've thought of every detail so you can focus on what matters most: unwinding and connecting.</p>
-    </section>
-
-    <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop pb-section-gap">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center">
-          <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">wifi</span>
-          <h3 class="font-headline-md text-xl text-primary mb-2">Complimentary Wi-Fi</h3>
-          <p class="font-body-md text-body-md text-on-surface-variant">Stay connected with reliable high-speed internet throughout the property.</p>
-        </div>
-        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:100ms">
-          <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">ac_unit</span>
-          <h3 class="font-headline-md text-xl text-primary mb-2">Room Heater</h3>
-          <p class="font-body-md text-body-md text-on-surface-variant">Stay warm and toasty during chilly mountain evenings.</p>
-        </div>
-        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:200ms">
-          <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">bedtime</span>
-          <h3 class="font-headline-md text-xl text-primary mb-2">Electric Heating Blankets</h3>
-          <p class="font-body-md text-body-md text-on-surface-variant">Ultra-cozy electric blankets in every room for deep, restful sleep.</p>
-        </div>
-        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:300ms">
-          <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">local_fire_department</span>
-          <h3 class="font-headline-md text-xl text-primary mb-2">Bonfire</h3>
-          <p class="font-body-md text-body-md text-on-surface-variant">Evening bonfires with seating under the stars.</p>
-        </div>
-        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:400ms">
-          <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">local_laundry_service</span>
-          <h3 class="font-headline-md text-xl text-primary mb-2">Laundry Service</h3>
-          <p class="font-body-md text-body-md text-on-surface-variant">Convenient laundry service available for longer stays.</p>
-        </div>
-        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:500ms">
-          <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">iron</span>
-          <h3 class="font-headline-md text-xl text-primary mb-2">Ironing Facility</h3>
-          <p class="font-body-md text-body-md text-on-surface-variant">Iron and ironing board available on request.</p>
-        </div>
-        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:600ms">
-          <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">directions_car</span>
-          <h3 class="font-headline-md text-xl text-primary mb-2">Cab Service</h3>
-          <p class="font-body-md text-body-md text-on-surface-variant">Reliable local cab arrangements for sightseeing and transfers.</p>
-        </div>
-        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:700ms">
-          <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">luggage</span>
-          <h3 class="font-headline-md text-xl text-primary mb-2">Luggage Assistance</h3>
-          <p class="font-body-md text-body-md text-on-surface-variant">Friendly staff to help with your bags on arrival and departure.</p>
-        </div>
-        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:800ms">
-          <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">hiking</span>
-          <h3 class="font-headline-md text-xl text-primary mb-2">Trek Guide</h3>
-          <p class="font-body-md text-body-md text-on-surface-variant">Local trek guide to help you explore the best trails around Jibhi.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop pb-section-gap reveal">
-      <div class="relative w-full h-[400px] rounded-[3rem] overflow-hidden flex flex-col justify-center items-center text-center px-8" role="img" aria-label="Mountain landscape">
-        <div class="absolute inset-0 z-0 parallax-bg" data-parallax="true" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDadx8bWjHH5cRqMoFbR_LdcYa4CxHl3FFV9NsqEp9XtvIQh_uqQa45hQ2Cod6q38T6ya0IMd0KBa91W2Hwen3fFK3tUV3-OdkAmlBw1eQCE84R43TaCIjwe6gyYNOyIjbDrySAhi8GMO8zPNh4YMELlQ7MqEQGS5c8l8DSVDbyYEFV4iA2k3EkiX6S_OvkZvSob2MEOEEgoGHkZ1kfs6VzIWXsHw1O0uRbQ1bdTYGBXZAtS3a3Po4KFyKlHsb0rnAJaX2wXzNnL7o')"></div>
-        <div class="absolute inset-0 bg-surface/80 z-10"></div>
-        <div class="relative z-20 max-w-2xl">
-          <h2 class="font-headline-lg text-4xl md:text-5xl text-primary mb-6">Ready to Experience FAM?</h2>
-          <p class="font-body-lg text-body-lg text-on-surface-variant mb-10">Book your stay and discover why our guests keep coming back.</p>
-          <a href="/pages/booking" class="btn-primary inline-flex items-center gap-2" aria-label="Book your stay at FAM">
-            <span>Book Your Stay</span>
-            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-          </a>
-        </div>
-      </div>
-    </section>
   </main>
 
   <footer class="bg-charcoal text-on-primary">
@@ -207,16 +132,16 @@ tailwind.config = {
         <div class="flex gap-16 text-center md:text-left">
           <div class="flex flex-col gap-4">
             <h4 class="font-label-sm uppercase tracking-widest text-on-primary/40 text-xs mb-2">Explore</h4>
-            <a href="/" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Home</a>
-            <a href="/pages/rooms" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Rooms</a>
-            <a href="/pages/life" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Life at FAM</a>
-            <a href="/pages/explore" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Explore</a>
-            <a href="/pages/gallery" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Gallery</a>
+            <a href="../index.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Home</a>
+            <a href="rooms.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Rooms</a>
+            <a href="life.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Life at FAM</a>
+            <a href="explore.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Explore</a>
+            <a href="gallery.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Gallery</a>
           </div>
           <div class="flex flex-col gap-4">
             <h4 class="font-label-sm uppercase tracking-widest text-on-primary/40 text-xs mb-2">Connect</h4>
-            <a href="/pages/amenities" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Amenities</a>
-            <a href="/#contact" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Contact Us</a>
+            <a href="amenities.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Amenities</a>
+            <a href="../index.html#contact" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Contact Us</a>
             <a href="https://www.instagram.com/flamingoaurmaina?igsh=ejFucDV1MWkzam5x" target="_blank" rel="noopener noreferrer" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm" aria-label="Visit Flamingo aur Maina on Instagram">Instagram</a>
           </div>
         </div>
@@ -266,29 +191,7 @@ tailwind.config = {
   <script src="../js/animations.js"></script>
   <script src="../js/seasonal.js"></script>
   <script src="../js/concierge.js"></script>
-  <script src="../js/page-transitions.js"></script>
   <script src="../js/mobile-nav.js"></script>
-  <script>
-    function initAmenitiesPage() {
-      if (typeof FAM !== 'undefined' && FAM.Animations) {
-        FAM.Animations.init({ gsap: false, lenis: false, cardParallax: false, parallax: false });
-      }
-    }
-    document.addEventListener('DOMContentLoaded', initAmenitiesPage);
-    window.__pageInit = initAmenitiesPage;
-  </script>
-  <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js').catch(function(e) {
-        console.warn('[SW] Registration failed:', e);
-      });
-    });
-  }
-  </script>
-  <script type="module" src="//instant.page/5.2.0"></script>
-</div>
 
 <script>try { var m = localStorage.getItem('fam-seasonal-mode'); if (m) { document.documentElement.setAttribute('data-seasonal', m); } } catch(e) {}</script>
 </body>
