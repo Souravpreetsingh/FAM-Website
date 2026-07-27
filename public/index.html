@@ -182,7 +182,7 @@ if ('serviceWorker' in navigator) {
         <a href="/pages/amenities" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Amenities</a>
         <div class="flex items-center gap-3">
           <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
-          <button type="button" onclick="window.location.href='/pages/rooms'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
+          <button type="button" onclick="window.location.href='/pages/booking'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
         </div>
       </div>
       <div class="flex items-center gap-4">
@@ -209,7 +209,7 @@ if ('serviceWorker' in navigator) {
       <a href="/pages/amenities" class="mobile-menu-link">Amenities</a>
       <div class="mobile-menu-cta-group">
         <button type="button" onclick="window.location.href='/pages/login'" class="nav-mobile-signin">Sign In</button>
-        <button type="button" onclick="window.location.href='/pages/rooms'" class="nav-mobile-book">Book Your Stay</button>
+        <button type="button" onclick="window.location.href='/pages/booking'" class="nav-mobile-book">Book Your Stay</button>
       </div>
     </nav>
     <div class="mobile-menu-footer">
@@ -374,7 +374,7 @@ if ('serviceWorker' in navigator) {
           </div>
           <h3 class="font-headline-md text-xl text-primary mb-1">Flamingo 1</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;6,000 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="/pages/rooms" class="btn-primary text-sm py-2 px-5">Book Now</a>
+          <a href="/pages/booking" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
 
@@ -390,7 +390,7 @@ if ('serviceWorker' in navigator) {
           </div>
           <h3 class="font-headline-md text-xl text-primary mb-1">Flamingo 2</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;5,000 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="/pages/rooms" class="btn-primary text-sm py-2 px-5">Book Now</a>
+          <a href="/pages/booking" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
 
@@ -406,7 +406,7 @@ if ('serviceWorker' in navigator) {
           </div>
           <h3 class="font-headline-md text-xl text-primary mb-1">Flamingo 3</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;6,000 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="/pages/rooms" class="btn-primary text-sm py-2 px-5">Book Now</a>
+          <a href="/pages/booking" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
 
@@ -422,7 +422,7 @@ if ('serviceWorker' in navigator) {
           </div>
           <h3 class="font-headline-md text-xl text-primary mb-1">Maina 1</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;2,500 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="/pages/rooms" class="btn-primary text-sm py-2 px-5">Book Now</a>
+          <a href="/pages/booking" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
 
@@ -438,7 +438,7 @@ if ('serviceWorker' in navigator) {
           </div>
           <h3 class="font-headline-md text-xl text-primary mb-1">Maina 2</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;2,000 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="/pages/rooms" class="btn-primary text-sm py-2 px-5">Book Now</a>
+          <a href="/pages/booking" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
 
@@ -454,7 +454,7 @@ if ('serviceWorker' in navigator) {
           </div>
           <h3 class="font-headline-md text-xl text-primary mb-1">Maina 3</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;2,500 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="/pages/rooms" class="btn-primary text-sm py-2 px-5">Book Now</a>
+          <a href="/pages/booking" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
     </div>
@@ -864,7 +864,7 @@ if ('serviceWorker' in navigator) {
       html += '<div class="tp-room-info"><h5>' + room.name + '</h5>';
       html += '<div class="tp-room-tags"><span>' + room.guests + '</span><span>' + room.price + '</span></div>';
       html += '<p>' + room.desc + '</p>';
-      html += '<a href="/pages/rooms" class="tp-room-book">Book Now </a>';
+      html += '<a href="/pages/booking" class="tp-room-book">Book Now </a>';
       html += '</div></div>';
 
       // Summary
@@ -880,7 +880,7 @@ if ('serviceWorker' in navigator) {
       html += '<div class="tp-export">';
       html += '<button class="tp-export-btn" onclick="alert(\'PDF download coming soon. Your itinerary will be available as a beautifully formatted PDF.\')"><span>&#128196;</span> Download Itinerary</button>';
       html += '<button class="tp-export-btn" onclick="if(navigator.share){navigator.share({title:\'My Jibhi Trip at Flamingo aur Maina\',text:\'Check out my personalized itinerary from FAM!\',url:window.location.href})}else{prompt(\'Copy this link to share:\',window.location.href)}"><span>&#128228;</span> Share Trip</button>';
-      html += '<a href="/pages/rooms" class="tp-export-btn solid"><span>&#128205;</span> Book Recommended Room</a>';
+      html += '<a href="/pages/booking" class="tp-export-btn solid"><span>&#128205;</span> Book Recommended Room</a>';
       html += '</div>';
 
       html += '</div>';
@@ -924,7 +924,7 @@ if ('serviceWorker' in navigator) {
       <div class="relative z-20 max-w-2xl">
         <h2 class="font-headline-lg text-4xl md:text-5xl text-primary mb-6">Find Your Perfect Stay.</h2>
         <p class="font-body-lg text-body-lg text-on-surface-variant mb-10">Every room has its own story. Choose the one that feels like yours.</p>
-        <a href="/pages/rooms" class="btn-primary inline-flex items-center gap-2 text-base py-4 px-10">
+        <a href="/pages/booking" class="btn-primary inline-flex items-center gap-2 text-base py-4 px-10">
           <span>View All Availability</span>
           <span class="material-symbols-outlined text-sm">arrow_forward</span>
         </a>
