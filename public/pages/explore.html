@@ -4,6 +4,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Explore Around FAM - Flamingo aur Maina</title>
+  <meta name="description" content="Discover the magic around every corner in Jibhi - waterfalls, mountain passes, lakes, and forest trails." />
   <meta property="og:title" content="Explore Around FAM - Flamingo aur Maina" />
   <meta property="og:description" content="Discover the magic around every corner in Jibhi - waterfalls, mountain passes, lakes, and forest trails." />
   <meta property="og:url" content="https://flamingoaurmaina.netlify.app/pages/explore.html" />
@@ -65,6 +66,7 @@ tailwind.config = {
 </style>
 </head>
 <body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
   <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300" id="main-nav">
     <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto">
       <div class="flex items-center gap-4">
@@ -74,7 +76,7 @@ tailwind.config = {
         <a href="../index.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Home</a>
         <a href="rooms.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Rooms</a>
         <a href="life.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Life at FAM</a>
-        <a href="explore.html" class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/30 pb-1">Explore</a>
+        <a href="explore.html" class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/30 pb-1" aria-current="page">Explore</a>
         <a href="gallery.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Gallery</a>
         <a href="amenities.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Amenities</a>
         <div class="flex items-center gap-3">
@@ -117,7 +119,7 @@ tailwind.config = {
     </div>
   </div>
 
-<main class="pt-32 md:pt-48">
+<main id="main-content" class="pt-32 md:pt-48">
 
   <!-- ====== HERO ====== -->
   <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop mb-section-gap text-center relative z-10">
@@ -154,7 +156,7 @@ tailwind.config = {
           </div>
           <h3>Jibhi Waterfall</h3>
           <p class="desc">Cascading waters surrounded by lush forest. The closest nature escape from FAM &#x2014; a short, scenic walk through village paths.</p>
-          <a href="#" class="explore-btn" aria-label="Explore Jibhi Waterfall">Explore <span class="arr">&#x2192;</span></a>
+          <a href="gallery.html" class="explore-btn" aria-label="Explore Jibhi Waterfall">Explore <span class="arr">&#x2192;</span></a>
         </div>
       </div>
 
@@ -171,7 +173,7 @@ tailwind.config = {
           </div>
           <h3>Jalori Pass</h3>
           <p class="desc">Stunning high-altitude views at 3,120 metres. One of Himachal's most scenic mountain passes, with sweeping panoramas of the Himalayas.</p>
-          <a href="#" class="explore-btn" aria-label="Explore Jalori Pass">Explore <span class="arr">&#x2192;</span></a>
+          <a href="gallery.html" class="explore-btn" aria-label="Explore Jalori Pass">Explore <span class="arr">&#x2192;</span></a>
         </div>
       </div>
 
@@ -188,7 +190,7 @@ tailwind.config = {
           </div>
           <h3>Serolsar Lake</h3>
           <p class="desc">A beautiful 2 km trek from Jalori Pass through enchanting forests of oak and rhododendron, leading to a crystal-clear alpine mirror lake.</p>
-          <a href="#" class="explore-btn" aria-label="Explore Serolsar Lake">Explore <span class="arr">&#x2192;</span></a>
+          <a href="gallery.html" class="explore-btn" aria-label="Explore Serolsar Lake">Explore <span class="arr">&#x2192;</span></a>
         </div>
       </div>
 
@@ -205,7 +207,7 @@ tailwind.config = {
           </div>
           <h3>Chehni Kothi</h3>
           <p class="desc">An ancient tower with historic architecture, standing tall in a heritage village. A step back in time through local village paths and traditional culture.</p>
-          <a href="#" class="explore-btn" aria-label="Explore Chehni Kothi">Explore <span class="arr">&#x2192;</span></a>
+          <a href="gallery.html" class="explore-btn" aria-label="Explore Chehni Kothi">Explore <span class="arr">&#x2192;</span></a>
         </div>
       </div>
 
@@ -222,7 +224,7 @@ tailwind.config = {
           </div>
           <h3>Mini Thailand</h3>
           <p class="desc">A hidden riverside paradise in the heart of Jibhi. Crystal-blue waters surrounded by boulders and pine trees &#x2014; perfect for a peaceful afternoon dip.</p>
-          <a href="#" class="explore-btn" aria-label="Explore Mini Thailand">Explore <span class="arr">&#x2192;</span></a>
+          <a href="gallery.html" class="explore-btn" aria-label="Explore Mini Thailand">Explore <span class="arr">&#x2192;</span></a>
         </div>
       </div>
 
@@ -239,7 +241,7 @@ tailwind.config = {
           </div>
           <h3>Tirthan Valley</h3>
           <p class="desc">Trout fishing, riverside walks, and pristine natural beauty along the Tirthan River. A serene escape into one of Himachal's most picturesque valleys.</p>
-          <a href="#" class="explore-btn" aria-label="Explore Tirthan Valley">Explore <span class="arr">&#x2192;</span></a>
+          <a href="gallery.html" class="explore-btn" aria-label="Explore Tirthan Valley">Explore <span class="arr">&#x2192;</span></a>
         </div>
       </div>
 
@@ -256,7 +258,7 @@ tailwind.config = {
           </div>
           <h3>Great Himalayan National Park</h3>
           <p class="desc">A UNESCO World Heritage Site home to exotic wildlife, alpine meadows, and breathtaking Himalayan vistas. A must-visit for nature lovers and trekkers.</p>
-          <a href="#" class="explore-btn" aria-label="Explore Great Himalayan National Park">Explore <span class="arr">&#x2192;</span></a>
+          <a href="gallery.html" class="explore-btn" aria-label="Explore Great Himalayan National Park">Explore <span class="arr">&#x2192;</span></a>
         </div>
       </div>
 
@@ -273,7 +275,7 @@ tailwind.config = {
           </div>
           <h3>Forest Trails</h3>
           <p class="desc">Walk through ancient deodar forests starting right from the property. Peaceful nature trails winding through towering pines and the sounds of the forest.</p>
-          <a href="#" class="explore-btn" aria-label="Explore Forest Trails">Explore <span class="arr">&#x2192;</span></a>
+          <a href="gallery.html" class="explore-btn" aria-label="Explore Forest Trails">Explore <span class="arr">&#x2192;</span></a>
         </div>
       </div>
     </div>
@@ -528,8 +530,8 @@ tailwind.config = {
       <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-on-primary/40 font-body-md">
         <p>&copy; 2024 Flamingo aur Maina. All rights reserved.</p>
         <div class="flex gap-6">
-          <a href="#" class="hover:text-on-primary transition-colors">Privacy Policy</a>
-          <a href="#" class="hover:text-on-primary transition-colors">Terms of Service</a>
+          <a href="#" class="hover:text-on-primary transition-colors" title="Page coming soon">Privacy Policy</a>
+          <a href="#" class="hover:text-on-primary transition-colors" title="Page coming soon">Terms of Service</a>
         </div>
       </div>
     </div>

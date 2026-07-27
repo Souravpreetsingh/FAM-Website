@@ -6917,3 +6917,23 @@ html.mode-winter .nav-mobile-book {
     align-items: center;
   }
 }
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 10000;
+  padding: 8px 16px;
+  background: #0a341d;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 8px 0;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid #C9A86A;
+  outline-offset: 2px;
+}

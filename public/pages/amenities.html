@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Amenities - Flamingo aur Maina</title>
+  <meta name="description" content="Everything you need for a comfortable mountain stay at Flamingo aur Maina in Jibhi, Himachal Pradesh." />
   <meta property="og:title" content="Amenities - Flamingo aur Maina" />
   <meta property="og:description" content="Everything you need for a comfortable mountain stay at Flamingo aur Maina in Jibhi." />
   <meta property="og:url" content="https://flamingoaurmaina.netlify.app/pages/amenities.html" />
@@ -59,6 +60,7 @@ tailwind.config = {
 </script>
 </head>
 <body class="antialiased overflow-x-hidden bg-background text-on-surface">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
   <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300" id="main-nav">
     <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto rounded-full">
       <div class="flex items-center gap-4">
@@ -70,7 +72,7 @@ tailwind.config = {
         <a href="life.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Life at FAM</a>
         <a href="explore.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Explore</a>
         <a href="gallery.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Gallery</a>
-        <a href="amenities.html" class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/30 pb-1">Amenities</a>
+        <a href="amenities.html" class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/30 pb-1" aria-current="page">Amenities</a>
         <div class="flex items-center gap-3">
           <button type="button" onclick="window.location.href='login.html'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
           <button type="button" onclick="window.location.href='booking.html'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
@@ -111,7 +113,7 @@ tailwind.config = {
     </div>
   </div>
 
-  <main class="pt-24">
+  <main id="main-content" class="pt-24">
     <section class="py-section-gap px-4 md:px-margin-desktop max-w-max-width mx-auto text-center reveal">
       <span class="font-label-sm text-accent-gold uppercase tracking-widest mb-4 block">Comforts</span>
       <h1 class="font-display-hero text-5xl md:text-7xl text-primary mb-6">Everything You Need</h1>
@@ -212,8 +214,8 @@ tailwind.config = {
       <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-on-primary/40 font-body-md">
         <p>&copy; 2024 Flamingo aur Maina. All rights reserved.</p>
         <div class="flex gap-6">
-          <a href="#" class="hover:text-on-primary transition-colors">Privacy Policy</a>
-          <a href="#" class="hover:text-on-primary transition-colors">Terms of Service</a>
+          <a href="#" class="hover:text-on-primary transition-colors" title="Page coming soon">Privacy Policy</a>
+          <a href="#" class="hover:text-on-primary transition-colors" title="Page coming soon">Terms of Service</a>
         </div>
       </div>
     </div>

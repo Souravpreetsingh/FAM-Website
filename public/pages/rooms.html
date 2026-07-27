@@ -111,6 +111,7 @@ tailwind.config = {
   </style>
 </head>
 <body class="antialiased overflow-x-hidden bg-background text-on-surface">
+<a href="#main-content" class="skip-link">Skip to main content</a>
 <div id="pt-overlay" aria-hidden="true"></div>
 
   <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300" id="main-nav">
@@ -120,7 +121,7 @@ tailwind.config = {
       </div>
       <div class="hidden lg:flex items-center gap-8">
         <a href="../index.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Home</a>
-        <a href="rooms.html" class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/30 pb-1">Rooms</a>
+        <a href="rooms.html" class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/30 pb-1" aria-current="page">Rooms</a>
         <a href="life.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Life at FAM</a>
         <a href="explore.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Explore</a>
         <a href="gallery.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Gallery</a>
@@ -166,7 +167,7 @@ tailwind.config = {
   </div>
 
 <div id="page-content">
-  <main class="pt-24">
+  <main id="main-content" class="pt-24">
 
     <!-- Intro -->
     <section class="py-section-gap px-4 md:px-margin-desktop max-w-max-width mx-auto flex flex-col items-center text-center reveal">
@@ -458,8 +459,8 @@ tailwind.config = {
       <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-on-primary/40 font-body-md">
         <p>&copy; 2024 Flamingo aur Maina. All rights reserved.</p>
         <div class="flex gap-6">
-          <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Privacy Policy</a>
-          <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Terms of Service</a>
+          <a href="#" class="hover:text-on-primary transition-colors" title="Page coming soon">Privacy Policy</a>
+          <a href="#" class="hover:text-on-primary transition-colors" title="Page coming soon">Terms of Service</a>
         </div>
       </div>
     </div>
