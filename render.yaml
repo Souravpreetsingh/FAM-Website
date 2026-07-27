@@ -2,7 +2,7 @@ services:
   - type: web
     name: fam-backend
     runtime: node
-    repo: https://github.com/Souravpreetsingh/fam-website.git
+    repo: https://github.com/Souravpreetsingh/famorg-website.git
     branch: master
     rootDir: backend
     buildCommand: npm install

@@ -198,6 +198,10 @@
       window.__pageInit = null;
       var scripts = doc.querySelectorAll('script:not([src])');
       scripts.forEach(function (oldScript) {
+        var type = (oldScript.getAttribute('type') || '').toLowerCase();
+        if (type && type !== 'text/javascript' && type !== 'module' && type !== 'application/javascript') {
+          return;
+        }
         var newScript = document.createElement('script');
         newScript.textContent = oldScript.textContent || '';
         if (document.body) {
@@ -209,6 +213,9 @@
       // re-init shared components
       if (typeof initMobileNav === 'function') {
         try { initMobileNav(); } catch (e) { console.warn('page-transitions:', e.message); }
+      }
+      if (typeof FAM !== 'undefined' && FAM.Animations && typeof FAM.Animations.init === 'function') {
+        try { FAM.Animations.init({ parallax: false, cardParallax: false, gsap: false, lenis: false }); } catch (e) { console.warn('page-transitions:', e.message); }
       }
 
       // re-apply seasonal mode state (ensures correct toggle icon after nav)

@@ -171,5 +171,13 @@
     init();
   }
 
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) {
+      initScrollBehavior();
+      initDesktopNavScroll();
+      initMobileNav();
+    }
+  });
+
   window.initMobileNav = initMobileNav;
 })();
