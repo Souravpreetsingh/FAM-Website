@@ -573,7 +573,7 @@
         if (guests) params.push('guests=' + encodeURIComponent(guests.textContent));
         var qs = params.length ? '?' + params.join('&') : '';
         closeBookingModal();
-        var url = '../pages/booking.html' + qs;
+        var url = '/pages/booking' + qs;
         if (typeof window.navigateTo === 'function') {
           setTimeout(function () { window.navigateTo(url); }, 350);
         } else {
@@ -585,9 +585,9 @@
 
   function openBookingModal() {
     if (typeof window.navigateTo === 'function') {
-      window.navigateTo('../pages/booking.html');
+      window.navigateTo('/pages/booking');
     } else {
-      window.location.href = '../pages/booking.html';
+      window.location.href = '/pages/booking';
     }
   }
 
@@ -626,9 +626,9 @@
     btn.addEventListener('click', function (e) {
       e.preventDefault();
       if (typeof window.navigateTo === 'function') {
-        window.navigateTo('../pages/booking.html');
+        window.navigateTo('/pages/booking');
       } else {
-        window.location.href = '../pages/booking.html';
+        window.location.href = '/pages/booking';
       }
     });
 
