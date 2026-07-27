@@ -1,23 +1,19 @@
 <!DOCTYPE html>
 <html class="scroll-smooth" lang="en">
 <head>
-  <style>#pt-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;background:var(--mode-bg);opacity:1;transition:opacity .5s cubic-bezier(.65,0,.35,1)}</style>
 <meta charset="utf-8"/>
-<script>try{var m=localStorage.getItem('fam-seasonal-mode');if(m==='winter'){document.documentElement.classList.add('mode-winter')}else if(m==='green'){document.documentElement.classList.add('mode-green')}}catch(e){}</script>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta name="description" content="Photo gallery of Flamingo aur Maina — rooms, views, nature, and experiences at our boutique stay in Jibhi, Himachal." />
-<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-<title>Gallery - Flamingo aur Maina</title>
-  <meta property="og:title" content="Gallery - Flamingo aur Maina" />
-  <meta property="og:description" content="Immerse yourself in the visual poetry of Flamingo aur Maina. A curated collection of moments in the Himalayan mountains." />
-  <meta property="og:url" content="https://flamingoaurmaina.netlify.app/pages/gallery" />
+<title>Moments - Flamingo aur Maina</title>
+  <meta property="og:title" content="Moments - Flamingo aur Maina" />
+  <meta property="og:description" content="Moments from the heart of Flamingo aur Maina — life, laughter, and the Himalayan mountains." />
+  <meta property="og:url" content="https://flamingoaurmaina.netlify.app/pages/gallery.html" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://flamingoaurmaina.netlify.app/images/hero-bg.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Gallery - Flamingo aur Maina" />
-  <meta name="twitter:description" content="A curated collection of moments at Flamingo aur Maina." />
+  <meta name="twitter:title" content="Moments - Flamingo aur Maina" />
+  <meta name="twitter:description" content="Moments from the heart of Flamingo aur Maina." />
   <meta name="twitter:image" content="https://flamingoaurmaina.netlify.app/images/hero-bg.jpg" />
-  <link rel="canonical" href="https://flamingoaurmaina.netlify.app/pages/gallery" />
+  <link rel="canonical" href="https://flamingoaurmaina.netlify.app/pages/gallery.html" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -31,20 +27,16 @@
       "@type": "ListItem",
       "position": 2,
       "name": "Gallery",
-      "item": "https://flamingoaurmaina.netlify.app/pages/gallery"
+      "item": "https://flamingoaurmaina.netlify.app/pages/gallery.html"
     }]
   }
   </script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null"/>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null"/>
-<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/></noscript>
-<link rel="stylesheet" href="../css/style.css?v=18" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/style.css?v=9" />
 <script id="tailwind-config">
 tailwind.config = {
   darkMode: "class", theme: { extend: {
@@ -56,25 +48,31 @@ tailwind.config = {
   }}
 }
 </script>
-
-  <link rel="stylesheet" href="../css/gallery.css" />
-  <link rel="stylesheet" href="../css/transitions.css?v=3" /></head>
-<body class="bg-background text-on-surface antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container"><div id="pt-overlay" aria-hidden="true"></div>
+<style>
+  .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
+  .reveal.active { opacity: 1; transform: translateY(0); }
+  .reel-wrapper { position: relative; overflow: hidden; border-radius: 1rem; background: #e8ece4; aspect-ratio: 9/16; max-width: 340px; width: 100%; margin: 0 auto; box-shadow: 0 4px 20px rgba(10,52,29,0.1); }
+  .reel-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+  .reel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+  @media (min-width: 768px) { .reel-grid { grid-template-columns: repeat(4, 1fr); } }
+</style>
+</head>
+<body class="bg-background text-on-surface antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
   <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300" id="main-nav">
     <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto rounded-full">
       <div class="flex items-center gap-4">
-        <a href="/" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
+        <a href="../index.html" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
       </div>
       <div class="hidden lg:flex items-center gap-8">
-        <a href="/" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Home</a>
-        <a href="/pages/rooms" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Rooms</a>
-        <a href="/pages/life" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Life at FAM</a>
-        <a href="/pages/explore" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Explore</a>
-        <a href="/pages/gallery" class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/30 pb-1">Gallery</a>
-        <a href="/pages/amenities" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Amenities</a>
+        <a href="../index.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Home</a>
+        <a href="rooms.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Rooms</a>
+        <a href="life.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Life at FAM</a>
+        <a href="explore.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Explore</a>
+        <a href="gallery.html" class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/30 pb-1">Gallery</a>
+        <a href="amenities.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Amenities</a>
         <div class="flex items-center gap-3">
-          <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
-          <button type="button" onclick="window.location.href='/pages/booking'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
+          <button type="button" onclick="window.location.href='login.html'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
+          <button type="button" onclick="window.location.href='rooms.html'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
         </div>
       </div>
       <div class="flex items-center gap-4">
@@ -82,8 +80,6 @@ tailwind.config = {
       </div>
     </div>
   </nav>
-
-  <!-- ====== MOBILE MENU ====== -->
   <div class="mobile-menu-overlay" id="mobile-overlay" aria-hidden="true"></div>
   <div class="mobile-menu-panel" id="mobile-panel" role="dialog" aria-modal="true" aria-label="Navigation menu">
     <div class="mobile-menu-header">
@@ -93,15 +89,15 @@ tailwind.config = {
       </button>
     </div>
     <nav class="mobile-menu-links" aria-label="Mobile navigation">
-      <a href="/" class="mobile-menu-link">Home</a>
-      <a href="/pages/rooms" class="mobile-menu-link">Rooms</a>
-      <a href="/pages/life" class="mobile-menu-link">Life at FAM</a>
-      <a href="/pages/explore" class="mobile-menu-link">Explore</a>
-      <a href="/pages/gallery" class="mobile-menu-link">Gallery</a>
-      <a href="/pages/amenities" class="mobile-menu-link">Amenities</a>
+      <a href="../index.html" class="mobile-menu-link">Home</a>
+      <a href="rooms.html" class="mobile-menu-link">Rooms</a>
+      <a href="life.html" class="mobile-menu-link">Life at FAM</a>
+      <a href="explore.html" class="mobile-menu-link">Explore</a>
+      <a href="gallery.html" class="mobile-menu-link">Gallery</a>
+      <a href="amenities.html" class="mobile-menu-link">Amenities</a>
       <div class="mobile-menu-cta-group">
-        <button type="button" onclick="window.location.href='/pages/login'" class="nav-mobile-signin">Sign In</button>
-        <button type="button" onclick="window.location.href='/pages/booking'" class="nav-mobile-book">Book Your Stay</button>
+        <button type="button" onclick="window.location.href='login.html'" class="nav-mobile-signin">Sign In</button>
+        <button type="button" onclick="window.location.href='rooms.html'" class="nav-mobile-book">Book Your Stay</button>
       </div>
     </nav>
     <div class="mobile-menu-footer">
@@ -111,162 +107,56 @@ tailwind.config = {
       </a>
     </div>
   </div>
-  <div id="page-content">
+<main class="pt-32 pb-section-gap">
 
-  <!-- ===== GALLERY SECTION ===== -->
-  <section class="gallery-section">
+<section class="max-w-max-width mx-auto px-4 md:px-margin-desktop text-center mb-16 reveal">
+  <h1 class="font-display-hero-mobile md:font-display-hero text-display-hero-mobile md:text-display-hero text-primary mb-6">Moments from FAM</h1>
+</section>
 
-    <header class="gallery-header">
-      <span class="gallery-header-label">Gallery</span>
-      <h1 class="gallery-header-title">Experience Flamingo aur Maina</h1>
-      <p class="gallery-header-desc">
-        Every photograph tells a story&mdash;from peaceful mountain mornings and handcrafted coffee to warm bonfire evenings and unforgettable moments in the heart of Jibhi.
-      </p>
-    </header>
-
-    <div class="gallery-grid">
-
-      <!-- 1 - Mountain Sunrise (featured) -->
-      <div class="gallery-item">
-        <div class="gallery-card" style="aspect-ratio: 2/3;">
-          <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1000&q=90" alt="Mountain Sunrise" loading="lazy" />
-          <div class="gallery-overlay">
-            <span class="gallery-overlay-title">Mountain Sunrise</span>
-            <span class="gallery-overlay-desc">Golden Himalayan mornings.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 2 - Luxury Cabin -->
-      <div class="gallery-item">
-        <div class="gallery-card" style="aspect-ratio: 1/1;">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiQQONzA8cxam44mhr-1ZivCdFCx8PU3hSQHSau4f24KnX5qrBsnrMNHMX5XmVgUd_uT2Hwy2W2bS4g2FHoPP0dn0-Bbdpcr1AOr0ps0rLKCSUGGfxMaihy-5FpNBv7iivXEdlVstvuVdEKryGYf3MhSDa_YShGMYyKa59nr28zb8EubJ-NsRApoEnq90zhgI48v8mG4Mp87tFyfNCcqFg1ISXOkOJONAPEvrRv-oHWr_qjWmb2k5sDLZNbXuAubSNWKPYgjfn7eQ" alt="Luxury Cabin" loading="lazy" />
-          <div class="gallery-overlay">
-            <span class="gallery-overlay-title">Luxury Cabin</span>
-            <span class="gallery-overlay-desc">Your peaceful retreat.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3 - Bonfire Night -->
-      <div class="gallery-item">
-        <div class="gallery-card" style="aspect-ratio: 4/3;">
-          <img src="https://images.unsplash.com/photo-1511497584788-876760111969?w=800&q=85" alt="Bonfire Night" loading="lazy" />
-          <div class="gallery-overlay">
-            <span class="gallery-overlay-title">Bonfire Night</span>
-            <span class="gallery-overlay-desc">Stories around the fire.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 4 - Apple Orchard -->
-      <div class="gallery-item">
-        <div class="gallery-card" style="aspect-ratio: 3/4;">
-          <img src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=800&q=85" alt="Apple Orchard" loading="lazy" />
-          <div class="gallery-overlay">
-            <span class="gallery-overlay-title">Apple Orchard</span>
-            <span class="gallery-overlay-desc">Walk through nature.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5 - Mountain Cafe -->
-      <div class="gallery-item">
-        <div class="gallery-card" style="aspect-ratio: 3/4;">
-          <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=800&q=85" alt="Mountain Cafe" loading="lazy" />
-          <div class="gallery-overlay">
-            <span class="gallery-overlay-title">Mountain Cafe</span>
-            <span class="gallery-overlay-desc">Fresh coffee with mountain views.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 6 - Wooden Interiors -->
-      <div class="gallery-item">
-        <div class="gallery-card" style="aspect-ratio: 4/3;">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4nlrjlGhGlQ1VJgZIpTbY7YapqlA_1BMfRG6-4JTpuKR5FIr-kCoGL2oLmf0vKEa4o4eCj4Cax_Lhik-W4Ye44HUpjMiiaBTCiS4heB0TPb8hgsU22edlGNxbK_RfEKDi2WEB3RurNCgyGvmQBNRG_vhq3OHgc8qMsHP7unAqt2hCjeV_YhoLtev37NNelTZhQ53GsVmZZ6GcvkW7TCoFrfGKEjGOS9l8v2N3WY6nXIvyOgDh09t3w0iWhvsIqOAURwZoWjIGhDI" alt="Wooden Interiors" loading="lazy" />
-          <div class="gallery-overlay">
-            <span class="gallery-overlay-title">Wooden Interiors</span>
-            <span class="gallery-overlay-desc">Crafted with warmth.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 7 - Riverside Peace -->
-      <div class="gallery-item">
-        <div class="gallery-card" style="aspect-ratio: 16/10;">
-          <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=85" alt="Riverside Peace" loading="lazy" />
-          <div class="gallery-overlay">
-            <span class="gallery-overlay-title">Riverside Peace</span>
-            <span class="gallery-overlay-desc">Find your calm by the Tirthan.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 8 - Starry Skies -->
-      <div class="gallery-item">
-        <div class="gallery-card" style="aspect-ratio: 16/10;">
-          <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=85" alt="Starry Skies" loading="lazy" />
-          <div class="gallery-overlay">
-            <span class="gallery-overlay-title">Starry Skies</span>
-            <span class="gallery-overlay-desc">A universe above the pines.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 9 - Morning Tea -->
-      <div class="gallery-item">
-        <div class="gallery-card" style="aspect-ratio: 1/1;">
-          <img src="https://lh3.googleusercontent.com/aida/AP1WRLu5JtDTYLXiwOcAC8VbHFMDUzcCHeA7W19jmV6RNbp4nY62htXEKml3x5md3Ou4DYivZgmo4f_gJS1k-7yNxykGWxb9gJ2O3Se_6IIFHMidIKeSIYEXvhKVK6kjOR3eHCGXxS9HEG0OI6MIldEjvrV1BfJFe_sMT_kIVu68xnoI9XJ4SwsdnC8J3opjO75Jk3_HYIlwKsZSb92SJSeZRc7qTGVmgQngtb0ajYEDQuVs1QO6YF-PyOKE21M" alt="Morning Tea" loading="lazy" />
-          <div class="gallery-overlay">
-            <span class="gallery-overlay-title">Morning Tea</span>
-            <span class="gallery-overlay-desc">Steam rising with the sun.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 10 - Forest Trail -->
-      <div class="gallery-item">
-        <div class="gallery-card" style="aspect-ratio: 4/3;">
-          <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=85" alt="Forest Trail" loading="lazy" />
-          <div class="gallery-overlay">
-            <span class="gallery-overlay-title">Forest Trail</span>
-            <span class="gallery-overlay-desc">Walk among ancient deodars.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 11 - Library Nook -->
-      <div class="gallery-item">
-        <div class="gallery-card" style="aspect-ratio: 3/4;">
-          <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80" alt="Library Nook" loading="lazy" />
-          <div class="gallery-overlay">
-            <span class="gallery-overlay-title">Library Nook</span>
-            <span class="gallery-overlay-desc">Quiet corners for quiet minds.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 12 - Sunset Views -->
-      <div class="gallery-item">
-        <div class="gallery-card" style="aspect-ratio: 4/3;">
-          <img src="https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=800&q=85" alt="Sunset Views" loading="lazy" />
-          <div class="gallery-overlay">
-            <span class="gallery-overlay-title">Sunset Views</span>
-            <span class="gallery-overlay-desc">Golden hour in the mountains.</span>
-          </div>
-        </div>
-      </div>
-
+<section class="max-w-max-width mx-auto px-4 md:px-margin-desktop mb-section-gap reveal">
+  <div class="reel-grid">
+    <div class="reel-wrapper" data-reel="DXBaJK9icmf">
+      <iframe src="https://www.instagram.com/reel/DXBaJK9icmf/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
     </div>
-
-    <div class="gallery-cta">
-      <button class="gallery-cta-btn" id="galleryViewAll">View Full Gallery</button>
+    <div class="reel-wrapper" data-reel="DZ9w6M8p2JT">
+      <iframe src="https://www.instagram.com/reel/DZ9w6M8p2JT/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
     </div>
-
-  </section>
-
+    <div class="reel-wrapper" data-reel="DWdi7wPibHh">
+      <iframe src="https://www.instagram.com/reel/DWdi7wPibHh/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
+    </div>
+    <div class="reel-wrapper" data-reel="DWTAMv3CVAw">
+      <iframe src="https://www.instagram.com/reel/DWTAMv3CVAw/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
+    </div>
+    <div class="reel-wrapper" data-reel="DWEJB-bCahr">
+      <iframe src="https://www.instagram.com/reel/DWEJB-bCahr/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
+    </div>
+    <div class="reel-wrapper" data-reel="DT7P79_ifmt">
+      <iframe src="https://www.instagram.com/reel/DT7P79_ifmt/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
+    </div>
+    <div class="reel-wrapper" data-reel="DaVZtdqJ0op">
+      <iframe src="https://www.instagram.com/reel/DaVZtdqJ0op/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
+    </div>
+    <div class="reel-wrapper" data-reel="DT0Pe4OCTJE">
+      <iframe src="https://www.instagram.com/reel/DT0Pe4OCTJE/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
+    </div>
   </div>
+</section>
+
+<section class="max-w-max-width mx-auto px-4 md:px-margin-desktop reveal">
+  <div class="bg-primary text-on-primary rounded-3xl p-12 md:p-24 text-center relative overflow-hidden">
+    <div class="absolute inset-0 bg-primary-container opacity-20 pointer-events-none"></div>
+    <div class="relative z-10 max-w-3xl mx-auto space-y-10">
+      <h2 class="font-display-hero-mobile md:font-display-hero text-display-hero-mobile md:text-display-hero">Some Memories Can't Be Captured. They Must Be Experienced.</h2>
+      <div class="flex flex-col sm:flex-row justify-center items-center gap-6 pt-4">
+        <a href="rooms.html" class="w-full sm:w-auto px-8 py-4 bg-accent-gold text-on-primary font-label-sm text-label-sm uppercase tracking-widest rounded-full hover:bg-white hover:text-primary transition-all duration-300 inline-block text-center">Book Your Stay</a>
+        <a href="life.html" class="w-full sm:w-auto px-8 py-4 bg-transparent border border-outline-variant text-on-primary font-label-sm text-label-sm uppercase tracking-widest rounded-full hover:bg-white/10 transition-all duration-300 inline-block text-center">Explore Life at FAM</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
   <footer class="bg-charcoal text-on-primary">
     <div class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-16">
       <div class="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 border-b border-on-primary/10 pb-12">
@@ -277,119 +167,69 @@ tailwind.config = {
         <div class="flex gap-16 text-center md:text-left">
           <div class="flex flex-col gap-4">
             <h4 class="font-label-sm uppercase tracking-widest text-on-primary/40 text-xs mb-2">Explore</h4>
-            <a href="/" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Home</a>
-            <a href="/pages/rooms" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Rooms</a>
-            <a href="/pages/life" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Life at FAM</a>
-            <a href="/pages/explore" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Explore</a>
-            <a href="/pages/gallery" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Gallery</a>
+            <a href="../index.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Home</a>
+            <a href="rooms.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Rooms</a>
+            <a href="life.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Life at FAM</a>
+            <a href="explore.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Explore</a>
+            <a href="gallery.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Gallery</a>
           </div>
           <div class="flex flex-col gap-4">
             <h4 class="font-label-sm uppercase tracking-widest text-on-primary/40 text-xs mb-2">Connect</h4>
-            <a href="/pages/amenities" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Amenities</a>
-            <a href="/#contact" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Contact Us</a>
-            <a href="https://www.instagram.com/flamingoaurmaina?igsh=ejFucDV1MWkzam5x" target="_blank" rel="noopener noreferrer" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm" aria-label="Visit Flamingo aur Maina on Instagram">Instagram</a>
+            <a href="amenities.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Amenities</a>
+            <a href="../index.html#contact" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Contact Us</a>
+            <a href="https://www.instagram.com/flamingoaurmaina?igsh=ejFucDV1MWkzam5x" target="_blank" rel="noopener noreferrer" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Instagram</a>
           </div>
         </div>
       </div>
       <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-on-primary/40 font-body-md">
         <p>&copy; 2024 Flamingo aur Maina. All rights reserved.</p>
         <div class="flex gap-6">
-          <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Privacy Policy</a>
-          <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Terms of Service</a>
+          <a href="#" class="hover:text-on-primary transition-colors">Privacy Policy</a>
+          <a href="#" class="hover:text-on-primary transition-colors">Terms of Service</a>
         </div>
       </div>
     </div>
   </footer>
+
 <script src="../js/animations.js"></script>
 <script src="../js/seasonal.js"></script>
 <script src="../js/concierge.js"></script>
-  <script src="../js/gallery.js"></script>
-  <script>
-  function initMobileMenu() {
-    var btn = document.getElementById('mobile-menu-btn');
-    var panel = document.getElementById('mobile-panel');
-    var overlay = document.getElementById('mobile-overlay');
-    var closeBtn = document.getElementById('mobile-close');
-    if (!btn || !panel || !overlay) return;
-
-    function open() {
-      panel.classList.add('open');
-      overlay.classList.add('open');
-      document.body.classList.add('mobile-menu-open');
-      btn.setAttribute('aria-expanded', 'true');
-    }
-    function close() {
-      panel.classList.remove('open');
-      overlay.classList.remove('open');
-      document.body.classList.remove('mobile-menu-open');
-      btn.setAttribute('aria-expanded', 'false');
-    }
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      if (panel.classList.contains('open')) close(); else open();
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof FAM !== 'undefined' && FAM.Animations) { FAM.Animations.init({ gsap: false, lenis: false, cardParallax: false }); }
+  const revealElements = document.querySelectorAll('.reveal');
+  const revealOnScroll = () => {
+    const windowHeight = window.innerHeight;
+    revealElements.forEach(el => {
+      const elementTop = el.getBoundingClientRect().top;
+      if (elementTop < windowHeight - 150) el.classList.add('active');
     });
-    closeBtn.addEventListener('click', close);
-    overlay.addEventListener('click', close);
-    panel.querySelectorAll('.mobile-menu-link').forEach(function(link) {
-      link.addEventListener('click', close);
-    });
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && panel.classList.contains('open')) close();
-    });
-  }
-  </script>
-  <script>
-    function initGalleryPage() {
-      if (typeof FAM !== 'undefined' && FAM.Animations) {
-        FAM.Animations.init({ gsap: false, lenis: false, cardParallax: false });
-      }
-      initMobileMenu();
-    }
-    document.addEventListener('DOMContentLoaded', initGalleryPage);
-    window.__pageInit = initGalleryPage;
-  </script>
-  <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
-  <script src="../js/page-transitions.js"></script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js').catch(function(e) {
-        console.warn('[SW] Registration failed:', e);
-      });
-    });
-  }
-  </script>
-  <script type="module" src="//instant.page/5.2.0"></script>
-<div id="booking-modal" class="booking-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Book your stay">
-  <div class="booking-modal-overlay"></div>
-  <div class="booking-modal-panel">
-    <div class="booking-modal-header">
-      <span class="booking-modal-title">&#x1F4C5; Check Availability</span>
-      <button class="booking-modal-close" id="booking-modal-close" aria-label="Close booking">&#x2715;</button>
-    </div>
-    <div class="booking-modal-body" id="booking-modal-body">
-      <div class="booking-form">
-        <div class="booking-field">
-          <label class="booking-label" for="modal-checkin">Check-in</label>
-          <input type="date" class="booking-input" id="modal-checkin" min="" />
-        </div>
-        <div class="booking-field">
-          <label class="booking-label" for="modal-checkout">Check-out</label>
-          <input type="date" class="booking-input" id="modal-checkout" min="" />
-        </div>
-        <div class="booking-field">
-          <label class="booking-label">Guests</label>
-          <div class="booking-guests">
-            <button class="booking-guest-btn" id="modal-guest-minus" aria-label="Remove guest">&#x2212;</button>
-            <span class="booking-guest-count" id="modal-guest-count">2</span>
-            <button class="booking-guest-btn" id="modal-guest-plus" aria-label="Add guest">+</button>
-          </div>
-        </div>
-        <button class="booking-cta" id="modal-booking-cta">Check Availability</button>
-        <p class="booking-footer-text">Full room selection &amp; booking details in next step</p>
-      </div>
-    </div>
-  </div>
-</div>
+  };
+  window.addEventListener('scroll', revealOnScroll);
+  revealOnScroll();
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) { nav.classList.add('shadow-md'); } else { nav.classList.remove('shadow-md'); }
+  });
+  initMobileMenu();
+});
+</script>
+<script>
+function initMobileMenu() {
+  var btn = document.getElementById('mobile-menu-btn');
+  var panel = document.getElementById('mobile-panel');
+  var overlay = document.getElementById('mobile-overlay');
+  var closeBtn = document.getElementById('mobile-close');
+  if (!btn || !panel || !overlay) return;
+  function open() { panel.classList.add('open'); overlay.classList.add('open'); document.body.classList.add('mobile-menu-open'); btn.setAttribute('aria-expanded', 'true'); }
+  function close() { panel.classList.remove('open'); overlay.classList.remove('open'); document.body.classList.remove('mobile-menu-open'); btn.setAttribute('aria-expanded', 'false'); }
+  btn.addEventListener('click', function(e) { e.stopPropagation(); if (panel.classList.contains('open')) close(); else open(); });
+  closeBtn.addEventListener('click', close);
+  overlay.addEventListener('click', close);
+  panel.querySelectorAll('.mobile-menu-link').forEach(function(link) { link.addEventListener('click', close); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && panel.classList.contains('open')) close(); });
+}
+</script>
+<script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
 </body>
 </html>

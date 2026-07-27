@@ -1,10 +1,600 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Explore - Flamingo aur Maina</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Explore Around FAM - Flamingo aur Maina</title>
+  <meta property="og:title" content="Explore Around FAM - Flamingo aur Maina" />
+  <meta property="og:description" content="Discover the magic around every corner in Jibhi - waterfalls, mountain passes, lakes, and forest trails." />
+  <meta property="og:url" content="https://flamingoaurmaina.netlify.app/pages/explore.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://flamingoaurmaina.netlify.app/images/hero-bg.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Explore Around FAM - Flamingo aur Maina" />
+  <meta name="twitter:description" content="Discover the magic around every corner in Jibhi." />
+  <meta name="twitter:image" content="https://flamingoaurmaina.netlify.app/images/hero-bg.jpg" />
+  <link rel="canonical" href="https://flamingoaurmaina.netlify.app/pages/explore.html" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://flamingoaurmaina.netlify.app"
+    },{
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Explore",
+      "item": "https://flamingoaurmaina.netlify.app/pages/explore.html"
+    }]
+  }
+  </script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<link rel="stylesheet" href="../css/style.css?v=9" />
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class", theme: { extend: {
+    colors: { "surface": "#f8f4ec", "background": "#f8f4ec", "surface-container": "#eeeeea", "surface-container-low": "#f3f4f0", "on-surface": "#1a1c1a", "on-surface-variant": "#414942", "primary": "#0a341d", "on-primary": "#ffffff", "primary-container": "#234b32", "accent-gold": "#C9A86A", "charcoal": "#1B1B1B", "muted-gray": "#6B7280", "outline-variant": "#c1c8c0", "secondary": "#605e58" },
+    fontFamily: { 'display-hero': ['Playfair Display', 'serif'], 'display-hero-mobile': ['Playfair Display', 'serif'], 'headline-lg': ['Playfair Display', 'serif'], 'headline-md': ['Playfair Display', 'serif'], 'body-lg': ['Inter', 'sans-serif'], 'body-md': ['Inter', 'sans-serif'], 'label-sm': ['Inter', 'sans-serif'] },
+    fontSize: { 'display-hero': ['80px', { lineHeight: '96px', letterSpacing: '0.04em', fontWeight: '700' }], 'display-hero-mobile': ['42px', { lineHeight: '48px', fontWeight: '700' }], 'headline-lg': ['48px', { lineHeight: '56px', fontWeight: '600' }], 'headline-md': ['32px', { lineHeight: '40px', fontWeight: '500' }], 'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }], 'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }], 'label-sm': ['14px', { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '600' }] },
+    borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" },
+    spacing: { 'section-gap': '120px', 'margin-desktop': '64px', 'gutter': '24px', 'max-width': '1400px' }
+  }}
+}
+</script>
+<style>
+  .reveal-text { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
+  .reveal-text span { display: inline-block; transform: translateY(100%); transition: transform 1s cubic-bezier(0.2, 0, 0.2, 1); }
+  .reveal-text.is-visible span { transform: translateY(0); }
+  .image-scale-container { overflow: hidden; position: relative; }
+  .ken-burns { animation: kenBurns 20s ease-in-out infinite alternate; transform-origin: center center; will-change: transform; }
+  @keyframes kenBurns { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
+  .leaf { position: absolute; background: #a5d1b0; width: 15px; height: 15px; border-radius: 15px 0 15px 0; opacity: 0.7; pointer-events: none; animation: fall linear infinite; }
+  .leaf.gold { background: #C9A86A; }
+  @keyframes fall { 0% { transform: translateY(-10px) translateX(0) rotate(0deg); opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.8; } 100% { transform: translateY(100vh) translateX(100px) rotate(360deg); opacity: 0; } }
+  .gsap-reveal { opacity: 0; transform: translateY(30px); }
+  .gsap-mask { clip-path: inset(100% 0 0 0); }
+</style>
 </head>
-<body>
+<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden">
+  <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300" id="main-nav">
+    <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto">
+      <div class="flex items-center gap-4">
+        <a href="../index.html" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
+      </div>
+      <div class="hidden lg:flex items-center gap-8">
+        <a href="../index.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Home</a>
+        <a href="rooms.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Rooms</a>
+        <a href="life.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Life at FAM</a>
+        <a href="explore.html" class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/30 pb-1">Explore</a>
+        <a href="gallery.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Gallery</a>
+        <a href="amenities.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Amenities</a>
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="window.location.href='login.html'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
+          <button type="button" onclick="window.location.href='rooms.html'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <button class="lg:hidden text-primary p-2" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ====== MOBILE MENU ====== -->
+  <div class="mobile-menu-overlay" id="mobile-overlay" aria-hidden="true"></div>
+  <div class="mobile-menu-panel" id="mobile-panel" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <div class="mobile-menu-header">
+      <span class="font-headline-md text-xl text-primary">Menu</span>
+      <button class="mobile-menu-close" id="mobile-close" aria-label="Close navigation menu">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <nav class="mobile-menu-links" aria-label="Mobile navigation">
+      <a href="../index.html" class="mobile-menu-link">Home</a>
+      <a href="rooms.html" class="mobile-menu-link">Rooms</a>
+      <a href="life.html" class="mobile-menu-link">Life at FAM</a>
+      <a href="explore.html" class="mobile-menu-link">Explore</a>
+      <a href="gallery.html" class="mobile-menu-link">Gallery</a>
+      <a href="amenities.html" class="mobile-menu-link">Amenities</a>
+      <div class="mobile-menu-cta-group">
+        <button type="button" onclick="window.location.href='login.html'" class="nav-mobile-signin">Sign In</button>
+        <button type="button" onclick="window.location.href='rooms.html'" class="nav-mobile-book">Book Your Stay</button>
+      </div>
+    </nav>
+    <div class="mobile-menu-footer">
+      <a href="tel:9876575673" class="mobile-menu-phone">
+        <span class="material-symbols-outlined text-lg">phone</span>
+        Property Manager: 98765 75673
+      </a>
+    </div>
+  </div>
+
+<main class="pt-32 md:pt-48">
+
+  <!-- ====== HERO ====== -->
+  <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop mb-section-gap text-center relative z-10">
+    <div class="inline-block mb-6 gsap-reveal">
+      <span class="font-label-sm text-label-sm uppercase tracking-widest text-accent-gold bg-accent-gold/10 px-4 py-2 rounded-full">EXPLORE</span>
+    </div>
+    <h1 class="font-display-hero-mobile md:font-display-hero text-primary mb-8 max-w-4xl mx-auto reveal-text">
+      <span>Discover The Magic</span><br/><span>Around Every Corner.</span>
+    </h1>
+    <p class="font-body-lg text-secondary max-w-2xl mx-auto reveal-text" style="transition-delay: 200ms;">
+      From the misty Jibhi Waterfall to the soaring heights of Jalori Pass &#x2014; adventure is never far at FAM.
+    </p>
+  </section>
+
+  <!-- ====== EXPLORE AROUND FAM ====== -->
+  <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-section-gap" id="explore">
+    <div class="text-center mb-12 md:mb-16 reveal">
+      <span class="font-label-sm text-accent-gold uppercase tracking-widest mb-4 block">Explore</span>
+      <h2 class="font-headline-lg text-4xl md:text-5xl text-primary mb-4">Explore Around FAM</h2>
+      <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Every adventure begins just a few minutes away.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
+      <!-- Jibhi Waterfall -->
+      <div class="explore-card reveal" style="transition-delay:0ms">
+        <img src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=800&q=80" alt="Jibhi Waterfall" loading="lazy" />
+        <div class="overlay"></div>
+        <div class="content">
+          <div class="meta">
+            <span class="tag"><span class="t-icon">&#x1F4CD;</span>500 m</span>
+            <span class="tag"><span class="t-icon">&#x23F1;&#xFE0F;</span>5 min walk</span>
+            <span class="tag"><span class="t-icon">&#x2B50;</span>Easy</span>
+            <span class="tag"><span class="t-icon">&#x1F4C5;</span>All seasons</span>
+          </div>
+          <h3>Jibhi Waterfall</h3>
+          <p class="desc">Cascading waters surrounded by lush forest. The closest nature escape from FAM &#x2014; a short, scenic walk through village paths.</p>
+          <a href="#" class="explore-btn" aria-label="Explore Jibhi Waterfall">Explore <span class="arr">&#x2192;</span></a>
+        </div>
+      </div>
+
+      <!-- Jalori Pass -->
+      <div class="explore-card reveal" style="transition-delay:80ms">
+        <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80" alt="Jalori Pass" loading="lazy" />
+        <div class="overlay"></div>
+        <div class="content">
+          <div class="meta">
+            <span class="tag"><span class="t-icon">&#x1F4CD;</span>15 km</span>
+            <span class="tag"><span class="t-icon">&#x23F1;&#xFE0F;</span>~45 min drive</span>
+            <span class="tag"><span class="t-icon">&#x2B50;</span>Moderate</span>
+            <span class="tag"><span class="t-icon">&#x1F4C5;</span>Mar&#x2013;Jun, Sep&#x2013;Nov</span>
+          </div>
+          <h3>Jalori Pass</h3>
+          <p class="desc">Stunning high-altitude views at 3,120 metres. One of Himachal's most scenic mountain passes, with sweeping panoramas of the Himalayas.</p>
+          <a href="#" class="explore-btn" aria-label="Explore Jalori Pass">Explore <span class="arr">&#x2192;</span></a>
+        </div>
+      </div>
+
+      <!-- Serolsar Lake -->
+      <div class="explore-card reveal" style="transition-delay:160ms">
+        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=80" alt="Serolsar Lake" loading="lazy" />
+        <div class="overlay"></div>
+        <div class="content">
+          <div class="meta">
+            <span class="tag"><span class="t-icon">&#x1F4CD;</span>17 km</span>
+            <span class="tag"><span class="t-icon">&#x23F1;&#xFE0F;</span>2 km trek</span>
+            <span class="tag"><span class="t-icon">&#x2B50;</span>Moderate</span>
+            <span class="tag"><span class="t-icon">&#x1F4C5;</span>May&#x2013;Oct</span>
+          </div>
+          <h3>Serolsar Lake</h3>
+          <p class="desc">A beautiful 2 km trek from Jalori Pass through enchanting forests of oak and rhododendron, leading to a crystal-clear alpine mirror lake.</p>
+          <a href="#" class="explore-btn" aria-label="Explore Serolsar Lake">Explore <span class="arr">&#x2192;</span></a>
+        </div>
+      </div>
+
+      <!-- Chehni Kothi -->
+      <div class="explore-card reveal" style="transition-delay:240ms">
+        <img src="https://images.unsplash.com/photo-1517021897933-0e0319cfbc28?w=800&q=80" alt="Chehni Kothi" loading="lazy" />
+        <div class="overlay"></div>
+        <div class="content">
+          <div class="meta">
+            <span class="tag"><span class="t-icon">&#x1F4CD;</span>8 km</span>
+            <span class="tag"><span class="t-icon">&#x23F1;&#xFE0F;</span>~25 min drive</span>
+            <span class="tag"><span class="t-icon">&#x2B50;</span>Easy</span>
+            <span class="tag"><span class="t-icon">&#x1F4C5;</span>All seasons</span>
+          </div>
+          <h3>Chehni Kothi</h3>
+          <p class="desc">An ancient tower with historic architecture, standing tall in a heritage village. A step back in time through local village paths and traditional culture.</p>
+          <a href="#" class="explore-btn" aria-label="Explore Chehni Kothi">Explore <span class="arr">&#x2192;</span></a>
+        </div>
+      </div>
+
+      <!-- Mini Thailand -->
+      <div class="explore-card reveal" style="transition-delay:320ms">
+        <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80" alt="Mini Thailand" loading="lazy" />
+        <div class="overlay"></div>
+        <div class="content">
+          <div class="meta">
+            <span class="tag"><span class="t-icon">&#x1F4CD;</span>2 km</span>
+            <span class="tag"><span class="t-icon">&#x23F1;&#xFE0F;</span>10 min drive</span>
+            <span class="tag"><span class="t-icon">&#x2B50;</span>Easy</span>
+            <span class="tag"><span class="t-icon">&#x1F4C5;</span>Mar&#x2013;Jun</span>
+          </div>
+          <h3>Mini Thailand</h3>
+          <p class="desc">A hidden riverside paradise in the heart of Jibhi. Crystal-blue waters surrounded by boulders and pine trees &#x2014; perfect for a peaceful afternoon dip.</p>
+          <a href="#" class="explore-btn" aria-label="Explore Mini Thailand">Explore <span class="arr">&#x2192;</span></a>
+        </div>
+      </div>
+
+      <!-- Tirthan Valley -->
+      <div class="explore-card reveal" style="transition-delay:400ms">
+        <img src="https://images.unsplash.com/photo-1511497584788-876760111969?w=800&q=80" alt="Tirthan Valley" loading="lazy" />
+        <div class="overlay"></div>
+        <div class="content">
+          <div class="meta">
+            <span class="tag"><span class="t-icon">&#x1F4CD;</span>20 km</span>
+            <span class="tag"><span class="t-icon">&#x23F1;&#xFE0F;</span>~30 min drive</span>
+            <span class="tag"><span class="t-icon">&#x2B50;</span>Easy</span>
+            <span class="tag"><span class="t-icon">&#x1F4C5;</span>Mar&#x2013;Jun, Sep&#x2013;Nov</span>
+          </div>
+          <h3>Tirthan Valley</h3>
+          <p class="desc">Trout fishing, riverside walks, and pristine natural beauty along the Tirthan River. A serene escape into one of Himachal's most picturesque valleys.</p>
+          <a href="#" class="explore-btn" aria-label="Explore Tirthan Valley">Explore <span class="arr">&#x2192;</span></a>
+        </div>
+      </div>
+
+      <!-- Great Himalayan National Park -->
+      <div class="explore-card reveal" style="transition-delay:480ms">
+        <img src="https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800&q=80" alt="Great Himalayan National Park" loading="lazy" />
+        <div class="overlay"></div>
+        <div class="content">
+          <div class="meta">
+            <span class="tag"><span class="t-icon">&#x1F4CD;</span>35 km</span>
+            <span class="tag"><span class="t-icon">&#x23F1;&#xFE0F;</span>~1 hr drive</span>
+            <span class="tag"><span class="t-icon">&#x2B50;</span>Moderate&#x2013;Challenging</span>
+            <span class="tag"><span class="t-icon">&#x1F4C5;</span>Apr&#x2013;Jun, Sep&#x2013;Oct</span>
+          </div>
+          <h3>Great Himalayan National Park</h3>
+          <p class="desc">A UNESCO World Heritage Site home to exotic wildlife, alpine meadows, and breathtaking Himalayan vistas. A must-visit for nature lovers and trekkers.</p>
+          <a href="#" class="explore-btn" aria-label="Explore Great Himalayan National Park">Explore <span class="arr">&#x2192;</span></a>
+        </div>
+      </div>
+
+      <!-- Forest Trails -->
+      <div class="explore-card reveal" style="transition-delay:560ms">
+        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80" alt="Forest Trails" loading="lazy" />
+        <div class="overlay"></div>
+        <div class="content">
+          <div class="meta">
+            <span class="tag"><span class="t-icon">&#x1F4CD;</span>0 km</span>
+            <span class="tag"><span class="t-icon">&#x23F1;&#xFE0F;</span>Right outside</span>
+            <span class="tag"><span class="t-icon">&#x2B50;</span>Easy</span>
+            <span class="tag"><span class="t-icon">&#x1F4C5;</span>All seasons</span>
+          </div>
+          <h3>Forest Trails</h3>
+          <p class="desc">Walk through ancient deodar forests starting right from the property. Peaceful nature trails winding through towering pines and the sounds of the forest.</p>
+          <a href="#" class="explore-btn" aria-label="Explore Forest Trails">Explore <span class="arr">&#x2192;</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== INTERACTIVE MAP ====== -->
+  <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-section-gap" id="fam-map-section">
+    <div class="text-center mb-10 reveal">
+      <span class="font-label-sm text-accent-gold uppercase tracking-widest mb-4 block">Around Us</span>
+      <h2 class="font-headline-lg text-4xl md:text-5xl text-primary mb-4">Explore the Map</h2>
+      <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Click any attraction to discover more about your next adventure.</p>
+    </div>
+
+    <div class="fam-map-wrap reveal">
+      <div class="map-info-panel" id="map-info-panel">
+        <button class="map-info-close" id="map-info-close" aria-label="Close"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
+        <div class="map-info-inner" id="map-info-content">
+          <div class="map-info-icon" id="mi-icon">&#x1F3DE;&#xFE0F;</div>
+          <div class="map-info-title" id="mi-title">Jibhi Waterfall</div>
+          <div class="map-info-sub" id="mi-sub">
+            <span class="chip">&#x1F4CD; <span id="mi-dist">500 m</span></span>
+            <span class="chip">&#x23F1;&#xFE0F; <span id="mi-time">5 min walk</span></span>
+          </div>
+          <div class="map-info-divider"></div>
+          <div class="map-info-row">
+            <span class="map-info-label">Best Time</span>
+            <span class="map-info-value" id="mi-best">All seasons</span>
+          </div>
+          <div class="map-info-row">
+            <span class="map-info-label">Carry</span>
+            <span class="map-info-value" id="mi-carry">Water shoes, camera</span>
+          </div>
+          <div class="map-info-row">
+            <span class="map-info-label">Duration</span>
+            <span class="map-info-value" id="mi-duration">1&#x2013;2 hours</span>
+          </div>
+          <div class="map-info-row">
+            <span class="map-info-label">Photo Spots</span>
+            <span class="map-info-value" id="mi-photo">Base of waterfall</span>
+          </div>
+          <div class="map-info-row">
+            <span class="map-info-label">Refreshments</span>
+            <span class="map-info-value" id="mi-cafes">Restaurant nearby</span>
+          </div>
+          <div class="map-info-divider"></div>
+          <button class="map-return-btn" id="map-return-btn"><span style="font-size:14px;">&#x2190;</span> Return to FAM</button>
+        </div>
+      </div>
+
+      <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;">
+        <defs>
+          <radialGradient id="fam-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(201,168,106,0.2)"/>
+            <stop offset="100%" stop-color="rgba(201,168,106,0)"/>
+          </radialGradient>
+          <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f3f4f0"/>
+            <stop offset="50%" stop-color="#e8ece4"/>
+            <stop offset="100%" stop-color="#dde4d6"/>
+          </linearGradient>
+          <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(10,52,29,0.1)"/>
+          </filter>
+          <g id="tree">
+            <path d="M0,-3 L3,6 L-3,6 Z" fill="rgba(10,52,29,0.05)" stroke="rgba(10,52,29,0.04)" stroke-width="0.5"/>
+          </g>
+          <g id="pine">
+            <path d="M0,-8 L4,-2 L2,-2 L5,4 L-5,4 L-2,-2 L-4,-2 Z" fill="rgba(10,52,29,0.04)" stroke="rgba(10,52,29,0.03)" stroke-width="0.3"/>
+          </g>
+        </defs>
+        <rect width="800" height="600" fill="url(#bg-grad)" rx="24"/>
+        <polygon points="0,350 60,250 120,280 180,200 250,260 300,220 350,280 400,350" fill="rgba(10,52,29,0.03)" stroke="rgba(10,52,29,0.04)" stroke-width="0.5"/>
+        <polygon points="400,320 460,230 520,270 580,190 650,250 720,210 780,260 800,320 800,350 400,350" fill="rgba(10,52,29,0.025)" stroke="rgba(10,52,29,0.035)" stroke-width="0.5"/>
+        <polygon points="150,380 220,300 290,350 350,290 400,380" fill="rgba(10,52,29,0.02)" stroke="rgba(10,52,29,0.03)" stroke-width="0.5"/>
+        <ellipse cx="400" cy="330" rx="120" ry="90" fill="none" stroke="rgba(10,52,29,0.03)" stroke-width="0.8"/>
+        <ellipse cx="400" cy="330" rx="200" ry="150" fill="none" stroke="rgba(10,52,29,0.025)" stroke-width="0.8"/>
+        <ellipse cx="400" cy="330" rx="280" ry="210" fill="none" stroke="rgba(10,52,29,0.02)" stroke-width="0.8"/>
+        <ellipse cx="400" cy="330" rx="360" ry="270" fill="none" stroke="rgba(10,52,29,0.015)" stroke-width="0.8"/>
+        <path d="M370,0 Q355,120 380,200 T365,320 T380,450 T360,600" fill="none" stroke="rgba(120,180,210,0.08)" stroke-width="24" stroke-linecap="round"/>
+        <path d="M370,0 Q355,120 380,200 T365,320 T380,450 T360,600" fill="none" stroke="rgba(120,180,210,0.12)" stroke-width="8" stroke-linecap="round"/>
+        <use href="#pine" x="180" y="280"/> <use href="#pine" x="195" y="295"/> <use href="#pine" x="170" y="300"/> <use href="#pine" x="200" y="270"/>
+        <use href="#pine" x="550" y="200"/> <use href="#pine" x="565" y="215"/> <use href="#pine" x="540" y="220"/>
+        <use href="#pine" x="620" y="350"/> <use href="#pine" x="635" y="365"/> <use href="#pine" x="650" y="340"/>
+        <use href="#pine" x="280" y="440"/> <use href="#pine" x="295" y="455"/> <use href="#pine" x="310" y="435"/>
+        <use href="#pine" x="480" y="480"/> <use href="#pine" x="495" y="495"/> <use href="#pine" x="510" y="475"/>
+        <use href="#tree" x="120" y="380"/> <use href="#tree" x="135" y="395"/> <use href="#tree" x="145" y="375"/>
+        <use href="#tree" x="680" y="400"/> <use href="#tree" x="695" y="415"/> <use href="#tree" x="710" y="395"/>
+        <use href="#tree" x="90" y="480"/> <use href="#tree" x="105" y="495"/> <use href="#tree" x="120" y="478"/>
+        <path class="map-route" id="route-waterfall" d="M400,320 Q470,360 500,390"/>
+        <path class="map-route" id="route-jalori" d="M400,320 Q490,250 540,175"/>
+        <path class="map-route" id="route-serolsar" d="M400,320 Q530,220 610,115"/>
+        <path class="map-route" id="route-chehni" d="M400,320 Q330,260 250,210"/>
+        <path class="map-route" id="route-mini" d="M400,320 Q380,400 370,470"/>
+        <path class="map-route" id="route-tirthan" d="M400,320 Q480,420 525,510"/>
+        <path class="map-route" id="route-ghnp" d="M400,320 Q570,290 690,260"/>
+        <path class="map-route" id="route-forest" d="M400,320 Q360,355 315,385"/>
+        <circle cx="400" cy="320" r="60" fill="url(#fam-glow)" pointer-events="none"/>
+        <circle cx="400" cy="320" r="18" fill="none" stroke="rgba(201,168,106,0.3)" stroke-width="2" class="fam-marker-pulse" pointer-events="none"/>
+        <circle cx="400" cy="320" r="10" fill="#C9A86A" stroke="#fff" stroke-width="2.5" filter="url(#shadow)"/>
+        <text x="400" y="347" text-anchor="middle" font-family="'Inter',sans-serif" font-size="10" font-weight="700" fill="#0a341d" letter-spacing="0.04em" pointer-events="none">FAM</text>
+        <g class="map-marker" id="marker-waterfall" data-spot="waterfall">
+          <circle class="marker-ring" cx="500" cy="390" r="0" fill="none" stroke="#C9A86A" stroke-width="1" opacity="0"/>
+          <circle class="marker-dot" cx="500" cy="390" r="7" fill="#fff" stroke="#414942" stroke-width="1.5" filter="url(#shadow)"/>
+          <text class="marker-label-icon" x="500" y="393" text-anchor="middle" font-size="7">&#x1F3DE;&#xFE0F;</text>
+          <text class="map-marker-label" x="500" y="408" text-anchor="middle">Waterfall</text>
+        </g>
+        <g class="map-marker" id="marker-jalori" data-spot="jalori">
+          <circle class="marker-ring" cx="540" cy="175" r="0" fill="none" stroke="#C9A86A" stroke-width="1" opacity="0"/>
+          <circle class="marker-dot" cx="540" cy="175" r="7" fill="#fff" stroke="#414942" stroke-width="1.5" filter="url(#shadow)"/>
+          <text class="marker-label-icon" x="540" y="178" text-anchor="middle" font-size="7">&#x1F332;</text>
+          <text class="map-marker-label" x="540" y="193" text-anchor="middle">Jalori Pass</text>
+        </g>
+        <g class="map-marker" id="marker-serolsar" data-spot="serolsar">
+          <circle class="marker-ring" cx="610" cy="115" r="0" fill="none" stroke="#C9A86A" stroke-width="1" opacity="0"/>
+          <circle class="marker-dot" cx="610" cy="115" r="7" fill="#fff" stroke="#414942" stroke-width="1.5" filter="url(#shadow)"/>
+          <text class="marker-label-icon" x="610" y="118" text-anchor="middle" font-size="7">&#x1F97E;</text>
+          <text class="map-marker-label" x="610" y="133" text-anchor="middle">Serolsar Lake</text>
+        </g>
+        <g class="map-marker" id="marker-chehni" data-spot="chehni">
+          <circle class="marker-ring" cx="250" cy="210" r="0" fill="none" stroke="#C9A86A" stroke-width="1" opacity="0"/>
+          <circle class="marker-dot" cx="250" cy="210" r="7" fill="#fff" stroke="#414942" stroke-width="1.5" filter="url(#shadow)"/>
+          <text class="marker-label-icon" x="250" y="213" text-anchor="middle" font-size="7">&#x1F6D5;</text>
+          <text class="map-marker-label" x="250" y="228" text-anchor="middle">Chehni Kothi</text>
+        </g>
+        <g class="map-marker" id="marker-mini" data-spot="mini">
+          <circle class="marker-ring" cx="370" cy="470" r="0" fill="none" stroke="#C9A86A" stroke-width="1" opacity="0"/>
+          <circle class="marker-dot" cx="370" cy="470" r="7" fill="#fff" stroke="#414942" stroke-width="1.5" filter="url(#shadow)"/>
+          <text class="marker-label-icon" x="370" y="473" text-anchor="middle" font-size="7">&#x1F3D6;&#xFE0F;</text>
+          <text class="map-marker-label" x="370" y="488" text-anchor="middle">Mini Thailand</text>
+        </g>
+        <g class="map-marker" id="marker-tirthan" data-spot="tirthan">
+          <circle class="marker-ring" cx="525" cy="510" r="0" fill="none" stroke="#C9A86A" stroke-width="1" opacity="0"/>
+          <circle class="marker-dot" cx="525" cy="510" r="7" fill="#fff" stroke="#414942" stroke-width="1.5" filter="url(#shadow)"/>
+          <text class="marker-label-icon" x="525" y="513" text-anchor="middle" font-size="7">&#x1F3DE;&#xFE0F;</text>
+          <text class="map-marker-label" x="525" y="528" text-anchor="middle">Tirthan Valley</text>
+        </g>
+        <g class="map-marker" id="marker-ghnp" data-spot="ghnp">
+          <circle class="marker-ring" cx="690" cy="260" r="0" fill="none" stroke="#C9A86A" stroke-width="1" opacity="0"/>
+          <circle class="marker-dot" cx="690" cy="260" r="7" fill="#fff" stroke="#414942" stroke-width="1.5" filter="url(#shadow)"/>
+          <text class="marker-label-icon" x="690" y="263" text-anchor="middle" font-size="7">&#x1F3D4;&#xFE0F;</text>
+          <text class="map-marker-label" x="690" y="278" text-anchor="middle">GHNP</text>
+        </g>
+        <g class="map-marker" id="marker-forest" data-spot="forest">
+          <circle class="marker-ring" cx="315" cy="385" r="0" fill="none" stroke="#C9A86A" stroke-width="1" opacity="0"/>
+          <circle class="marker-dot" cx="315" cy="385" r="7" fill="#fff" stroke="#414942" stroke-width="1.5" filter="url(#shadow)"/>
+          <text class="marker-label-icon" x="315" y="388" text-anchor="middle" font-size="7">&#x1F33F;</text>
+          <text class="map-marker-label" x="315" y="403" text-anchor="middle">Forest Trails</text>
+        </g>
+        <g transform="translate(60,60)" opacity="0.35">
+          <circle cx="0" cy="0" r="22" fill="none" stroke="rgba(10,52,29,0.2)" stroke-width="0.5"/>
+          <polygon points="0,-20 3,-5 0,-8 -3,-5" fill="#0a341d"/>
+          <polygon points="0,20 3,5 0,8 -3,5" fill="rgba(10,52,29,0.15)"/>
+          <text x="0" y="32" text-anchor="middle" font-family="'Inter',sans-serif" font-size="8" fill="rgba(10,52,29,0.3)" font-weight="600">N</text>
+        </g>
+        <g transform="translate(640,555)" opacity="0.25">
+          <line x1="0" y1="0" x2="80" y2="0" stroke="rgba(10,52,29,0.4)" stroke-width="1"/>
+          <line x1="0" y1="-4" x2="0" y2="4" stroke="rgba(10,52,29,0.4)" stroke-width="1"/>
+          <line x1="40" y1="-3" x2="40" y2="3" stroke="rgba(10,52,29,0.25)" stroke-width="0.5"/>
+          <line x1="80" y1="-4" x2="80" y2="4" stroke="rgba(10,52,29,0.4)" stroke-width="1"/>
+          <text x="0" y="14" text-anchor="middle" font-family="'Inter',sans-serif" font-size="8" fill="rgba(10,52,29,0.3)">0</text>
+          <text x="80" y="14" text-anchor="middle" font-family="'Inter',sans-serif" font-size="8" fill="rgba(10,52,29,0.3)">10 km</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <script>
+  (function() {
+    var spots = {
+      waterfall: { icon: '\u{1F3DE}\u{FE0F}', name: 'Jibhi Waterfall', distance: '500 m', time: '5 min walk', bestTime: 'All seasons (Monsoon ideal)', carry: 'Water shoes, camera, swimwear, water bottle', duration: '1\u20132 hours', photo: 'Base of waterfall, forest canopy, stream bed', cafes: 'Pack water & snacks from FAM' },
+      jalori: { icon: '\u{1F332}', name: 'Jalori Pass', distance: '15 km', time: '~45 min drive', bestTime: 'March\u2013June, September\u2013November', carry: 'Jacket, sunscreen, water, snacks, camera', duration: 'Half day', photo: 'Panoramic viewpoints, ridge lines, valley below', cafes: 'Small dhabas at pass; pack lunch recommended' },
+      serolsar: { icon: '\u{1F97E}', name: 'Serolsar Lake', distance: '17 km + 2 km trek', time: '~1.5 hr total', bestTime: 'May\u2013October', carry: 'Trekking shoes, rain jacket, water, packed lunch', duration: '3\u20134 hours (incl. trek)', photo: 'Lake reflection, forest trail, mountain backdrop', cafes: 'None on trek \u2014 pack food from FAM' },
+      chehni: { icon: '\u{1F6D5}', name: 'Chehni Kothi', distance: '8 km', time: '~25 min drive', bestTime: 'All seasons', carry: 'Walking shoes, camera, water', duration: '2\u20133 hours', photo: 'Ancient tower architecture, village life, mountain views', cafes: 'Local village eateries; restaurants on return' },
+      mini: { icon: '\u{1F3D6}\u{FE0F}', name: 'Mini Thailand', distance: '2 km', time: '10 min drive', bestTime: 'March\u2013June (warm months)', carry: 'Swimwear, towel, snacks, water', duration: '2\u20134 hours', photo: 'Blue waters, boulder formations, river bends', cafes: 'None on site \u2014 pack from FAM' },
+      tirthan: { icon: '\u{1F3DE}\u{FE0F}', name: 'Tirthan Valley', distance: '20 km', time: '~30 min drive', bestTime: 'March\u2013June, September\u2013November', carry: 'Camera, water, walking shoes, fishing gear (optional)', duration: 'Half day to full day', photo: 'Tirthan River, trout streams, valley panoramas', cafes: 'Riverside restaurants, Trout House' },
+      ghnp: { icon: '\u{1F3D4}\u{FE0F}', name: 'Great Himalayan National Park', distance: '35 km', time: '~1 hr drive', bestTime: 'April\u2013June, September\u2013October', carry: 'Trekking shoes, warm layers, rain gear, water, permit', duration: 'Full day or multi-day trek', photo: 'Alpine meadows, wildlife, snow-capped peaks, flora', cafes: 'Entry gate eateries; pack food for treks' },
+      forest: { icon: '\u{1F33F}', name: 'Forest Trails', distance: '0 km', time: 'Right outside', bestTime: 'All seasons', carry: 'Walking shoes, camera, water', duration: '30 min \u2013 3 hours', photo: 'Deodar forests, morning light rays, forest floor', cafes: 'Restaurant nearby; pack water & snacks from FAM' }
+    };
+    var activeId = null;
+    var panel = document.getElementById('map-info-panel');
+    var closeBtn = document.getElementById('map-info-close');
+    var returnBtn = document.getElementById('map-return-btn');
+    function clearActive() {
+      if (activeId) {
+        var oldMarker = document.getElementById('marker-' + activeId);
+        var oldRoute = document.getElementById('route-' + activeId);
+        if (oldMarker) oldMarker.classList.remove('active');
+        if (oldRoute) oldRoute.classList.remove('active');
+        activeId = null;
+      }
+    }
+    function showSpot(id) {
+      if (activeId === id) { closePanel(); return; }
+      clearActive();
+      activeId = id;
+      var marker = document.getElementById('marker-' + id);
+      var route = document.getElementById('route-' + id);
+      if (marker) marker.classList.add('active');
+      if (route) route.classList.add('active');
+      var d = spots[id];
+      document.getElementById('mi-icon').textContent = d.icon;
+      document.getElementById('mi-title').textContent = d.name;
+      document.getElementById('mi-dist').textContent = d.distance;
+      document.getElementById('mi-time').textContent = d.time;
+      document.getElementById('mi-best').textContent = d.bestTime;
+      document.getElementById('mi-carry').textContent = d.carry;
+      document.getElementById('mi-duration').textContent = d.duration;
+      document.getElementById('mi-photo').textContent = d.photo;
+      document.getElementById('mi-cafes').textContent = d.cafes;
+      panel.classList.add('open');
+    }
+    function closePanel() { clearActive(); panel.classList.remove('open'); }
+    document.querySelectorAll('.map-marker').forEach(function(el) {
+      el.addEventListener('click', function() { showSpot(this.getAttribute('data-spot')); });
+    });
+    closeBtn.addEventListener('click', closePanel);
+    returnBtn.addEventListener('click', closePanel);
+    document.addEventListener('click', function(e) {
+      if (!panel.classList.contains('open')) return;
+      var wrap = document.querySelector('.fam-map-wrap');
+      if (wrap && !wrap.contains(e.target)) closePanel();
+    });
+  })();
+  </script>
+
+</main>
+
+  <footer class="bg-charcoal text-on-primary">
+    <div class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-16">
+      <div class="flex flex-col md:flex-row justify-between items-center md:items-start gap-12 border-b border-on-primary/10 pb-12">
+        <div class="flex flex-col items-center md:items-start gap-4">
+          <h3 class="font-headline-md text-2xl text-on-primary tracking-wider">Flamingo aur Maina</h3>
+          <p class="text-on-primary/60 font-body-md max-w-xs text-center md:text-left">A sanctuary of refined luxury and untold stories amidst nature's embrace.</p>
+        </div>
+        <div class="flex gap-16 text-center md:text-left">
+          <div class="flex flex-col gap-4">
+            <h4 class="font-label-sm uppercase tracking-widest text-on-primary/40 text-xs mb-2">Explore</h4>
+            <a href="../index.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Home</a>
+            <a href="rooms.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Rooms</a>
+            <a href="life.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Life at FAM</a>
+            <a href="explore.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Explore</a>
+            <a href="gallery.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Gallery</a>
+          </div>
+          <div class="flex flex-col gap-4">
+            <h4 class="font-label-sm uppercase tracking-widest text-on-primary/40 text-xs mb-2">Connect</h4>
+            <a href="amenities.html" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Amenities</a>
+            <a href="../index.html#contact" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Contact Us</a>
+            <a href="#" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Instagram</a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-on-primary/40 font-body-md">
+        <p>&copy; 2024 Flamingo aur Maina. All rights reserved.</p>
+        <div class="flex gap-6">
+          <a href="#" class="hover:text-on-primary transition-colors">Privacy Policy</a>
+          <a href="#" class="hover:text-on-primary transition-colors">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    if (typeof FAM !== 'undefined' && FAM.Animations) {
+      FAM.Animations.init({ gsap: true, lenis: false });
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal-text').forEach(el => observer.observe(el));
+
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.utils.toArray('.gsap-reveal').forEach(element => {
+        gsap.to(element, { scrollTrigger: { trigger: element, start: "top 85%", toggleActions: "play none none reverse" }, y: 0, opacity: 1, duration: 1, ease: "power3.out" });
+      });
+      gsap.utils.toArray('.gsap-mask').forEach(element => {
+        gsap.to(element, { scrollTrigger: { trigger: element, start: "top 80%", toggleActions: "play none none reverse" }, clipPath: "inset(0% 0 0 0)", duration: 1.5, ease: "power4.inOut" });
+      });
+    }
+    initMobileMenu();
+  });
+  </script>
+  <script>
+  function initMobileMenu() {
+    var btn = document.getElementById('mobile-menu-btn');
+    var panel = document.getElementById('mobile-panel');
+    var overlay = document.getElementById('mobile-overlay');
+    var closeBtn = document.getElementById('mobile-close');
+    if (!btn || !panel || !overlay) return;
+
+    function open() {
+      panel.classList.add('open');
+      overlay.classList.add('open');
+      document.body.classList.add('mobile-menu-open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+    function close() {
+      panel.classList.remove('open');
+      overlay.classList.remove('open');
+      document.body.classList.remove('mobile-menu-open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (panel.classList.contains('open')) close(); else open();
+    });
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', close);
+    panel.querySelectorAll('.mobile-menu-link').forEach(function(link) {
+      link.addEventListener('click', close);
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && panel.classList.contains('open')) close();
+    });
+  }
+  </script>
+  <script src="../js/animations.js"></script>
+  <script src="../js/seasonal.js"></script>
+  <script src="../js/concierge.js"></script>
+  <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
 </body>
 </html>
