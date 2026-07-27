@@ -167,234 +167,76 @@ tailwind.config = {
 
 <div id="page-content">
   <main class="pt-24">
-    <!-- Intro -->
+
+    <!-- Intro Section -->
     <section class="py-section-gap px-4 md:px-margin-desktop max-w-max-width mx-auto flex flex-col items-center text-center reveal">
-      <span class="font-label-sm text-accent-gold tracking-widest uppercase mb-4">Stay With Us</span>
-      <h1 class="font-display-hero text-5xl md:text-7xl text-on-surface mb-8 max-w-4xl">Spaces Designed to Feel Like Home.</h1>
-      <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Every room at Flamingo aur Maina has been thoughtfully designed to combine mountain charm, modern comfort, and peaceful living.</p>
+      <p class="font-label-sm text-primary tracking-widest uppercase mb-4">Stay With Us</p>
+      <h1 class="font-display-hero text-5xl md:text-7xl text-on-surface mb-8 max-w-4xl text-balance">Spaces Designed to Feel Like Home.</h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl text-balance">
+        Every room at Flamingo aur Maina has been thoughtfully designed to combine mountain charm, modern comfort, and peaceful living.
+      </p>
     </section>
 
-    <!-- Room Listings -->
-    <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-section-gap flex flex-col gap-32">
+    <!-- Rooms List -->
+    <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-section-gap flex flex-col gap-[160px]">
 
-      <!-- Flamingo 1 -->
+      <!-- Flamingo 1: Image Left, Content Right -->
       <article class="flex flex-col lg:flex-row items-center gap-16 reveal">
-        <div class="w-full lg:w-3/5 h-[500px] relative rounded-3xl overflow-hidden shadow-2xl">
-          <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80" alt="Flamingo 1 duplex wooden cabin with mountain views" class="w-full h-full object-cover" loading="lazy" />
-          <div class="absolute bottom-6 left-6 right-6 flex gap-4 overflow-x-auto scrollbar-hide">
-            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shrink-0 border border-outline-variant/30">
-              <span class="material-symbols-outlined text-primary text-lg">landscape</span>
-              <span class="font-label-sm text-on-surface text-xs">Mountain View</span>
+        <div class="w-full lg:w-3/5 h-[600px] relative rounded-3xl overflow-hidden shadow-2xl">
+          <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrzL8aFnw29G--xO0xB7cJw5bUF6iErudebJK_udr_C-zjP4VVlPtTWtaytwm4XB9bodkmUPBFKrwg5wyEST0zHHzbh0yonox_YJAvHikynJjdiUhZFewW5B-CsIt8NgwdA3jZp77wdsLitsm4LimVKuNeWhudbzgqJBAT5IPUysrbNaWPH2y-7GiKzxfxaF6_4Lm1WjF9TxgQVW_6qgR5P0LdecGYW9beSuPCGHckRsHLUSsMdykqIEYZNHQqm2lcRClynYC64wM" alt="Flamingo 1 duplex with mountain views" loading="lazy" />
+          <div class="absolute bottom-6 left-6 right-6 flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shadow-sm shrink-0 border border-outline-variant/30">
+              <span class="material-symbols-outlined text-primary text-xl">landscape</span>
+              <span class="font-label-sm text-on-surface">Mountain View</span>
             </div>
-            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shrink-0 border border-outline-variant/30">
-              <span class="material-symbols-outlined text-primary text-lg">wifi</span>
-              <span class="font-label-sm text-on-surface text-xs">Wi-Fi</span>
-            </div>
-            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shrink-0 border border-outline-variant/30">
-              <span class="material-symbols-outlined text-primary text-lg">ac_unit</span>
-              <span class="font-label-sm text-on-surface text-xs">Heater</span>
+            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shadow-sm shrink-0 border border-outline-variant/30">
+              <span class="material-symbols-outlined text-primary text-xl">wifi</span>
+              <span class="font-label-sm text-on-surface">Wi-Fi</span>
             </div>
           </div>
         </div>
         <div class="w-full lg:w-2/5 flex flex-col items-start text-left">
-          <div class="flex items-center gap-3 mb-6">
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">4 Guests</span>
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">&#8377;6,000 / night (incl.&nbsp;GST)</span>
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">2 Beds</span>
+          <div class="inline-flex items-center gap-3 mb-6">
+            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full">4 Guests</span>
+            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full">&#8377;6,000 / night</span>
           </div>
-          <h2 class="font-headline-lg text-4xl md:text-5xl text-on-surface mb-2">Flamingo 1</h2>
-          <p class="font-headline-md text-2xl text-primary/70 italic mb-6">Duplex</p>
-          <p class="font-body-lg text-body-lg text-on-surface-variant mb-8">A spacious duplex stay with warm wooden interiors and mountain-facing windows. Spread across two levels with a private sit-out area. Flamingo 1 is the signature experience at FAM.</p>
-          <div class="flex flex-wrap gap-3 mb-8">
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">king_bed</span> King Bed</span>
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">bathtub</span> Attached Bath</span>
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">local_fire_department</span> Bonfire</span>
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">coffee</span> Tea/Coffee</span>
-          </div>
+          <h2 class="font-headline-lg text-4xl md:text-5xl text-on-surface mb-6">Flamingo 1 <span class="block text-primary/70 font-headline-md italic mt-2">Duplex</span></h2>
+          <p class="font-body-lg text-body-lg text-on-surface-variant mb-10 text-balance">
+            A spacious duplex stay with warm wooden interiors and mountain-facing windows.
+          </p>
           <div class="flex gap-4">
-            <a href="/pages/booking" class="btn-primary" aria-label="Book Flamingo 1">Book Now</a>
-            <a href="#flamingo-1" class="btn-secondary" aria-label="View Flamingo 1 details">View Details</a>
+            <a href="/pages/booking" class="bg-primary hover:bg-primary/90 text-on-primary font-label-sm py-4 px-8 rounded-full transition-colors">Book Your Stay</a>
+            <a href="#flamingo-1" class="bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm py-4 px-8 rounded-full transition-colors">View Details</a>
           </div>
         </div>
       </article>
 
-      <!-- Flamingo 2 -->
+      <!-- Flamingo 2: Content Left, Image Right -->
       <article class="flex flex-col-reverse lg:flex-row items-center gap-16 reveal">
         <div class="w-full lg:w-2/5 flex flex-col items-start text-left">
-          <div class="flex items-center gap-3 mb-6">
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">4 Guests</span>
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">&#8377;5,000 / night (incl.&nbsp;GST)</span>
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">1 Bed</span>
+          <div class="inline-flex items-center gap-3 mb-6">
+            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full">4 Guests</span>
+            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full">&#8377;5,000 / night</span>
           </div>
-          <h2 class="font-headline-lg text-4xl md:text-5xl text-on-surface mb-2">Flamingo 2</h2>
-          <p class="font-headline-md text-2xl text-primary/70 italic mb-6">King Attic</p>
-          <p class="font-body-lg text-body-lg text-on-surface-variant mb-8">A cozy attic-style retreat featuring skylight views and charming wooden architecture. Perfect for couples seeking romance under the stars.</p>
-          <div class="flex flex-wrap gap-3 mb-8">
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">king_bed</span> King Bed</span>
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">bathtub</span> Attached Bath</span>
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">wb_sunny</span> Skylight</span>
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">local_fire_department</span> Bonfire</span>
-          </div>
+          <h2 class="font-headline-lg text-4xl md:text-5xl text-on-surface mb-6">Flamingo 2 <span class="block text-primary/70 font-headline-md italic mt-2">King Attic</span></h2>
+          <p class="font-body-lg text-body-lg text-on-surface-variant mb-10 text-balance">
+            A cozy attic-style retreat featuring skylight views and charming wooden architecture.
+          </p>
           <div class="flex gap-4">
-            <a href="/pages/booking" class="btn-primary" aria-label="Book Flamingo 2">Book Now</a>
-            <a href="#flamingo-2" class="btn-secondary" aria-label="View Flamingo 2 details">View Details</a>
+            <a href="/pages/booking" class="bg-primary hover:bg-primary/90 text-on-primary font-label-sm py-4 px-8 rounded-full transition-colors">Book Your Stay</a>
+            <a href="#flamingo-2" class="bg-surface-container hover:bg-surface-variant text-on-surface font-label-sm py-4 px-8 rounded-full transition-colors">View Details</a>
           </div>
         </div>
-        <div class="w-full lg:w-3/5 h-[500px] relative rounded-3xl overflow-hidden shadow-2xl">
-          <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80" alt="Flamingo 2 king attic room with skylight" class="w-full h-full object-cover" loading="lazy" />
-          <div class="absolute bottom-6 left-6 right-6 flex gap-4 overflow-x-auto scrollbar-hide">
-            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shrink-0 border border-outline-variant/30">
-              <span class="material-symbols-outlined text-primary text-lg">wb_sunny</span>
-              <span class="font-label-sm text-on-surface text-xs">Skylight</span>
+        <div class="w-full lg:w-3/5 h-[600px] relative rounded-3xl overflow-hidden shadow-2xl">
+          <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4nlrjlGhGlQ1VJgZIpTbY7YapqlA_1BMfRG6-4JTpuKR5FIr-kCoGL2oLmf0vKEa4o4eCj4Cax_Lhik-W4Ye44HUpjMiiaBTCiS4heB0TPb8hgsU22edlGNxbK_RfEKDi2WEB3RurNCgyGvmQBNRG_vhq3OHgc8qMsHP7unAqt2hCjeV_YhoLtev37NNelTZhQ53GsVmZZ6GcvkW7TCoFrfGKEjGOS9l8v2N3WY6nXIvyOgDh09t3w0iWhvsIqOAURwZoWjIGhDI" alt="Flamingo 2 king attic with skylight" loading="lazy" />
+          <div class="absolute bottom-6 left-6 right-6 flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shadow-sm shrink-0 border border-outline-variant/30">
+              <span class="material-symbols-outlined text-primary text-xl">wb_sunny</span>
+              <span class="font-label-sm text-on-surface">Skylight</span>
             </div>
-            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shrink-0 border border-outline-variant/30">
-              <span class="material-symbols-outlined text-primary text-lg">thermostat</span>
-              <span class="font-label-sm text-on-surface text-xs">Heater</span>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Flamingo 3 -->
-      <article class="flex flex-col lg:flex-row items-center gap-16 reveal">
-        <div class="w-full lg:w-3/5 h-[500px] relative rounded-3xl overflow-hidden shadow-2xl">
-          <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80" alt="Flamingo 3 duplex with garden access" class="w-full h-full object-cover" loading="lazy" />
-          <div class="absolute bottom-6 left-6 right-6 flex gap-4 overflow-x-auto scrollbar-hide">
-            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shrink-0 border border-outline-variant/30">
-              <span class="material-symbols-outlined text-primary text-lg">nature</span>
-              <span class="font-label-sm text-on-surface text-xs">Garden Access</span>
-            </div>
-            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shrink-0 border border-outline-variant/30">
-              <span class="material-symbols-outlined text-primary text-lg">ac_unit</span>
-              <span class="font-label-sm text-on-surface text-xs">Heater</span>
-            </div>
-          </div>
-        </div>
-        <div class="w-full lg:w-2/5 flex flex-col items-start text-left">
-          <div class="flex items-center gap-3 mb-6">
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">4 Guests</span>
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">&#8377;6,000 / night (incl.&nbsp;GST)</span>
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">2 Beds</span>
-          </div>
-          <h2 class="font-headline-lg text-4xl md:text-5xl text-on-surface mb-2">Flamingo 3</h2>
-          <p class="font-headline-md text-2xl text-primary/70 italic mb-6">Duplex</p>
-          <p class="font-body-lg text-body-lg text-on-surface-variant mb-8">A generous duplex with garden access and serene mountain surrounds. Ideal for groups or families seeking space, comfort, and nature.</p>
-          <div class="flex flex-wrap gap-3 mb-8">
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">king_bed</span> 2 Beds</span>
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">yard</span> Garden</span>
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">local_fire_department</span> Bonfire</span>
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">coffee</span> Tea/Coffee</span>
-          </div>
-          <div class="flex gap-4">
-            <a href="/pages/booking" class="btn-primary" aria-label="Book Flamingo 3">Book Now</a>
-            <a href="#flamingo-3" class="btn-secondary" aria-label="View Flamingo 3 details">View Details</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Maina 1 -->
-      <article class="flex flex-col-reverse lg:flex-row items-center gap-16 reveal">
-        <div class="w-full lg:w-2/5 flex flex-col items-start text-left">
-          <div class="flex items-center gap-3 mb-6">
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">2 Guests</span>
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">&#8377;2,500 / night (incl.&nbsp;GST)</span>
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">1 Bed</span>
-          </div>
-          <h2 class="font-headline-lg text-4xl md:text-5xl text-on-surface mb-2">Maina 1</h2>
-          <p class="font-headline-md text-2xl text-primary/70 italic mb-6">Private Room</p>
-          <p class="font-body-lg text-body-lg text-on-surface-variant mb-8">A warm, private room with mountain views, designed for solo travellers and couples who appreciate simplicity and comfort.</p>
-          <div class="flex flex-wrap gap-3 mb-8">
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">king_bed</span> Queen Bed</span>
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">bathtub</span> Attached Bath</span>
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">local_fire_department</span> Bonfire</span>
-          </div>
-          <div class="flex gap-4">
-            <a href="/pages/booking" class="btn-primary" aria-label="Book Maina 1">Book Now</a>
-            <a href="#maina-1" class="btn-secondary" aria-label="View Maina 1 details">View Details</a>
-          </div>
-        </div>
-        <div class="w-full lg:w-3/5 h-[500px] relative rounded-3xl overflow-hidden shadow-2xl">
-          <img src="https://images.unsplash.com/photo-1631049307262-da0ec9d70304?w=800&q=80" alt="Maina 1 private room with mountain view" class="w-full h-full object-cover" loading="lazy" />
-          <div class="absolute bottom-6 left-6 right-6 flex gap-4 overflow-x-auto scrollbar-hide">
-            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shrink-0 border border-outline-variant/30">
-              <span class="material-symbols-outlined text-primary text-lg">landscape</span>
-              <span class="font-label-sm text-on-surface text-xs">Mountain View</span>
-            </div>
-            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shrink-0 border border-outline-variant/30">
-              <span class="material-symbols-outlined text-primary text-lg">wifi</span>
-              <span class="font-label-sm text-on-surface text-xs">Wi-Fi</span>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Maina 2 -->
-      <article class="flex flex-col lg:flex-row items-center gap-16 reveal">
-        <div class="w-full lg:w-3/5 h-[500px] relative rounded-3xl overflow-hidden shadow-2xl">
-          <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80" alt="Maina 2 cozy valley view room" class="w-full h-full object-cover" loading="lazy" />
-          <div class="absolute bottom-6 left-6 right-6 flex gap-4 overflow-x-auto scrollbar-hide">
-            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shrink-0 border border-outline-variant/30">
-              <span class="material-symbols-outlined text-primary text-lg">landscape</span>
-              <span class="font-label-sm text-on-surface text-xs">Valley View</span>
-            </div>
-            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shrink-0 border border-outline-variant/30">
-              <span class="material-symbols-outlined text-primary text-lg">ac_unit</span>
-              <span class="font-label-sm text-on-surface text-xs">Heater</span>
-            </div>
-          </div>
-        </div>
-        <div class="w-full lg:w-2/5 flex flex-col items-start text-left">
-          <div class="flex items-center gap-3 mb-6">
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">2 Guests</span>
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">&#8377;2,000 / night (incl.&nbsp;GST)</span>
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">1 Bed</span>
-          </div>
-          <h2 class="font-headline-lg text-4xl md:text-5xl text-on-surface mb-2">Maina 2</h2>
-          <p class="font-headline-md text-2xl text-primary/70 italic mb-6">Private Room</p>
-          <p class="font-body-lg text-body-lg text-on-surface-variant mb-8">A compact, cosy room offering beautiful valley views and a peaceful nook for quiet reflection. Perfect for the minimalist traveller.</p>
-          <div class="flex flex-wrap gap-3 mb-8">
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">king_bed</span> Queen Bed</span>
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">bathtub</span> Attached Bath</span>
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">local_fire_department</span> Bonfire</span>
-          </div>
-          <div class="flex gap-4">
-            <a href="/pages/booking" class="btn-primary" aria-label="Book Maina 2">Book Now</a>
-            <a href="#maina-2" class="btn-secondary" aria-label="View Maina 2 details">View Details</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Maina 3 -->
-      <article class="flex flex-col-reverse lg:flex-row items-center gap-16 reveal">
-        <div class="w-full lg:w-2/5 flex flex-col items-start text-left">
-          <div class="flex items-center gap-3 mb-6">
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">2 Guests</span>
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">&#8377;2,500 / night (incl.&nbsp;GST)</span>
-            <span class="font-label-sm text-on-surface-variant bg-surface-container py-1 px-3 rounded-full text-xs">1 Bed</span>
-          </div>
-          <h2 class="font-headline-lg text-4xl md:text-5xl text-on-surface mb-2">Maina 3</h2>
-          <p class="font-headline-md text-2xl text-primary/70 italic mb-6">Private Room</p>
-          <p class="font-body-lg text-body-lg text-on-surface-variant mb-8">A charming private room that blends warm wooden interiors with modern cosiness. Great value for travellers who want comfort without compromise.</p>
-          <div class="flex flex-wrap gap-3 mb-8">
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">king_bed</span> Queen Bed</span>
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">bathtub</span> Attached Bath</span>
-            <span class="luxury-badge text-xs"><span class="material-symbols-outlined text-accent-gold text-sm">local_fire_department</span> Bonfire</span>
-          </div>
-          <div class="flex gap-4">
-            <a href="/pages/booking" class="btn-primary" aria-label="Book Maina 3">Book Now</a>
-            <a href="#maina-3" class="btn-secondary" aria-label="View Maina 3 details">View Details</a>
-          </div>
-        </div>
-        <div class="w-full lg:w-3/5 h-[500px] relative rounded-3xl overflow-hidden shadow-2xl">
-          <img src="https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=800&q=80" alt="Maina 3 charming wooden interior room" class="w-full h-full object-cover" loading="lazy" />
-          <div class="absolute bottom-6 left-6 right-6 flex gap-4 overflow-x-auto scrollbar-hide">
-            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shrink-0 border border-outline-variant/30">
-              <span class="material-symbols-outlined text-primary text-lg">nature</span>
-              <span class="font-label-sm text-on-surface text-xs">Garden Access</span>
-            </div>
-            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shrink-0 border border-outline-variant/30">
-              <span class="material-symbols-outlined text-primary text-lg">wifi</span>
-              <span class="font-label-sm text-on-surface text-xs">Wi-Fi</span>
+            <div class="bg-surface/90 backdrop-blur-md rounded-full py-2 px-4 flex items-center gap-2 shadow-sm shrink-0 border border-outline-variant/30">
+              <span class="material-symbols-outlined text-primary text-xl">thermostat</span>
+              <span class="font-label-sm text-on-surface">Heater</span>
             </div>
           </div>
         </div>
@@ -403,30 +245,31 @@ tailwind.config = {
     </section>
 
     <!-- Quote Divider -->
-    <section class="py-24 bg-surface-container-low text-center reveal">
-      <div class="max-w-4xl mx-auto px-4">
+    <section class="py-section-gap px-4 md:px-margin-desktop bg-surface-container-low text-center reveal">
+      <div class="max-w-4xl mx-auto">
         <span class="material-symbols-outlined text-5xl text-primary/30 mb-6 block">format_quote</span>
-        <blockquote class="font-headline-lg text-3xl md:text-4xl text-primary italic">
+        <blockquote class="font-headline-lg text-3xl md:text-4xl text-primary italic text-balance">
           &ldquo;Luxury isn't measured by marble floors. It's measured by how at home you feel.&rdquo;
         </blockquote>
       </div>
     </section>
 
     <!-- Bottom CTA -->
-    <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-section-gap reveal">
+    <section class="py-section-gap px-4 md:px-margin-desktop max-w-max-width mx-auto reveal">
       <div class="relative w-full h-[500px] rounded-[3rem] overflow-hidden flex flex-col justify-center items-center text-center px-8">
         <div class="absolute inset-0 z-0 parallax-bg" data-parallax="true" role="img" aria-label="Mountain landscape at dusk" style="background-image: url('https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=1200&q=80')"></div>
         <div class="absolute inset-0 bg-surface/80 z-10"></div>
         <div class="relative z-20 max-w-2xl">
           <h2 class="font-headline-lg text-4xl md:text-5xl text-primary mb-6">Find Your Perfect Stay.</h2>
-          <p class="font-body-lg text-body-lg text-on-surface-variant mb-10">Every room has its own story. Choose the one that feels like yours.</p>
-          <a href="/pages/booking" class="btn-primary inline-flex items-center gap-2 text-base py-4 px-10">
+          <p class="font-body-lg text-body-lg text-on-surface-variant mb-10 text-balance">Every room has its own story. Choose the one that feels like yours.</p>
+          <a href="/pages/booking" class="bg-primary hover:bg-primary/90 text-on-primary font-label-sm py-4 px-10 rounded-full transition-transform hover:scale-105 inline-flex items-center gap-2">
             <span>View All Availability</span>
             <span class="material-symbols-outlined text-sm">arrow_forward</span>
           </a>
         </div>
       </div>
     </section>
+
   </main>
 
   <footer class="bg-charcoal text-on-primary">
