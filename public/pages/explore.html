@@ -282,7 +282,7 @@ button:focus-visible, [onclick]:focus-visible, [tabindex]:focus-visible { outlin
     <div class="flex items-center gap-4">
       <a href="/" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
     </div>
-    <div class="hidden md:flex nav-links-desktop items-center gap-8">
+    <div class="hidden lg:flex items-center gap-8">
       <a href="/" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Home</a>
       <a href="/pages/rooms" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Rooms</a>
       <a href="/pages/life" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Life at FAM</a>
@@ -295,40 +295,38 @@ button:focus-visible, [onclick]:focus-visible, [tabindex]:focus-visible { outlin
         <button type="button" onclick="window.location.href='/pages/booking'" class="nav-book-btn">Book Your Stay</button>
       </div>
     </div>
+      <div class="flex items-center gap-4">
+        <button class="lg:hidden text-primary p-2" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button>
+      </div>
   </div>
 </nav>
 
-<div class="mobile-nav-bar" id="mobile-nav-bar">
-  <a href="/" class="mobile-nav-logo">Flamingo aur Maina</a>
-  <a href="/pages/booking" class="mobile-book-btn" aria-label="Book Now">Book Now</a>
-  <button class="mobile-nav-toggle" id="mobile-menu-btn" aria-label="Open menu" aria-expanded="false">
-    <span class="menu-icon-line"></span>
-    <span class="menu-icon-line"></span>
-    <span class="menu-icon-line"></span>
-  </button>
-</div>
-<div class="mobile-overlay" id="mobile-overlay" aria-hidden="true"></div>
-<div class="mobile-panel" id="mobile-panel" role="dialog" aria-modal="true" aria-label="Navigation menu">
-  <div class="mobile-panel-header">
-    <button class="mobile-panel-close" id="mobile-panel-close" aria-label="Close menu">
-      <div class="mobile-panel-close-wrap">
-        <span class="close-icon-line"></span>
-        <span class="close-icon-line"></span>
-      </div>
+<div class="mobile-menu-overlay" id="mobile-overlay" aria-hidden="true"></div>
+<div class="mobile-menu-panel" id="mobile-panel" role="dialog" aria-modal="true" aria-label="Navigation menu">
+  <div class="mobile-menu-header">
+    <span class="font-headline-md text-xl text-primary">Menu</span>
+    <button class="mobile-menu-close" id="mobile-close" aria-label="Close navigation menu">
+      <span class="material-symbols-outlined">close</span>
     </button>
   </div>
-  <nav class="mobile-panel-links" aria-label="Mobile navigation">
-    <a href="/" class="mobile-panel-link" style="--i:0">Home</a>
-    <a href="/pages/rooms" class="mobile-panel-link" style="--i:1">Rooms</a>
-    <a href="/pages/life" class="mobile-panel-link" style="--i:2">Life at FAM</a>
-    <a href="/pages/explore" class="mobile-panel-link" style="--i:3">Explore</a>
-    <a href="/pages/gallery" class="mobile-panel-link" style="--i:4">Gallery</a>
-      <a href="/pages/amenities" class="mobile-panel-link" style="--i:5">Amenities</a>
-      <a href="/#contact" class="mobile-panel-link" style="--i:6">Contact</a>
-    </nav>
-  <div class="mobile-panel-cta">
-    <a href="/pages/booking" class="mobile-panel-book-btn">Book Your Stay</a>
-    <button type="button" onclick="window.location.href='/pages/login'" class="mobile-panel-signin-btn" data-direct-nav>Sign In</button>
+  <nav class="mobile-menu-links" aria-label="Mobile navigation">
+    <a href="/" class="mobile-menu-link">Home</a>
+    <a href="/pages/rooms" class="mobile-menu-link">Rooms</a>
+    <a href="/pages/life" class="mobile-menu-link">Life at FAM</a>
+    <a href="/pages/explore" class="mobile-menu-link">Explore</a>
+    <a href="/pages/gallery" class="mobile-menu-link">Gallery</a>
+    <a href="/pages/amenities" class="mobile-menu-link">Amenities</a>
+    <a href="/#contact" class="mobile-menu-link">Contact</a>
+    <div class="mobile-menu-cta-group">
+      <button type="button" onclick="window.location.href='/pages/login'" class="nav-mobile-signin">Sign In</button>
+      <button type="button" onclick="window.location.href='/pages/booking'" class="nav-mobile-book">Book Your Stay</button>
+    </div>
+  </nav>
+  <div class="mobile-menu-footer">
+    <a href="tel:9876575673" class="mobile-menu-phone">
+      <span class="material-symbols-outlined text-lg">phone</span>
+      Property Manager: 98765 75673
+    </a>
   </div>
 </div>
 
