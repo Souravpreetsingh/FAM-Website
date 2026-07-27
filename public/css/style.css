@@ -6209,44 +6209,6 @@ html.mode-winter .nav-mobile-book {
    Premium Mobile Navigation (max-width: 768px)
    ============================================ */
 @media (max-width: 767px) {
-  #main-nav {
-    display: none;
-  }
-
-  .mobile-nav-bar {
-    display: flex;
-    position: fixed;
-    top: 14px;
-    left: 14px;
-    right: 14px;
-    z-index: 100;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px 8px 20px;
-    background: rgba(248, 244, 236, 0.82);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 9999px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
-    gap: 6px;
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease, box-shadow 0.35s ease, background 0.3s ease;
-    min-height: 60px;
-  }
-
-  .mobile-nav-bar.hidden {
-    transform: translateY(-100px);
-    opacity: 0;
-  }
-
-  .mobile-nav-bar.scrolled {
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
-    background: rgba(248, 244, 236, 0.92);
-  }
-
-  .mobile-nav-bar.menu-open {
-    display: none;
-  }
 
   .mobile-nav-logo {
     font-family: 'Playfair Display', serif;
