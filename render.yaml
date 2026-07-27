@@ -41,33 +41,4 @@ services:
       - key: EMAIL_FROM
         sync: false
 
-  - type: static_site
-    name: fam-frontend
-    repo: https://github.com/Souravpreetsingh/fam-website.git
-    branch: master
-    buildCommand: echo "Static site — no build required"
-    publishPath: public
-    headers:
-      - path: /*
-        name: X-Content-Type-Options
-        value: nosniff
-      - path: /*
-        name: X-Frame-Options
-        value: DENY
-      - path: /*
-        name: Referrer-Policy
-        value: strict-origin-when-cross-origin
-      - path: /assets/*
-        name: Cache-Control
-        value: public, max-age=31536000, immutable
-      - path: /images/*
-        name: Cache-Control
-        value: public, max-age=31536000, immutable
-    routes:
-      - type: rewrite
-        source: /pages/:page
-        destination: /pages/:page.html
-      - type: redirect
-        source: /api/*
-        destination: https://fam-backend.onrender.com/api/:splat
-        status: 302
+
