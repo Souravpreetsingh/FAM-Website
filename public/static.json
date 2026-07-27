@@ -1,0 +1,13 @@
+{
+  "rewrites": [
+    { "source": "/pages/:page", "destination": "/pages/:page.html" },
+    { "source": "/", "destination": "/index.html" }
+  ],
+  "redirects": [
+    {
+      "source": "/api/*",
+      "destination": "https://fam-backend.onrender.com/api/:splat",
+      "type": "proxy"
+    }
+  ]
+}

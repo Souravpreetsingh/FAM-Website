@@ -2,8 +2,8 @@ services:
   - type: web
     name: fam-backend
     runtime: node
-    repo: https://github.com/YOUR_USERNAME/YOUR_REPO_NAME
-    branch: main
+    repo: https://github.com/Souravpreetsingh/fam-website.git
+    branch: master
     rootDir: backend
     buildCommand: npm install
     startCommand: node server.js
@@ -13,7 +13,7 @@ services:
       - key: PORT
         value: "5000"
       - key: FRONTEND_URL
-        value: https://fam-mountain-retreat.vercel.app
+        value: https://fam-frontend.onrender.com
       - key: MONGODB_URI
         sync: false
       - key: JWT_ACCESS_SECRET
@@ -40,3 +40,34 @@ services:
         sync: false
       - key: EMAIL_FROM
         sync: false
+
+  - type: static_site
+    name: fam-frontend
+    repo: https://github.com/Souravpreetsingh/fam-website.git
+    branch: master
+    buildCommand: echo "Static site — no build required"
+    publishPath: public
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /images/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    routes:
+      - type: rewrite
+        source: /pages/:page
+        destination: /pages/:page.html
+      - type: redirect
+        source: /api/*
+        destination: https://fam-backend.onrender.com/api/:splat
+        status: 302
