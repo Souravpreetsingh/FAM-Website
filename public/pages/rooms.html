@@ -3,6 +3,7 @@
 <head>
   <style>#pt-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;background:#f8f4ec;opacity:1;transition:opacity .5s cubic-bezier(.65,0,.35,1)}</style>
   <meta charset="utf-8" />
+  <script>try{var m=localStorage.getItem('fam-seasonal-mode');if(m==='winter'){document.documentElement.classList.add('mode-winter')}else if(m==='green'){document.documentElement.classList.add('mode-green')}}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Explore our boutique rooms at Flamingo aur Maina — duplex suites, private rooms, and king attic stays in Jibhi, Himachal Pradesh." />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -44,7 +45,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </noscript>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link rel="stylesheet" href="../css/style.css?v=15" />
+  <link rel="stylesheet" href="../css/style.css?v=16" />
 
 <script id="tailwind-config">
 tailwind.config = {
@@ -114,7 +115,7 @@ tailwind.config = {
       <div class="flex items-center gap-4">
         <a href="/" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
       </div>
-      <div class="hidden lg:flex items-center gap-8">
+      <div class="hidden md:flex nav-links-desktop items-center gap-8">
         <a href="/" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Home</a>
         <a href="/pages/rooms" class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/30 pb-1">Rooms</a>
         <a href="/pages/life" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Life at FAM</a>
@@ -124,7 +125,7 @@ tailwind.config = {
         <a href="/#contact" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Contact</a>
         <div class="flex items-center gap-3">
           <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" aria-label="Sign in to your account" data-direct-nav>Sign In</button>
-          <button type="button" onclick="window.location.href='/pages/booking'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
+          <a href="/pages/booking" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</a>
         </div>
       </div>
     </div>
