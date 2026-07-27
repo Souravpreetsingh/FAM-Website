@@ -139,6 +139,46 @@
     return { roomTotal: roomTotal, tax: tax, addonTotal: addonTotal, discount: discount, weekendSurcharge: weekendSurcharge, total: Math.max(0, total), nights: nights, baseRate: baseRate };
   }
 
+  var serverPrice = null;
+  var priceFetchPending = false;
+
+  function fetchServerPrice(callback) {
+    if (priceFetchPending) return;
+    if (!state.checkIn || !state.checkOut || !state.tripType) {
+      if (callback) callback(null);
+      return;
+    }
+    priceFetchPending = true;
+    var payload = {
+      roomId: state.tripType,
+      checkIn: state.checkIn.toISOString().slice(0, 10),
+      checkOut: state.checkOut.toISOString().slice(0, 10),
+      addons: state.addons,
+      rooms: state.rooms
+    };
+    fetch('/.netlify/functions/calculate-price', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function(r) {
+      return r.json();
+    }).then(function(data) {
+      priceFetchPending = false;
+      if (data.error) {
+        console.error('Server price error:', data.error);
+        if (callback) callback(null);
+        return;
+      }
+      serverPrice = data;
+      updatePrice();
+      if (callback) callback(data);
+    }).catch(function(err) {
+      priceFetchPending = false;
+      console.error('Server price fetch failed:', err);
+      if (callback) callback(null);
+    });
+  }
+
   function smoothScroll(el) {
     if (!el) return;
     var target = el.scrollTopMax !== undefined ? el.scrollTopMax : el.scrollHeight - el.clientHeight;
@@ -179,21 +219,37 @@
     t.innerHTML = '<span class="bk-trigger-glow"></span><span class="bk-trigger-icon">✦</span><span>Book Now</span>';
     document.body.appendChild(t);
     initMagnetic(t);
-    t.addEventListener('click', open);
+    t.addEventListener('click', function () {
+      if (typeof window.navigateTo === 'function') {
+        window.navigateTo('/pages/booking');
+      } else {
+        window.location.href = '/pages/booking';
+      }
+    });
   }
 
   function buildPanel() {
-    if (panelBuilt) return;
+    if (panelBuilt) {
+      var p = document.getElementById('bk-panel');
+      var o = document.getElementById('bk-overlay');
+      var b = document.getElementById('bk-body');
+      if (p && o && b && b.children.length > 0) return;
+      panelBuilt = false;
+    }
     panelBuilt = true;
 
     var overlay = document.createElement('div');
     overlay.className = 'bk-overlay';
     overlay.id = 'bk-overlay';
+    overlay.setAttribute('aria-hidden', 'true');
     overlay.addEventListener('click', close);
 
     var panel = document.createElement('div');
     panel.className = 'bk-panel';
     panel.id = 'bk-panel';
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-modal', 'true');
+    panel.setAttribute('aria-labelledby', 'bk-header-title');
 
     // Header
     var header = document.createElement('div');
@@ -262,10 +318,6 @@
     var dout = document.getElementById('bk-checkout');
     if (di) di.addEventListener('click', function() { scrollToCal(); });
     if (dout) dout.addEventListener('click', function() { scrollToCal(); });
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') close();
-    });
   }
 
   function scrollToCal() {
@@ -672,19 +724,10 @@
 
   /* === Trip Type === */
   function bindTripCards() {
-    var container = document.getElementById('bk-trip-cards') || document.querySelector('.bk-trip-cards');
-    if (!container) {
-      document.querySelectorAll('.bk-trip-card').forEach(function(card) {
-        card.addEventListener('click', function() {
-          document.querySelectorAll('.bk-trip-card').forEach(function(c) { c.classList.remove('selected'); });
-          card.classList.add('selected');
-          state.tripType = card.getAttribute('data-trip');
-          var next = document.getElementById('bk-next');
-          if (next) next.textContent = 'Get AI Recommendation →';
-        });
-      });
-      return;
-    }
+    var container = document.querySelector('.bk-trip-grid');
+    if (!container) return;
+    if (container._tripBound) return;
+    container._tripBound = true;
     container.addEventListener('click', function(e) {
       var card = e.target.closest('.bk-trip-card');
       if (!card) return;
@@ -725,8 +768,96 @@
   /* === Payment === */
   var payStep = 0;
 
+  function clearFieldErrors() {
+    document.querySelectorAll('.bk-pay-input.error').forEach(function(el) {
+      el.classList.remove('error');
+    });
+    document.querySelectorAll('.bk-field-error').forEach(function(el) {
+      el.parentNode.removeChild(el);
+    });
+  }
+
+  function showFieldError(id, message) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('error');
+    var existing = el.parentNode.querySelector('.bk-field-error');
+    if (existing) {
+      existing.textContent = message;
+      return;
+    }
+    var err = document.createElement('span');
+    err.className = 'bk-field-error';
+    err.textContent = message;
+    el.parentNode.insertBefore(err, el.nextSibling);
+  }
+
+  function validatePaymentForm() {
+    clearFieldErrors();
+    var valid = true;
+
+    // Name
+    var nameVal = document.getElementById('bk-pay-name');
+    if (!nameVal || nameVal.value.trim().length < 2) {
+      showFieldError('bk-pay-name', 'Please enter your full name (min 2 characters)');
+      valid = false;
+    }
+
+    // Email
+    var emailVal = document.getElementById('bk-pay-email');
+    var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailVal || !emailRe.test(emailVal.value.trim())) {
+      showFieldError('bk-pay-email', 'Please enter a valid email address');
+      valid = false;
+    }
+
+    // Phone
+    var phoneVal = document.getElementById('bk-pay-phone');
+    var phoneDigits = phoneVal ? phoneVal.value.replace(/\D/g, '') : '';
+    if (!phoneVal || phoneDigits.length < 10) {
+      showFieldError('bk-pay-phone', 'Please enter a valid phone number (min 10 digits)');
+      valid = false;
+    }
+
+    // Card
+    var cardVal = document.getElementById('bk-pay-card');
+    var cardDigits = cardVal ? cardVal.value.replace(/\D/g, '') : '';
+    if (!cardVal || cardDigits.length < 12) {
+      showFieldError('bk-pay-card', 'Please enter a valid card number (min 12 digits)');
+      valid = false;
+    }
+
+    // Expiry
+    var expiryVal = document.getElementById('bk-pay-expiry');
+    if (!expiryVal || !/^\d{2}\/\d{2}$/.test(expiryVal.value.trim())) {
+      showFieldError('bk-pay-expiry', 'Please enter a valid expiry date (MM/YY)');
+      valid = false;
+    } else {
+      var parts = expiryVal.value.trim().split('/');
+      var expMonth = parseInt(parts[0], 10);
+      var expYear = parseInt(parts[1], 10) + 2000;
+      var now = new Date();
+      var curMonth = now.getMonth() + 1;
+      var curYear = now.getFullYear();
+      if (expMonth < 1 || expMonth > 12 || expYear < curYear || (expYear === curYear && expMonth < curMonth)) {
+        showFieldError('bk-pay-expiry', 'Card is expired or invalid');
+        valid = false;
+      }
+    }
+
+    // CVV
+    var cvvVal = document.getElementById('bk-pay-cvv');
+    if (!cvvVal || !/^\d{3,4}$/.test(cvvVal.value.trim())) {
+      showFieldError('bk-pay-cvv', 'Please enter a valid CVV (3 or 4 digits)');
+      valid = false;
+    }
+
+    return valid;
+  }
+
   function refreshPayment() {
     payStep = 0;
+    clearFieldErrors();
     updatePayProgress();
   }
 
@@ -742,10 +873,26 @@
 
   function processPayment() {
     if (payStep >= 5) return;
+    if (payStep === 0) {
+      if (!validatePaymentForm()) return;
+      fetchServerPrice(function(data) {
+        if (!data) {
+          showFieldError('bk-pay-btn', 'Unable to verify pricing. Please try again later.');
+          return;
+        }
+        payStep++;
+        updatePayProgress();
+        if (payStep >= 4) completePayment();
+      });
+      return;
+    }
     payStep++;
     updatePayProgress();
     if (payStep < 4) return;
-    // Complete payment
+    completePayment();
+  }
+
+  function completePayment() {
     var panel = document.getElementById('bk-panel');
     var body = document.getElementById('bk-body');
     var footer = document.getElementById('bk-footer');
@@ -769,23 +916,68 @@
   function updatePrice() {
     var el = document.getElementById('bk-footer-price');
     if (!el) return;
-    var p = calcPrice();
+    var p = serverPrice || calcPrice();
     el.textContent = '₹' + (p.total || 0).toLocaleString('en-IN');
+    fetchServerPrice();
   }
 
   /* === Open / Close === */
+  var lastFocus = null;
+
+  function getFocusable(el) {
+    if (!el) return [];
+    return Array.from(el.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )).filter(function(el) {
+      return !el.disabled && el.offsetParent !== null;
+    });
+  }
+
+  function trapFocus(e) {
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key !== 'Tab') return;
+    var panel = document.getElementById('bk-panel');
+    if (!panel || !panel.classList.contains('open')) return;
+    var focusable = getFocusable(panel);
+    if (focusable.length === 0) return;
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else {
+      if (document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  }
+
   function open() {
     var overlay = document.getElementById('bk-overlay');
     var panel = document.getElementById('bk-panel');
+    var body = document.getElementById('bk-body');
+    if (!overlay || !panel || !body || body.children.length === 0) {
+      panelBuilt = false;
+      buildPanel();
+      overlay = document.getElementById('bk-overlay');
+      panel = document.getElementById('bk-panel');
+    }
     if (overlay) overlay.classList.add('open');
     if (panel) panel.classList.add('open');
     goToStep(state.step);
-    // Rebind dynamic events
+    lastFocus = document.activeElement;
+    document.addEventListener('keydown', trapFocus);
+    // Rebind dynamic events and focus first element
     setTimeout(function() {
       renderCalendar('');
       renderCalendar('-out');
       updateCalSummary();
       bindTripCards();
+      var focusable = getFocusable(panel);
+      if (focusable.length > 0) focusable[0].focus();
     }, 100);
   }
 
@@ -842,6 +1034,12 @@
         document.getElementById('bk-next').addEventListener('click', nextStep);
         document.getElementById('bk-skip').addEventListener('click', function() { advance(); });
       }
+    }
+    document.removeEventListener('keydown', trapFocus);
+    if (lastFocus) {
+      var toFocus = lastFocus;
+      lastFocus = null;
+      setTimeout(function() { if (toFocus && toFocus.focus) toFocus.focus(); }, 50);
     }
   }
 

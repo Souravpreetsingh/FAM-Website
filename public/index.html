@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html class="scroll-smooth" lang="en" style="background:#f8f4ec">
+<html class="scroll-smooth" lang="en">
 <head>
-  <style>#pt-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;background:#f8f4ec;opacity:1}</style>
+  <style>#pt-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;background:var(--mode-bg);opacity:1;transition:opacity .5s cubic-bezier(.65,0,.35,1)}</style>
   <meta charset="utf-8" />
+  <script>try{var m=localStorage.getItem('fam-seasonal-mode');if(m==='winter'){document.documentElement.classList.add('mode-winter')}else if(m==='green'){document.documentElement.classList.add('mode-green')}}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preload" as="image" href="/images/hero/luxury-hero.jpg" />
+  <link rel="preload" as="image" href="/assets/frames/ezgif-frame-001.jpg" />
   <title>Flamingo aur Maina | Boutique Stays in Jibhi</title>
   <meta property="og:title" content="Flamingo aur Maina | Boutique Stays in Jibhi" />
   <meta property="og:description" content="A sanctuary of refined luxury and untold stories amidst nature's embrace. Boutique stays in Jibhi, Himachal Pradesh." />
@@ -58,7 +60,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </noscript>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link rel="stylesheet" href="css/style.css?v=15" />
+  <link rel="stylesheet" href="css/style.css?v=16" />
   <link rel="stylesheet" href="css/scroll-story.css?v=3" />
   <link rel="stylesheet" href="css/transitions.css?v=3" />
   
@@ -152,7 +154,7 @@ tailwind.config = {
     }
   </style>
 </head>
-<body class="antialiased overflow-x-hidden bg-background text-on-surface" style="background:#f8f4ec">
+<body class="antialiased overflow-x-hidden bg-background text-on-surface">
 <div id="pt-overlay" aria-hidden="true"></div>
 <script>
 if ('serviceWorker' in navigator) {
@@ -171,7 +173,7 @@ if ('serviceWorker' in navigator) {
       <div class="flex items-center gap-4">
         <a href="/" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
       </div>
-      <div class="hidden lg:flex items-center gap-8">
+      <div class="hidden md:flex nav-links-desktop items-center gap-8">
         <a href="/" class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/30 pb-1">Home</a>
         <a href="/pages/rooms" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Rooms</a>
         <a href="/pages/life" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Life at FAM</a>
@@ -181,7 +183,7 @@ if ('serviceWorker' in navigator) {
         <a href="#contact" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Contact</a>
         <div class="flex items-center gap-3">
           <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" aria-label="Sign in to your account" data-direct-nav>Sign In</button>
-          <a href="/pages/booking.html" class="nav-book-btn" data-direct-nav aria-label="Book your stay at FAM">Book Your Stay</a>
+          <a href="/pages/booking" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</a>
         </div>
       </div>
     </div>
@@ -190,7 +192,7 @@ if ('serviceWorker' in navigator) {
   <!-- ====== MOBILE NAV BAR (below 769px) ====== -->
   <div class="mobile-nav-bar" id="mobile-nav-bar">
     <a href="/" class="mobile-nav-logo">Flamingo aur Maina</a>
-    <a href="/pages/booking.html" class="mobile-book-btn" data-direct-nav aria-label="Book Now">Book Now</a>
+    <a href="/pages/booking" class="mobile-book-btn" aria-label="Book Now">Book Now</a>
     <button class="mobile-nav-toggle" id="mobile-menu-btn" aria-label="Open menu" aria-expanded="false">
       <span class="menu-icon-line"></span>
       <span class="menu-icon-line"></span>
@@ -220,7 +222,7 @@ if ('serviceWorker' in navigator) {
       <a href="#contact" class="mobile-panel-link" style="--i:5">Contact</a>
     </nav>
     <div class="mobile-panel-cta">
-      <a href="/pages/booking.html" class="mobile-panel-book-btn" data-direct-nav>Book Your Stay</a>
+      <a href="/pages/booking" class="mobile-panel-book-btn">Book Your Stay</a>
       <button type="button" onclick="window.location.href='/pages/login'" class="mobile-panel-signin-btn" data-direct-nav>Sign In</button>
     </div>
   </div>
@@ -239,7 +241,7 @@ if ('serviceWorker' in navigator) {
         <p class="hero-tagline hero-seq">Luxury Boutique Caf&eacute; &amp; Mountain Retreat</p>
         <p class="hero-desc hero-seq">A sanctuary of refined luxury and untold stories amidst nature&rsquo;s embrace.</p>
         <div class="hero-btns hero-seq">
-          <a href="/pages/booking.html" class="hero-btn-primary" data-direct-nav>
+          <a href="/pages/booking" class="hero-btn-primary">
             <span>Book Your Stay</span>
             <span class="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
           </a>
@@ -381,7 +383,7 @@ if ('serviceWorker' in navigator) {
           </div>
           <h3 class="font-headline-md text-xl text-primary mb-1">Flamingo 1</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;6,000 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="/pages/booking.html" class="btn-primary text-sm py-2 px-5">Book Now</a>
+          <a href="/pages/booking" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
 
@@ -397,7 +399,7 @@ if ('serviceWorker' in navigator) {
           </div>
           <h3 class="font-headline-md text-xl text-primary mb-1">Flamingo 2</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;5,000 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="/pages/booking.html" class="btn-primary text-sm py-2 px-5">Book Now</a>
+          <a href="/pages/booking" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
 
@@ -413,7 +415,7 @@ if ('serviceWorker' in navigator) {
           </div>
           <h3 class="font-headline-md text-xl text-primary mb-1">Maina 1</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;2,500 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="/pages/booking.html" class="btn-primary text-sm py-2 px-5">Book Now</a>
+          <a href="/pages/booking" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
     </div>
@@ -1075,7 +1077,7 @@ if ('serviceWorker' in navigator) {
 
   <script>
   function initMobileReveal() {
-    if (window.innerWidth > 768) return;
+    if (window.innerWidth >= 768) return;
     var els = document.querySelectorAll('.reveal-mobile');
     if (!els.length) return;
     if ('IntersectionObserver' in window) {
@@ -1105,11 +1107,11 @@ if ('serviceWorker' in navigator) {
     <div class="booking-modal-body" id="booking-modal-body">
       <div class="booking-form">
         <div class="booking-field">
-          <label class="booking-label">Check-in</label>
+          <label class="booking-label" for="modal-checkin">Check-in</label>
           <input type="date" class="booking-input" id="modal-checkin" min="" />
         </div>
         <div class="booking-field">
-          <label class="booking-label">Check-out</label>
+          <label class="booking-label" for="modal-checkout">Check-out</label>
           <input type="date" class="booking-input" id="modal-checkout" min="" />
         </div>
         <div class="booking-field">

@@ -8,7 +8,7 @@
     var btn = document.getElementById('mobile-menu-btn');
     var panel = document.getElementById('mobile-panel');
     var overlay = document.getElementById('mobile-overlay');
-    var closeBtn = document.getElementById('mobile-panel-close');
+    var closeBtn = document.getElementById('mobile-panel-close') || document.getElementById('mobile-close');
     var navBar = document.getElementById('mobile-nav-bar');
 
     if (!btn || !panel || !overlay) return;
@@ -27,7 +27,7 @@
       btn.setAttribute('aria-expanded', 'true');
       overlay.setAttribute('aria-hidden', 'false');
       panel.setAttribute('aria-hidden', 'false');
-      if (navBar) navBar.style.display = 'none';
+      if (navBar) navBar.classList.add('menu-open');
       setTimeout(function () {
         var first = panel.querySelector(focusableSel);
         if (first) first.focus();
@@ -42,7 +42,12 @@
       btn.setAttribute('aria-expanded', 'false');
       overlay.setAttribute('aria-hidden', 'true');
       panel.setAttribute('aria-hidden', 'true');
-      if (navBar) navBar.style.display = '';
+      if (navBar) {
+        navBar.classList.remove('menu-open');
+        navBar.classList.remove('hidden');
+        navBar.classList.remove('scrolled');
+      }
+      lastScrollY = window.scrollY;
       if (lastFocused) {
         lastFocused.focus();
         lastFocused = null;
@@ -58,7 +63,7 @@
     if (closeBtn) closeBtn.addEventListener('click', close);
     if (overlay) overlay.addEventListener('click', close);
 
-    panel.querySelectorAll('.mobile-panel-link, .mobile-panel-book-btn, .mobile-panel-signin-btn').forEach(function (el) {
+    panel.querySelectorAll('.mobile-panel-link, .mobile-panel-book-btn, .mobile-panel-signin-btn, .mobile-menu-link, .nav-mobile-signin, .nav-mobile-book').forEach(function (el) {
       el.addEventListener('click', function () {
         setTimeout(close, 200);
       });
@@ -98,25 +103,27 @@
     lastScrollY = window.scrollY;
 
     function onScroll() {
-      var currentY = window.scrollY;
+      try {
+        var currentY = window.scrollY;
 
-      if (currentY < 50) {
-        navBar.classList.remove('hidden', 'scrolled');
+        if (currentY < 50) {
+          navBar.classList.remove('hidden', 'scrolled');
+          lastScrollY = currentY;
+          return;
+        }
+
+        if (currentY > lastScrollY && currentY > 80) {
+          navBar.classList.add('hidden');
+          navBar.classList.add('scrolled');
+        } else {
+          navBar.classList.remove('hidden');
+          navBar.classList.add('scrolled');
+        }
+
         lastScrollY = currentY;
+      } finally {
         ticking = false;
-        return;
       }
-
-      if (currentY > lastScrollY && currentY > 80) {
-        navBar.classList.add('hidden');
-        navBar.classList.add('scrolled');
-      } else {
-        navBar.classList.remove('hidden');
-        navBar.classList.add('scrolled');
-      }
-
-      lastScrollY = currentY;
-      ticking = false;
     }
 
     window.addEventListener('scroll', function () {

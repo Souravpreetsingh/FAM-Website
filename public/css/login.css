@@ -808,7 +808,7 @@
   .login-card-inner { padding: 40px 32px; }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .login-page { flex-direction: column; position: relative; min-height: 100vh; }
   .login-hero {
     flex: 0 0 280px;

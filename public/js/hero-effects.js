@@ -4,18 +4,19 @@
   var heroRoot = null;
   var bgWrap = null;
   var ambient = null;
-  var cursorGlow = null;
   var particles = [];
   var mouseX = 0.5;
   var mouseY = 0.5;
   var isDesktop = window.innerWidth >= 1024;
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var parallaxTicking = false;
+  var magneticTicking = false;
 
   function createCursorGlow() {
     var el = document.createElement('div');
     el.className = 'hero-cursor-glow';
     document.body.appendChild(el);
-    cursorGlow = el;
+    var cursorGlow = el;
 
     document.addEventListener('mousemove', function(e) {
       mouseX = e.clientX / window.innerWidth;
@@ -33,7 +34,7 @@
 
   function createParticles() {
     if (!ambient || reducedMotion) return;
-    var count = isDesktop ? 30 : 10;
+    var count = isDesktop ? 20 : 8;
     for (var i = 0; i < count; i++) {
       var p = document.createElement('div');
       var size = 2 + Math.random() * 3;
@@ -65,31 +66,36 @@
     if (!bgWrap || reducedMotion || !isDesktop) return;
 
     document.addEventListener('mousemove', function(e) {
-      var xFactor = (e.clientX / window.innerWidth - 0.5) * 6;
-      var yFactor = (e.clientY / window.innerHeight - 0.5) * 4;
-      bgWrap.style.transform = 'translate3d(' + xFactor + 'px, ' + yFactor + 'px, 0) scale(1.02)';
-    });
+      if (parallaxTicking) return;
+      parallaxTicking = true;
+      requestAnimationFrame(function() {
+        var xFactor = (e.clientX / window.innerWidth - 0.5) * 6;
+        var yFactor = (e.clientY / window.innerHeight - 0.5) * 4;
+        bgWrap.style.transform = 'translate3d(' + xFactor + 'px, ' + yFactor + 'px, 0) scale(1.02)';
+        parallaxTicking = false;
+      });
+    }, { passive: true });
   }
 
   function initMagneticButtons() {
     if (!isDesktop || reducedMotion) return;
     var btns = document.querySelectorAll('.hero-btn-primary, .hero-btn-secondary');
     btns.forEach(function(btn) {
-      var ticking = false;
       btn.addEventListener('mousemove', function(e) {
-        if (ticking) return;
-        ticking = true;
+        if (magneticTicking) return;
+        magneticTicking = true;
         requestAnimationFrame(function() {
           var rect = btn.getBoundingClientRect();
           var x = e.clientX - rect.left - rect.width / 2;
           var y = e.clientY - rect.top - rect.height / 2;
           var dist = Math.sqrt(x * x + y * y);
-          if (dist > 100) { ticking = false; return; }
+          if (dist > 100) { magneticTicking = false; return; }
           var strength = (1 - dist / 100) * 6;
           var angle = Math.atan2(y, x);
           btn.style.transform = 'translate3d(' + Math.cos(angle) * strength + 'px, ' + Math.sin(angle) * strength + 'px, 0)';
-          ticking = false;
+          magneticTicking = false;
         });
+        magneticTicking = true;
       }, { passive: true });
       btn.addEventListener('mouseleave', function() {
         btn.style.transform = '';

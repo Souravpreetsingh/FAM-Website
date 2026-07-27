@@ -55,7 +55,14 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/booking" element={<Booking />} />
+          <Route path="/booking/review" element={<BookingReview />} />
+          <Route path="/rooms" element={<Rooms />} />
+          <Route path="/rooms/:slug" element={<RoomDetail />} />
+          <Route path="/rooms/:slug/book" element={<RoomDetail />} />
+        </Route>
 
         <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
         <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
@@ -63,14 +70,6 @@ export default function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
 
         <Route path="/verify-email" element={<VerifyEmail />} />
-
-        <Route element={<Layout />}>
-          <Route path="/booking" element={<Booking />} />
-          <Route path="/booking/review" element={<BookingReview />} />
-          <Route path="/rooms" element={<Rooms />} />
-          <Route path="/rooms/:slug" element={<RoomDetail />} />
-          <Route path="/rooms/:slug/book" element={<RoomDetail />} />
-        </Route>
 
         <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
           <Route path="/bookings" element={<Lazy><MyBookings /></Lazy>} />

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html class="scroll-smooth" lang="en" style="background:#f8f4ec">
+<html class="scroll-smooth" lang="en">
 <head>
-  <style>#pt-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;background:#f8f4ec;opacity:1;transition:opacity .5s cubic-bezier(.65,0,.35,1)}</style>
+  <style>#pt-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;background:var(--mode-bg);opacity:1;transition:opacity .5s cubic-bezier(.65,0,.35,1)}</style>
 <meta charset="utf-8"/>
+<script>try{var m=localStorage.getItem('fam-seasonal-mode');if(m==='winter'){document.documentElement.classList.add('mode-winter')}else if(m==='green'){document.documentElement.classList.add('mode-green')}}catch(e){}</script>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta name="description" content="Discover Jibhi, Himachal Pradesh — treks, riverside picnics, local culture, and Himalayan adventures near Flamingo aur Maina." />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -37,13 +38,13 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null"/>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null"/>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null"/>
-<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/></noscript>
-<link rel="stylesheet" href="../css/style.css?v=15" />
+<link rel="stylesheet" href="../css/style.css?v=16" />
 <script id="tailwind-config">
 tailwind.config = {
   darkMode: "class", theme: { extend: {
@@ -268,20 +269,20 @@ button:focus-visible, [onclick]:focus-visible, [tabindex]:focus-visible { outlin
   pointer-events: none; z-index: 1;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .map-info-panel { right: 10px; left: 10px; width: auto; top: auto; bottom: 10px; }
   .cta-section { padding: 48px 24px; border-radius: 16px; }
   .ex-hero { min-height: 600px; }
 }
 </style>
   <link rel="stylesheet" href="../css/transitions.css?v=3" /></head>
-<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden" style="background:#f8f4ec"><div id="pt-overlay" aria-hidden="true"></div>
+<body class="antialiased overflow-x-hidden bg-background text-on-surface"><div id="pt-overlay" aria-hidden="true"></div>
 <nav class="main-nav" id="main-nav">
   <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto">
     <div class="flex items-center gap-4">
       <a href="/" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
     </div>
-    <div class="hidden lg:flex items-center gap-8">
+    <div class="hidden md:flex nav-links-desktop items-center gap-8">
       <a href="/" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Home</a>
       <a href="/pages/rooms" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Rooms</a>
       <a href="/pages/life" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Life at FAM</a>
@@ -291,7 +292,7 @@ button:focus-visible, [onclick]:focus-visible, [tabindex]:focus-visible { outlin
         <a href="/#contact" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Contact</a>
         <div class="flex items-center gap-3">
         <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" data-direct-nav>Sign In</button>
-        <button type="button" onclick="window.location.href='booking.html'" class="nav-book-btn">Book Your Stay</button>
+        <button type="button" onclick="window.location.href='/pages/booking'" class="nav-book-btn">Book Your Stay</button>
       </div>
     </div>
   </div>
@@ -299,7 +300,7 @@ button:focus-visible, [onclick]:focus-visible, [tabindex]:focus-visible { outlin
 
 <div class="mobile-nav-bar" id="mobile-nav-bar">
   <a href="/" class="mobile-nav-logo">Flamingo aur Maina</a>
-  <a href="/pages/booking.html" class="mobile-book-btn" data-direct-nav aria-label="Book Now">Book Now</a>
+  <a href="/pages/booking" class="mobile-book-btn" aria-label="Book Now">Book Now</a>
   <button class="mobile-nav-toggle" id="mobile-menu-btn" aria-label="Open menu" aria-expanded="false">
     <span class="menu-icon-line"></span>
     <span class="menu-icon-line"></span>
@@ -326,7 +327,7 @@ button:focus-visible, [onclick]:focus-visible, [tabindex]:focus-visible { outlin
       <a href="/#contact" class="mobile-panel-link" style="--i:6">Contact</a>
     </nav>
   <div class="mobile-panel-cta">
-    <a href="booking.html" class="mobile-panel-book-btn" data-direct-nav>Book Your Stay</a>
+    <a href="/pages/booking" class="mobile-panel-book-btn">Book Your Stay</a>
     <button type="button" onclick="window.location.href='/pages/login'" class="mobile-panel-signin-btn" data-direct-nav>Sign In</button>
   </div>
 </div>
@@ -781,24 +782,24 @@ button:focus-visible, [onclick]:focus-visible, [tabindex]:focus-visible { outlin
         <div>
           <div style="font-size:12px;color:#6B7280;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px">At a Glance</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-            <div style="padding:16px;border-radius:16px;background:#f8f4ec">
+            <div style="padding:16px;border-radius:16px;background:var(--mode-bg)">
               <div style="font-size:13px;color:#0a341d;font-weight:600;margin-bottom:4px">&#127782; Months</div>
               <div style="font-size:14px;color:#6B7280" id="s-months">March – April</div>
             </div>
-            <div style="padding:16px;border-radius:16px;background:#f8f4ec">
+            <div style="padding:16px;border-radius:16px;background:var(--mode-bg)">
               <div style="font-size:13px;color:#0a341d;font-weight:600;margin-bottom:4px">&#127758; Temperature</div>
               <div style="font-size:14px;color:#6B7280" id="s-temp">15°C – 25°C</div>
             </div>
-            <div style="padding:16px;border-radius:16px;background:#f8f4ec">
+            <div style="padding:16px;border-radius:16px;background:var(--mode-bg)">
               <div style="font-size:13px;color:#0a341d;font-weight:600;margin-bottom:4px">&#128170; Activities</div>
               <div style="font-size:14px;color:#6B7280" id="s-activities">Trekking, Photography</div>
             </div>
-            <div style="padding:16px;border-radius:16px;background:#f8f4ec">
+            <div style="padding:16px;border-radius:16px;background:var(--mode-bg)">
               <div style="font-size:13px;color:#0a341d;font-weight:600;margin-bottom:4px">&#127960; Landscape</div>
               <div style="font-size:14px;color:#6B7280" id="s-landscape">Blooming meadows</div>
             </div>
           </div>
-          <div style="margin-top:16px;padding:16px;border-radius:16px;background:#f8f4ec">
+          <div style="margin-top:16px;padding:16px;border-radius:16px;background:var(--mode-bg)">
             <div style="font-size:12px;color:#6B7280;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:8px">&#127758; Best Places This Season</div>
             <div style="font-size:14px;color:#0a341d" id="s-places">Jibhi Waterfall, Jalori Pass, Chehni Kothi, Tirthan Valley</div>
           </div>
@@ -817,7 +818,7 @@ button:focus-visible, [onclick]:focus-visible, [tabindex]:focus-visible { outlin
       <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);color:#fff;line-height:1.15;margin-bottom:16px">Your Himalayan Adventure<br/>Begins Here.</h2>
       <p style="color:rgba(255,255,255,0.6);max-width:500px;margin:0 auto 32px;font-size:15px;line-height:1.7">From misty waterfalls to starlit bonfires, every moment at FAM is an invitation to slow down and reconnect.</p>
       <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center">
-        <button onclick="window.location.href='booking.html'" style="padding:14px 36px;border-radius:9999px;background:#C9A86A;color:#fff;font-weight:600;font-size:14px;border:none;cursor:pointer;transition:all 0.3s;letter-spacing:0.02em" onmouseover="this.style.background='#b8925a';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='#C9A86A';this.style.transform='translateY(0)'">Book Your Stay</button>
+        <button onclick="window.location.href='/pages/booking'" style="padding:14px 36px;border-radius:9999px;background:#C9A86A;color:#fff;font-weight:600;font-size:14px;border:none;cursor:pointer;transition:all 0.3s;letter-spacing:0.02em" onmouseover="this.style.background='#b8925a';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='#C9A86A';this.style.transform='translateY(0)'">Book Your Stay</button>
         <button onclick="if(typeof toggleConcierge==='function')toggleConcierge()" style="padding:14px 36px;border-radius:9999px;background:rgba(255,255,255,0.1);color:#fff;font-weight:600;font-size:14px;border:1px solid rgba(255,255,255,0.2);cursor:pointer;transition:all 0.3s;letter-spacing:0.02em" onmouseover="this.style.background='rgba(255,255,255,0.15)';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.transform='translateY(0)'">Talk to AI Concierge</button>
       </div>
     </div>
@@ -852,7 +853,7 @@ button:focus-visible, [onclick]:focus-visible, [tabindex]:focus-visible { outlin
       </div>
     </div>
     <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-on-primary/40 font-body-md">
-      <p>&copy; 2026 Flamingo aur Maina. All rights reserved.</p>
+      <p>&copy; 2024 Flamingo aur Maina. All rights reserved.</p>
       <div class="flex gap-6">
         <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Privacy Policy</a>
         <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Terms of Service</a>
@@ -1091,6 +1092,7 @@ window.__pageInit = initExplorePage;
 <script src="../js/concierge.js"></script>
   <script src="../js/seasonal.js"></script>
   <script src="../js/mobile-nav.js"></script>
+  <script src="../js/animations.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
   <script src="../js/page-transitions.js"></script>
@@ -1114,11 +1116,11 @@ window.__pageInit = initExplorePage;
     <div class="booking-modal-body" id="booking-modal-body">
       <div class="booking-form">
         <div class="booking-field">
-          <label class="booking-label">Check-in</label>
+          <label class="booking-label" for="modal-checkin">Check-in</label>
           <input type="date" class="booking-input" id="modal-checkin" min="" />
         </div>
         <div class="booking-field">
-          <label class="booking-label">Check-out</label>
+          <label class="booking-label" for="modal-checkout">Check-out</label>
           <input type="date" class="booking-input" id="modal-checkout" min="" />
         </div>
         <div class="booking-field">

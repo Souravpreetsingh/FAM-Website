@@ -1,17 +1,33 @@
 (function () {
   'use strict';
 
-  var isMobile = window.innerWidth <= 768;
+  var isMobile = window.innerWidth <= 767;
   var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReducedMotion || isMobile) return;
 
   var gsap, ScrollTrigger, lenis;
+  var animElements = [];
+  var rafId = null;
+  var prevTime = 0;
+  var isHidden = false;
+
+  function cleanupRAF() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    animElements = [];
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    isHidden = document.hidden;
+    if (isHidden && rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    else if (!isHidden && animElements.length > 0 && !rafId) { rafId = requestAnimationFrame(mainLoop); }
+  });
 
   /* ============================================
      SETUP
      ============================================ */
   function initLenis() {
     if (typeof Lenis === 'undefined') return;
+    if (typeof FAM !== 'undefined' && FAM.lenis) { lenis = FAM.lenis; return; }
     lenis = new Lenis({
       lerp: 0.07,
       wheelMultiplier: 1.0,
@@ -19,12 +35,11 @@
       syncTouch: true,
       touchMultiplier: 1.5,
     });
-    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    if (typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined') {
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add(function(time) {
         lenis.raf(time * 1000);
       });
-      gsap.ticker.lagSmoothing(0);
     } else {
       function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
       requestAnimationFrame(raf);
@@ -40,7 +55,6 @@
     createChapters();
     createAtmosphere();
     createProgressBar();
-    createCursorGlow();
     initParallax();
     initRevealAnimations();
   }
@@ -67,35 +81,10 @@
   }
 
   /* ============================================
-     CURSOR GLOW
-     ============================================ */
-  function createCursorGlow() {
-    var glow = document.createElement('div');
-    glow.className = 'ss-cursor-glow';
-    glow.id = 'ss-cursor-glow';
-    document.body.appendChild(glow);
-    var isVisible = false;
-    var timer;
-    document.addEventListener('mousemove', function(e) {
-      glow.style.transform = 'translate(' + (e.clientX - 150) + 'px, ' + (e.clientY - 150) + 'px)';
-      if (!isVisible) { isVisible = true; glow.style.opacity = '1'; }
-      clearTimeout(timer);
-      timer = setTimeout(function() {
-        glow.style.opacity = '0';
-        isVisible = false;
-      }, 2000);
-    });
-    document.addEventListener('mouseleave', function() {
-      glow.style.opacity = '0';
-      isVisible = false;
-    });
-  }
-
-  /* ============================================
-     ATMOSPHERE — Leaves, Birds, Fireflies, Stars, Moon, Mist, Light Rays
+     ATMOSPHERE — Single RAF loop for all elements
      ============================================ */
   function createAtmosphere() {
-    if (window.innerWidth <= 768) return;
+    if (window.innerWidth <= 767) return;
     var container = document.createElement('div');
     container.className = 'ss-atmosphere';
     container.id = 'ss-atmosphere';
@@ -107,10 +96,44 @@
     createMoon(container);
     createMist(container);
     createLightRays(container);
+    if (animElements.length > 0) {
+      rafId = requestAnimationFrame(mainLoop);
+    }
+  }
+
+  function mainLoop(t) {
+    if (isHidden) { rafId = null; return; }
+    if (prevTime === 0) prevTime = t;
+    var dt = t - prevTime;
+    prevTime = t;
+    if (dt > 100) dt = 16;
+    for (var i = 0; i < animElements.length; i++) {
+      animElements[i].update(dt, t);
+    }
+    rafId = requestAnimationFrame(mainLoop);
+  }
+
+  function makeAnimElement(config) {
+    var anim = {
+      el: config.el,
+      duration: config.duration,
+      delay: config.delay,
+      elapsed: 0,
+      started: false,
+      update: function(dt) {
+        if (!this.el.parentNode) return;
+        if (!this.started) { this.started = true; this.elapsed = -this.delay * 1000; }
+        this.elapsed += dt;
+        var p = (this.elapsed / 1000) % this.duration / this.duration;
+        config.animate(this.el, p);
+        if (p >= 0.99) config.reset.call(this, this.el);
+      }
+    };
+    return anim;
   }
 
   function createLeaves(container) {
-    var leafCount = 6;
+    var leafCount = 4;
     var leafTypes = ['ss-leaf-1', 'ss-leaf-2', 'ss-leaf-3'];
     for (var i = 0; i < leafCount; i++) {
       var leaf = document.createElement('div');
@@ -121,32 +144,28 @@
       leaf.style.height = (6 + Math.random() * 8) + 'px';
       leaf.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
       container.appendChild(leaf);
-      animateLeaf(leaf);
+      var dur = 8 + Math.random() * 6;
+      var delay = Math.random() * 4;
+      animElements.push(makeAnimElement({
+        el: leaf, duration: dur, delay: delay,
+        animate: function(el, p) {
+          var wave = Math.sin(p * Math.PI * 4) * 20;
+          var fall = p * 30;
+          el.style.transform = 'translate(' + wave + 'px, ' + fall + 'px) rotate(' + (p * 720) + 'deg)';
+          el.style.opacity = p > 0.85 ? (1 - (p - 0.85) / 0.15) : 0.4;
+        },
+        reset: function(el) {
+          var d = 8 + Math.random() * 6;
+          this.duration = d;
+          this.delay = Math.random() * 4;
+          this.elapsed = -this.delay * 1000;
+        }
+      }));
     }
-  }
-
-  function animateLeaf(el) {
-    var x = parseFloat(el.style.left);
-    var y = parseFloat(el.style.top);
-    var duration = 8 + Math.random() * 6;
-    var delay = Math.random() * 4;
-    var startTime = null;
-    function step(t) {
-      if (!startTime) startTime = t;
-      var p = ((t - startTime) / 1000 + delay) % duration / duration;
-      var wave = Math.sin(p * Math.PI * 4) * 20;
-      var fall = p * 30;
-      el.style.transform = 'translate(' + wave + 'px, ' + fall + 'px) rotate(' + (p * 720) + 'deg)';
-      el.style.opacity = p > 0.85 ? (1 - (p - 0.85) / 0.15) : 0.4;
-      if (p >= 1) { el.style.opacity = '0'; startTime = null; delay = Math.random() * 4; }
-      requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
   }
 
   function createBirds(container) {
-    var birdCount = 3;
-    for (var i = 0; i < birdCount; i++) {
+    for (var i = 0; i < 2; i++) {
       var bird = document.createElement('div');
       bird.className = 'ss-bird';
       bird.textContent = '~';
@@ -155,32 +174,29 @@
       bird.style.top = (8 + Math.random() * 20) + '%';
       bird.style.transform = 'scaleX(' + (Math.random() > 0.5 ? 1 : -1) + ')';
       container.appendChild(bird);
-      animateBird(bird);
+      var scaleDir = bird.style.transform.indexOf('-1') >= 0 ? -1 : 1;
+      var dur = 12 + Math.random() * 8;
+      var delay = Math.random() * 8;
+      animElements.push(makeAnimElement({
+        el: bird, duration: dur, delay: delay,
+        animate: function(el, p) {
+          var x = p * 80;
+          var y = Math.sin(p * Math.PI * 3) * 15;
+          var wave = Math.sin(p * Math.PI * 6) * 5;
+          el.style.transform = 'translate(' + x + 'vw, ' + (y + wave) + 'px) scaleX(' + (-scaleDir) + ')';
+          el.style.opacity = p > 0.85 ? (1 - (p - 0.85) / 0.15) : (p < 0.1 ? p / 0.1 : 0.3);
+        },
+        reset: function(el) {
+          this.duration = 12 + Math.random() * 8;
+          this.delay = Math.random() * 8;
+          this.elapsed = -this.delay * 1000;
+        }
+      }));
     }
-  }
-
-  function animateBird(el) {
-    var startX = parseFloat(el.style.left);
-    var startY = parseFloat(el.style.top);
-    var duration = 12 + Math.random() * 8;
-    var delay = Math.random() * 8;
-    var scaleDir = el.style.transform.indexOf('-1') >= 0 ? -1 : 1;
-    var startTime = null;
-    function step(t) {
-      if (!startTime) startTime = t;
-      var p = ((t - startTime) / 1000 + delay) % duration / duration;
-      var x = p * 80;
-      var y = Math.sin(p * Math.PI * 3) * 15;
-      var wave = Math.sin(p * Math.PI * 6) * 5;
-      el.style.transform = 'translate(' + x + 'vw, ' + (y + wave) + 'px) scaleX(' + (-scaleDir) + ')';
-      el.style.opacity = p > 0.85 ? (1 - (p - 0.85) / 0.15) : (p < 0.1 ? p / 0.1 : 0.3);
-      requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
   }
 
   function createFireflies(container) {
-    var count = 8;
+    var count = 5;
     for (var i = 0; i < count; i++) {
       var ff = document.createElement('div');
       ff.className = 'ss-firefly';
@@ -190,31 +206,25 @@
       ff.style.height = ff.style.width;
       ff.style.opacity = '0';
       container.appendChild(ff);
-      animateFirefly(ff);
+      var sx = parseFloat(ff.style.left);
+      var sy = parseFloat(ff.style.top);
+      var dur = 3 + Math.random() * 4;
+      animElements.push(makeAnimElement({
+        el: ff, duration: dur, delay: 0,
+        animate: function(el, p) {
+          var x = sx + Math.sin(p * Math.PI * 2) * 8;
+          var y = sy + Math.cos(p * Math.PI * 3) * 6;
+          var glow = Math.sin(p * Math.PI * 6) * 0.5 + 0.5;
+          el.style.transform = 'translate(' + (x - sx) + 'vw, ' + (y - sy) + 'vh)';
+          el.style.opacity = glow * 0.7;
+        },
+        reset: function() {}
+      }));
     }
-  }
-
-  function animateFirefly(el) {
-    var sx = parseFloat(el.style.left);
-    var sy = parseFloat(el.style.top);
-    var dur = 3 + Math.random() * 4;
-    var startTime = null;
-    function step(t) {
-      if (!startTime) startTime = t;
-      var p = ((t - startTime) / 1000) % dur / dur;
-      var x = sx + Math.sin(p * Math.PI * 2) * 8;
-      var y = sy + Math.cos(p * Math.PI * 3) * 6;
-      var glow = Math.sin(p * Math.PI * 6) * 0.5 + 0.5;
-      el.style.transform = 'translate(' + (x - sx) + 'vw, ' + (y - sy) + 'vh)';
-      el.style.opacity = glow * 0.7;
-      requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
   }
 
   function createStars(container) {
-    var count = 30;
-    for (var i = 0; i < count; i++) {
+    for (var i = 0; i < 20; i++) {
       var star = document.createElement('div');
       star.className = 'ss-star';
       star.style.left = Math.random() * 100 + '%';
@@ -261,23 +271,19 @@
     var p = ambientState.progress;
     var atmosphere = document.getElementById('ss-atmosphere');
     if (!atmosphere) return;
-    // Moon visibility
     var moon = document.getElementById('ss-moon');
     if (moon) {
       var moonOpacity = Math.max(0, Math.min(1, (p - 0.6) / 0.3));
       moon.style.opacity = moonOpacity.toString();
     }
-    // Stars visibility
     var stars = atmosphere.querySelectorAll('.ss-star');
     stars.forEach(function(s) {
       var starP = Math.max(0, Math.min(1, (p - 0.5) / 0.4));
       var base = parseFloat(s.style.opacity) || 0.2;
       s.style.opacity = (base * starP).toString();
     });
-    // Fireflies visibility (more active at night)
     var fireflies = atmosphere.querySelectorAll('.ss-firefly');
     fireflies.forEach(function(f) {
-      var ffP = Math.max(0, Math.min(1, (p - 0.3) / 0.5));
       var current = parseFloat(f.dataset.baseOpacity) || 0.7;
       f.style.opacity = ((p > 0.6 ? ((p - 0.6) / 0.4) : 0.3) * current).toString();
     });
@@ -301,7 +307,6 @@
     });
   }
 
-  /* --- Chapter 1: Arrival (Hero) --- */
   function chapter1Arrival() {
     var hero = document.getElementById('hero');
     if (!hero) return;
@@ -313,23 +318,16 @@
         scrub: 1.5,
       }
     });
-    // Mist drifts away
     var mist = document.getElementById('ss-mist-layer');
     if (mist) tl.to(mist, { opacity: 0, y: -40, ease: 'power1.out' }, 0);
     var mist2 = document.getElementById('ss-mist-layer-2');
     if (mist2) tl.to(mist2, { opacity: 0, x: 60, ease: 'power1.out' }, 0);
-    // Light rays intensify then fade
     var rays = document.querySelectorAll('.ss-light-ray');
     tl.to(rays, { opacity: 0.6, rotate: 5, ease: 'power1.out' }, 0.2);
     tl.to(rays, { opacity: 0, ease: 'power1.in' }, 0.6);
   }
 
-  /* --- Chapter 2: Welcome --- */
   function chapter2Welcome() {
-    var sections = [
-      { id: 'welcome', trigger: '#welcome' },
-      { trigger: '.max-w-max-width.mx-auto', start: 'top 85%' },
-    ];
     document.querySelectorAll('.ss-fade-up, .ss-fade-in, .ss-scale-reveal, .ss-blur-reveal').forEach(function(el) {
       if (el.closest('#hero')) return;
       ScrollTrigger.create({
@@ -341,7 +339,6 @@
     });
   }
 
-  /* --- Chapter 3: Rooms --- */
   function chapter3Rooms() {
     var roomCards = document.querySelectorAll('.room-card, [class*="room"], .group');
     if (!roomCards.length) return;
@@ -355,12 +352,10 @@
         },
         once: true,
       });
-      // Card lift
       card.classList.add('ss-card-lift');
     });
   }
 
-  /* --- Chapter 4: Amenities --- */
   function chapter4Amenities() {
     document.querySelectorAll('.explore-card, [class*="feature"], [class*="amenity"]').forEach(function(el) {
       el.classList.add('ss-scale-reveal');
@@ -374,11 +369,9 @@
     });
   }
 
-  /* --- Chapter 5: Experiences --- */
   function chapter5Experiences() {
     var aiSection = document.getElementById('ai-trip-planner');
     if (!aiSection) return;
-    // Parallax for the SVG illustration
     var svgCol = aiSection.querySelector('.lg\\:col-span-1, [class*="col-span"]');
     if (svgCol) {
       gsap.to(svgCol, {
@@ -392,7 +385,6 @@
         }
       });
     }
-    // Left column content reveal
     var contentCol = aiSection.querySelector('.lg\\:col-span-2, [class*="col-span"]:not([class*="col-span-1"])');
     if (contentCol) {
       ScrollTrigger.create({
@@ -405,9 +397,7 @@
     }
   }
 
-  /* --- Chapter 6: AI Concierge --- */
   function chapter6Concierge() {
-    // The concierge button already exists and pulses. Enhance with glow.
     var btn = document.getElementById('concierge-btn');
     if (btn) {
       gsap.to(btn, {
@@ -420,7 +410,6 @@
     }
   }
 
-  /* --- Chapter 7: Booking --- */
   function chapter7Booking() {
     var ctaSection = document.querySelector('[class*="cta"], .max-w-max-width:last-of-type');
     if (!ctaSection) return;
@@ -434,7 +423,6 @@
         ease: 'sine.inOut',
       });
     }
-    // Warm background transition
     gsap.to(ctaSection, {
       backgroundColor: 'rgba(248,244,236,0.5)',
       scrollTrigger: {
@@ -459,7 +447,6 @@
     }
   }
 
-  /* --- Ambient Timeline (time-of-day shift) --- */
   function ambientTimeline() {
     ScrollTrigger.create({
       trigger: 'body',
@@ -474,7 +461,7 @@
   }
 
   /* ============================================
-     PARALLAX — Native scroll-based parallax
+     PARALLAX
      ============================================ */
   function initParallax() {
     if (!gsap || !ScrollTrigger) return;
@@ -490,7 +477,6 @@
         }
       });
     });
-    // Image zoom on scroll
     document.querySelectorAll('.ss-img-zoom').forEach(function(el) {
       var img = el.querySelector('img, .aspect-ratio-bg');
       if (!img) return;
@@ -529,14 +515,13 @@
      INIT
      ============================================ */
   function init() {
-    if (typeof gsap !== 'undefined') {
+    if (typeof window.gsap !== 'undefined') {
       gsap = window.gsap;
     }
-    if (typeof ScrollTrigger !== 'undefined') {
+    if (typeof window.ScrollTrigger !== 'undefined') {
       ScrollTrigger = window.ScrollTrigger;
     }
     initScrollTrigger();
-    // Fallback if GSAP didn't load
     if (!gsap || !ScrollTrigger) {
       initRevealAnimations();
       createProgressBar();
@@ -548,4 +533,9 @@
   } else {
     init();
   }
+
+  window.addEventListener('page:loaded', function() {
+    cleanupRAF();
+  });
+
 })();

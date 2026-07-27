@@ -201,7 +201,7 @@
       }
     }, 60000);
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
   }
 
   if (document.readyState === 'loading') {

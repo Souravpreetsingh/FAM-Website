@@ -30,60 +30,74 @@ function exitPage(cb) {
 }
 
 function enterPage() {
-  if (!overlay) return;
-  var ov = window.getComputedStyle(overlay).opacity;
-  var visible = parseFloat(ov) > 0.01;
-  
-  if (visible) {
-    overlay.style.transition = 'opacity 0.5s cubic-bezier(0.65,0,0.35,1)';
-    overlay.style.opacity = '1';
-  }
-  
-  var els = [];
-  var mains = document.querySelectorAll('main, .pt-content');
-  mains.forEach(function(m){
-    var children = [];
-    m.querySelectorAll('section, .hero-root, .mt-hero, .ex-hero, .planner-wrap, .cta-section, .map-section, .editorial-card, .experience-card, .explore-card, .trip-planner-wrap, .tp-card, .fam-map-wrap, .booking-bar, footer').forEach(function(s){ children.push(s); });
-    if (children.length === 0) {
-      for (var i=0;i<m.children.length;i++) children.push(m.children[i]);
+  try {
+    if (!overlay) return;
+    var ov = window.getComputedStyle(overlay).opacity;
+    var visible = parseFloat(ov) > 0.01;
+    
+    if (visible) {
+      overlay.style.transition = 'opacity 0.5s cubic-bezier(0.65,0,0.35,1)';
+      overlay.style.opacity = '1';
     }
-    children.forEach(function(c){ if (els.indexOf(c)===-1) els.push(c); });
-  });
-  if (els.length === 0) {
-    document.querySelectorAll('section, .hero-root, footer').forEach(function(s){ els.push(s); });
-  }
-  var bodyEls = document.querySelectorAll('body > :not(#pt-overlay):not(#pt-cursor):not(.pt-loading)');
-  if (els.length === 0) {
-    bodyEls.forEach(function(el,i){
-      if (el.id !== 'pt-overlay' && el.id !== 'pt-cursor') {
-        els.push(el);
+    
+    var els = [];
+    var mains = document.querySelectorAll('main, .pt-content');
+    mains.forEach(function(m){
+      var children = [];
+      m.querySelectorAll('section, .hero-root, .mt-hero, .ex-hero, .planner-wrap, .cta-section, .map-section, .editorial-card, .experience-card, .explore-card, .trip-planner-wrap, .tp-card, .fam-map-wrap, .booking-bar, footer').forEach(function(s){ children.push(s); });
+      if (children.length === 0) {
+        for (var i=0;i<m.children.length;i++) children.push(m.children[i]);
       }
+      children.forEach(function(c){ if (els.indexOf(c)===-1) els.push(c); });
     });
-  }
-  
-  els = els.filter(function(el){ return !el.classList.contains('hero-root'); });
-  els.forEach(function(el, i){
-    el.style.transition = 'none';
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-  });
-  
-  requestAnimationFrame(function(){ setTimeout(function(){
+    if (els.length === 0) {
+      document.querySelectorAll('section, .hero-root, footer').forEach(function(s){ els.push(s); });
+    }
+    var bodyEls = document.querySelectorAll('body > :not(#pt-overlay):not(#pt-cursor):not(.pt-loading)');
+    if (els.length === 0) {
+      bodyEls.forEach(function(el,i){
+        if (el.id !== 'pt-overlay' && el.id !== 'pt-cursor') {
+          els.push(el);
+        }
+      });
+    }
+    
+    els = els.filter(function(el){ return !el.classList.contains('hero-root'); });
     els.forEach(function(el, i){
-      setTimeout(function(){
-        el.style.transition = 'opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1)';
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0)';
-      }, 80 + i * ENTER_DELAY);
+      el.style.transition = 'none';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
     });
     
-    overlay.style.opacity = '0';
-    
-    setTimeout(function(){
-      document.body.classList.remove('pt-enter','pt-exit');
-      BUSY = false;
-    }, 800 + els.length * ENTER_DELAY);
-  }, visible ? 100 : 0); }); }
+    requestAnimationFrame(function(){ setTimeout(function(){
+      els.forEach(function(el, i){
+        setTimeout(function(){
+          el.style.transition = 'opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1)';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, 80 + i * ENTER_DELAY);
+      });
+      
+      overlay.style.opacity = '0';
+      
+      setTimeout(function(){
+        document.body.classList.remove('pt-enter','pt-exit');
+        BUSY = false;
+      }, 800 + els.length * ENTER_DELAY);
+    }, visible ? 100 : 0); });
+  } catch(e) {
+    if (overlay) { overlay.style.transition = 'none'; overlay.style.opacity = '0'; }
+    var fallbackEls = document.querySelectorAll('section, .hero-root, footer, main, .mt-hero');
+    fallbackEls.forEach(function(el){
+      el.style.transition = 'none';
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+      el.style.filter = '';
+    });
+    document.body.classList.remove('pt-enter','pt-exit');
+    BUSY = false;
+  }
+}
 
 function isInternalLink(href) {
   if (!href || href === '#') return false;
@@ -102,7 +116,7 @@ function normalizeHref(href) {
 }
 
 document.addEventListener('click', function(e) {
-  var link = e.target.closest('a');
+  var link = e.target.nodeType === 1 ? e.target.closest('a') : null;
   if (!link) return;
   var href = link.getAttribute('href');
   if (!isInternalLink(href)) return;
@@ -162,17 +176,18 @@ if (document.readyState === 'complete') {
 }
 
 setTimeout(function() {
-  if (BUSY) {
-    /* enterPage safety timeout */
-    BUSY = false;
-    if (overlay) { overlay.style.transition = 'none'; overlay.style.opacity = '0'; }
-    document.querySelectorAll('section, .hero-root, footer').forEach(function(el) {
+  if (overlay && parseFloat(window.getComputedStyle(overlay).opacity) > 0.01) {
+    overlay.style.transition = 'none';
+    overlay.style.opacity = '0';
+    document.querySelectorAll('section, .hero-root, footer, main, .mt-hero, .ex-hero').forEach(function(el) {
       el.style.transition = 'none';
       el.style.opacity = '1';
       el.style.transform = 'none';
+      el.style.filter = '';
     });
+    BUSY = false;
   }
-}, 5000);
+}, 3000);
 
 var cursor = document.getElementById('pt-cursor');
 if (!cursor && window.matchMedia('(pointer:fine)').matches && !window.matchMedia('(prefers-reduced-motion:reduce)').matches) {

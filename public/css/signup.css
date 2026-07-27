@@ -860,7 +860,7 @@
   .signup-card-inner { padding: 36px 28px; }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .signup-page { flex-direction: column; position: relative; min-height: 100vh; }
   .signup-hero {
     flex: 0 0 240px;

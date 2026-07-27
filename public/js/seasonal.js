@@ -147,7 +147,7 @@
 
     var icon = document.createElement('span');
     icon.className = 'seasonal-toggle-icon leaf';
-    icon.textContent = '\uD83C\uDF3F';
+    icon.textContent = '\uD83C\uDF43';
     toggle.appendChild(icon);
 
     toggle.addEventListener('click', function () {
@@ -166,7 +166,7 @@
 
     function setIcon() {
       if (mode === 'green') {
-        icon.textContent = '\uD83C\uDF3F';
+        icon.textContent = '\uD83C\uDF43';
         icon.className = 'seasonal-toggle-icon leaf';
         toggle.setAttribute('aria-label', 'Switch to Winter Mode');
       } else {
@@ -247,7 +247,7 @@
 
     applyMode(saved, false);
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
   }
 
   if (document.readyState === 'loading') {
@@ -257,4 +257,10 @@
   }
 
   window.initSeasonal = init;
+
+  window.reapplySeasonal = function () {
+    var saved = 'green';
+    try { var stored = localStorage.getItem(STORAGE_KEY); if (stored) saved = stored; } catch (e) { /* */ }
+    applyMode(saved, false);
+  };
 })();

@@ -147,8 +147,8 @@
       btn.style.transform = 'translate(' + (dx * strength) + 'px, ' + (dy * strength) + 'px) scale(1.08)';
     }
     function reset() { btn.style.transform = ''; }
-    btn.addEventListener('mousemove', move);
-    btn.addEventListener('mouseleave', reset);
+    btn.addEventListener('mousemove', move, { passive: true });
+    btn.addEventListener('mouseleave', reset, { passive: true });
   }
 
   function createSparkle() {
@@ -568,52 +568,26 @@
         var co = document.getElementById('modal-checkout');
         var guests = document.getElementById('modal-guest-count');
         var params = [];
-        if (ci && ci.value) params.push('checkin=' + ci.value);
-        if (co && co.value) params.push('checkout=' + co.value);
-        if (guests) params.push('guests=' + guests.textContent);
+        if (ci && ci.value) params.push('checkin=' + encodeURIComponent(ci.value));
+        if (co && co.value) params.push('checkout=' + encodeURIComponent(co.value));
+        if (guests) params.push('guests=' + encodeURIComponent(guests.textContent));
         var qs = params.length ? '?' + params.join('&') : '';
         closeBookingModal();
-        setTimeout(function () {
-          window.location.href = '/pages/booking.html' + qs;
-        }, 350);
+        var url = '/pages/booking' + qs;
+        if (typeof window.navigateTo === 'function') {
+          setTimeout(function () { window.navigateTo(url); }, 350);
+        } else {
+          setTimeout(function () { window.location.href = url; }, 350);
+        }
       });
     }
   }
 
   function openBookingModal() {
-    var modal = document.getElementById('booking-modal');
-    if (!modal) return;
-    if (bookingModalOpen) return;
-
-    initBookingModalEvents();
-
-    bookingModalOpen = true;
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-
-    history.pushState({ bookingModal: true }, '');
-
-    var today = new Date();
-    var y = today.getFullYear();
-    var m = String(today.getMonth() + 1).padStart(2, '0');
-    var d = String(today.getDate()).padStart(2, '0');
-    var minDate = y + '-' + m + '-' + d;
-
-    var ci = document.getElementById('modal-checkin');
-    var co = document.getElementById('modal-checkout');
-    if (ci) {
-      ci.setAttribute('min', minDate);
-      if (!ci.value) ci.value = minDate;
-    }
-    if (co) {
-      var tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      var ty = tomorrow.getFullYear();
-      var tm = String(tomorrow.getMonth() + 1).padStart(2, '0');
-      var td = String(tomorrow.getDate()).padStart(2, '0');
-      co.setAttribute('min', minDate);
-      if (!co.value) co.value = ty + '-' + tm + '-' + td;
+    if (typeof window.navigateTo === 'function') {
+      window.navigateTo('/pages/booking');
+    } else {
+      window.location.href = '/pages/booking';
     }
   }
 
@@ -651,7 +625,11 @@
 
     btn.addEventListener('click', function (e) {
       e.preventDefault();
-      openBookingModal();
+      if (typeof window.navigateTo === 'function') {
+        window.navigateTo('/pages/booking');
+      } else {
+        window.location.href = '/pages/booking';
+      }
     });
 
     var tooltip = document.createElement('div');
@@ -684,7 +662,7 @@
 
   /* === Overlap Prevention === */
   function initOverlapPrevention() {
-    if (window.innerWidth > 768) return;
+    if (window.innerWidth > 767) return;
     var ticking = false;
 
     function getCriticalSections() {
@@ -741,7 +719,7 @@
 
     window.addEventListener('resize', function () {
       onScroll();
-    });
+    }, { passive: true });
   }
 
   function init() {
@@ -749,15 +727,6 @@
 
     buildBookingShortcut();
     initOverlapPrevention();
-
-    var heroBtn = document.querySelector('.hero-btn-primary');
-    if (heroBtn) {
-      heroBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        openBookingModal();
-      }, true);
-    }
 
     loadKnowledgeBase(function () {
       buildButton();
@@ -793,6 +762,7 @@
 
   // Re-init after SPA page transitions (concierge elements are removed from DOM)
   document.addEventListener('page:loaded', function () {
+    clearInterval(sparkleInterval);
     if (isOpen) close();
     init();
   });

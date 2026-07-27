@@ -38,15 +38,15 @@
     var ticking = false;
     window.addEventListener('scroll', function() {
       if (!ticking) {
-        ticking = true;
         requestAnimationFrame(function() {
           var scrolled = window.scrollY;
-          imgs.forEach(function(img) {
-            var speed = parseFloat(img.dataset.speed) || 0.15;
-            img.style.transform = 'translate3d(0, ' + (scrolled * speed) + 'px, 0) scale(1.1)';
-          });
+          for (var i = 0; i < imgs.length; i++) {
+            var speed = parseFloat(imgs[i].dataset.speed) || 0.15;
+            imgs[i].style.transform = 'translate3d(0, ' + (scrolled * speed) + 'px, 0) scale(1.1)';
+          }
           ticking = false;
         });
+        ticking = true;
       }
     }, { passive: true });
   };
@@ -58,13 +58,13 @@
     document.addEventListener('mousemove', function(e) {
       if (window.innerWidth <= 1024) return;
       if (!ticking) {
-        ticking = true;
         requestAnimationFrame(function() {
           var x = (e.clientX / window.innerWidth - 0.5) * 20;
           var y = (e.clientY / window.innerHeight - 0.5) * 20;
           card.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
           ticking = false;
         });
+        ticking = true;
       }
     }, { passive: true });
   };
@@ -94,6 +94,7 @@
 
   FAM.Animations.initLenis = function() {
     if (typeof Lenis === 'undefined') return;
+    if (FAM.lenis) return;
     var lenis = new Lenis({
       duration: 1.2,
       easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
@@ -105,7 +106,6 @@
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
-      gsap.ticker.lagSmoothing(0);
     } else {
       function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
       requestAnimationFrame(raf);
@@ -136,10 +136,8 @@
   global.FAM = FAM;
 
   document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('img:not([loading])').forEach(function(img) {
-      if (!img.hasAttribute('fetchpriority')) {
-        img.setAttribute('loading', 'lazy');
-      }
+    document.querySelectorAll('img:not([loading]):not([fetchpriority="high"])').forEach(function(img) {
+      img.setAttribute('loading', 'lazy');
     });
   });
 

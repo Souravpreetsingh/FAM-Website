@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 export default function Navbar() {
   const { isAuthenticated, logout } = useAuth()
+  const navigate = useNavigate()
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const handleLogout = async () => {
@@ -25,6 +26,18 @@ export default function Navbar() {
           <Link to="/rooms" className="text-sm text-white/70 hover:text-white transition-colors font-body tracking-wide">
             Rooms
           </Link>
+          <a href="/pages/life" className="text-sm text-white/70 hover:text-white transition-colors font-body tracking-wide">
+            Life at FAM
+          </a>
+          <a href="/pages/explore" className="text-sm text-white/70 hover:text-white transition-colors font-body tracking-wide">
+            Explore
+          </a>
+          <a href="/pages/gallery" className="text-sm text-white/70 hover:text-white transition-colors font-body tracking-wide">
+            Gallery
+          </a>
+          <a href="/pages/amenities" className="text-sm text-white/70 hover:text-white transition-colors font-body tracking-wide">
+            Amenities
+          </a>
           {isAuthenticated ? (
             <>
               <Link to="/bookings" className="text-sm text-white/70 hover:text-white transition-colors font-body tracking-wide">
@@ -39,11 +52,11 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link to="/login" className="px-4 py-2 rounded-full text-sm font-medium text-white bg-[#2E5E4E] hover:bg-[#3a705e] transition-all">
+              <button onClick={() => navigate('/booking')} className="px-4 py-2 rounded-full text-sm font-medium text-white bg-[#2E5E4E] hover:bg-[#3a705e] transition-all">
+                Book Your Stay
+              </button>
+              <Link to="/login" className="text-sm text-white/70 hover:text-white transition-colors font-body tracking-wide">
                 Sign In
-              </Link>
-              <Link to="/register" className="px-4 py-2 rounded-full text-sm font-medium text-white bg-[#2E5E4E] hover:bg-[#3a705e] transition-all">
-                Sign Up
               </Link>
             </>
           )}
@@ -65,6 +78,10 @@ export default function Navbar() {
           <div className="flex flex-col px-4 py-4 gap-3">
             <a href="/" className="text-sm text-white/70 hover:text-white py-2">Home</a>
             <Link to="/rooms" onClick={() => setMobileOpen(false)} className="text-sm text-white/70 hover:text-white py-2">Rooms</Link>
+            <a href="/pages/life" onClick={() => setMobileOpen(false)} className="text-sm text-white/70 hover:text-white py-2">Life at FAM</a>
+            <a href="/pages/explore" onClick={() => setMobileOpen(false)} className="text-sm text-white/70 hover:text-white py-2">Explore</a>
+            <a href="/pages/gallery" onClick={() => setMobileOpen(false)} className="text-sm text-white/70 hover:text-white py-2">Gallery</a>
+            <a href="/pages/amenities" onClick={() => setMobileOpen(false)} className="text-sm text-white/70 hover:text-white py-2">Amenities</a>
             {isAuthenticated ? (
               <>
                 <Link to="/bookings" onClick={() => setMobileOpen(false)} className="text-sm text-white/70 hover:text-white py-2">My Bookings</Link>
@@ -72,9 +89,11 @@ export default function Navbar() {
                 <button onClick={() => { handleLogout(); setMobileOpen(false) }} className="text-left text-sm text-white/70 hover:text-white py-2">Sign Out</button>
               </>
             ) : (
-              <div className="flex gap-3 pt-2">
-                <Link to="/login" onClick={() => setMobileOpen(false)} className="flex-1 text-center px-4 py-2 rounded-full text-sm font-medium text-white bg-white/10">Sign In</Link>
-                <Link to="/register" onClick={() => setMobileOpen(false)} className="flex-1 text-center px-4 py-2 rounded-full text-sm font-medium text-white bg-[#2E5E4E]">Sign Up</Link>
+              <div className="flex flex-col gap-3 pt-2">
+                <button onClick={() => { setMobileOpen(false); navigate('/booking') }} className="w-full px-4 py-2 rounded-full text-sm font-medium text-white bg-[#2E5E4E]">
+                  Book Your Stay
+                </button>
+                <Link to="/login" onClick={() => setMobileOpen(false)} className="w-full text-center px-4 py-2 rounded-full text-sm font-medium text-white bg-white/10">Sign In</Link>
               </div>
             )}
           </div>

@@ -13,7 +13,7 @@ var PRECACHE_URLS = [
   '/pages/amenities',
   '/pages/amenities.html',
   '/pages/booking',
-  '/pages/booking.html',
+  '/pages/booking',
   '/pages/login',
   '/pages/login.html',
   '/pages/signup',

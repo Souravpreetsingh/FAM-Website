@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html class="scroll-smooth" lang="en" style="background:#f8f4ec">
+<html class="scroll-smooth" lang="en">
 <head>
-  <style>#pt-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;background:#f8f4ec;opacity:0}</style>
+  <style>#pt-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;background:var(--mode-bg);opacity:1;transition:opacity .5s cubic-bezier(.65,0,.35,1)}</style>
   <meta charset="utf-8" />
+  <script>try{var m=localStorage.getItem('fam-seasonal-mode');if(m==='winter'){document.documentElement.classList.add('mode-winter')}else if(m==='green'){document.documentElement.classList.add('mode-green')}}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Book your boutique mountain stay at Flamingo aur Maina in Jibhi, Himachal Pradesh. Select your room, dates, and preferences." />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -10,6 +11,7 @@
   <meta property="og:title" content="Book Your Stay - Flamingo aur Maina" />
   <meta property="og:description" content="Select your perfect room at Flamingo aur Maina in Jibhi, Himachal Pradesh." />
   <meta property="og:url" content="https://flamingoaurmaina.netlify.app/pages/booking" />
+  <meta property="og:type" content="website" />
   <meta property="og:image" content="https://flamingoaurmaina.netlify.app/images/hero/luxury-hero.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Book Your Stay - Flamingo aur Maina" />
@@ -26,7 +28,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </noscript>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link rel="stylesheet" href="/css/style.css?v=15" />
+  <link rel="stylesheet" href="/css/style.css?v=16" />
 
 <script id="tailwind-config">
 tailwind.config = {
@@ -186,7 +188,7 @@ tailwind.config = {
     input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid #C9A86A; outline-offset: 1px; }
   </style>
 </head>
-<body class="antialiased overflow-x-hidden bg-background text-on-surface" style="background:#f8f4ec">
+<body class="antialiased overflow-x-hidden bg-background text-on-surface">
 <div id="pt-overlay" aria-hidden="true"></div>
 
   <!-- ====== NAVBAR ====== -->
@@ -195,7 +197,7 @@ tailwind.config = {
       <div class="flex items-center gap-4">
         <a href="/" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
       </div>
-      <div class="hidden lg:flex items-center gap-8">
+      <div class="hidden md:flex nav-links-desktop items-center gap-8">
         <a href="/" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Home</a>
         <a href="/pages/rooms" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Rooms</a>
         <a href="/pages/life" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Life at FAM</a>
@@ -205,7 +207,7 @@ tailwind.config = {
         <a href="/#contact" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Contact</a>
         <div class="flex items-center gap-3">
           <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" aria-label="Sign in to your account" data-direct-nav>Sign In</button>
-          <button type="button" onclick="window.location.href='booking.html'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
+          <button type="button" onclick="window.location.href='/pages/booking'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
         </div>
       </div>
     </div>
@@ -213,7 +215,7 @@ tailwind.config = {
 
   <div class="mobile-nav-bar" id="mobile-nav-bar">
     <a href="/" class="mobile-nav-logo">Flamingo aur Maina</a>
-    <a href="/pages/booking.html" class="mobile-book-btn" data-direct-nav aria-label="Book Now">Book Now</a>
+    <a href="/pages/booking" class="mobile-book-btn" aria-label="Book Now">Book Now</a>
     <button class="mobile-nav-toggle" id="mobile-menu-btn" aria-label="Open menu" aria-expanded="false">
       <span class="menu-icon-line"></span>
       <span class="menu-icon-line"></span>
@@ -240,7 +242,7 @@ tailwind.config = {
       <a href="/#contact" class="mobile-panel-link" style="--i:6">Contact</a>
     </nav>
     <div class="mobile-panel-cta">
-      <a href="/pages/booking.html" class="mobile-panel-book-btn" data-direct-nav>Book Your Stay</a>
+      <a href="/pages/booking" class="mobile-panel-book-btn">Book Your Stay</a>
       <button type="button" onclick="window.location.href='/pages/login'" class="mobile-panel-signin-btn" data-direct-nav>Sign In</button>
     </div>
   </div>
@@ -479,12 +481,12 @@ tailwind.config = {
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A86A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                   <span class="text-accent-gold font-body text-[11px] tracking-[0.1em] uppercase font-medium">Confirmation Sent</span>
                 </div>
-                <p class="text-on-surface-variant/60 font-body text-sm">A confirmation email has been sent to <span id="confirmation-email" class="font-medium text-primary">your email</span>. You can also view your booking in your <a href="/dashboard" class="text-accent-gold underline">dashboard</a>.</p>
+                <p class="text-on-surface-variant/60 font-body text-sm">A confirmation email has been sent to <span id="confirmation-email" class="font-medium text-primary">your email</span>. You can also <a href="/" class="text-accent-gold underline">return to the homepage</a>.</p>
               </div>
 
               <div class="flex flex-col gap-3">
                 <a href="/" class="w-full py-3.5 rounded-full font-body text-[12px] font-medium tracking-[0.15em] uppercase transition-all duration-400 text-center bg-primary text-on-primary hover:bg-primary-container shadow-lg">Return Home</a>
-                <a href="/dashboard" class="w-full py-3.5 rounded-full font-body text-[12px] font-medium tracking-[0.15em] uppercase transition-all duration-400 text-center border border-outline-variant/40 text-on-surface-variant hover:text-primary">View My Bookings</a>
+                <a href="/" class="w-full py-3.5 rounded-full font-body text-[12px] font-medium tracking-[0.15em] uppercase transition-all duration-400 text-center border border-outline-variant/40 text-on-surface-variant hover:text-primary">Return Home</a>
               </div>
             </div>
           </div>
@@ -755,7 +757,7 @@ tailwind.config = {
 
   function renderRooms() {
     var grid = document.getElementById('room-grid');
-    _isMobileView = window.innerWidth <= 768;
+    _isMobileView = window.innerWidth <= 767;
     var builder = _isMobileView ? buildMobileRoomCard : buildRoomCard;
     grid.innerHTML = ROOMS.map(function(r, i) { return builder(r, i); }).join('');
 
@@ -1114,6 +1116,7 @@ tailwind.config = {
 
   <script src="/js/mobile-nav.js"></script>
   <script src="/js/seasonal.js"></script>
+  <script src="/js/concierge.js"></script>
   <script src="/js/animations.js"></script>
   <script src="/js/page-transitions.js"></script>
   <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>

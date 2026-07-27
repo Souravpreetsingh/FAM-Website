@@ -428,12 +428,7 @@ FAM.Auth = (() => {
   // ── Auto-hide Nav on Auth Pages ──
 
   function setupAuthPage() {
-    const nav = document.getElementById('main-nav');
-    if (nav) nav.style.display = 'none';
-    const mobileOverlay = document.getElementById('mobile-overlay');
-    if (mobileOverlay) mobileOverlay.style.display = 'none';
-    const mobilePanel = document.getElementById('mobile-panel');
-    if (mobilePanel) mobilePanel.style.display = 'none';
+    document.body.classList.add('auth-active');
   }
 
   // ── Public API ──

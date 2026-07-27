@@ -14,7 +14,6 @@
   background: linear-gradient(90deg, #C9A86A, #0a341d, #C9A86A);
   z-index: 10000;
   pointer-events: none;
-  transition: transform 0.1s linear;
   will-change: transform;
 }
 
@@ -363,7 +362,7 @@
 }
 
 /* --- Responsive --- */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .ss-atmosphere { display: none; }
   .ss-mist-layer { display: none; }
   .ss-mist-layer-2 { display: none; }
