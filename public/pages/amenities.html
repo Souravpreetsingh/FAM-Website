@@ -46,8 +46,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </noscript>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link rel="stylesheet" href="../css/style.css?v=17" />
-
+  <link rel="stylesheet" href="../css/style.css?v=18" />
+  <link rel="stylesheet" href="../css/transitions.css?v=3" />
 <script id="tailwind-config">
 tailwind.config = {
   darkMode: "class",
@@ -67,132 +67,128 @@ tailwind.config = {
   }
 }
 </script>
-  <link rel="stylesheet" href="../css/transitions.css?v=3" /></head>
-<body class="antialiased overflow-x-hidden bg-background text-on-surface"><div id="pt-overlay" aria-hidden="true"></div>
-  <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#eaf0ed] px-4 md:px-10 py-3 max-w-max-width mx-auto w-full">
-    <div class="flex items-center gap-4 text-[#111714]">
-      <div class="size-4">
-        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-          <path d="M13.8261 30.5736C16.7203 29.8826 20.2244 29.4783 24 29.4783C27.7756 29.4783 31.2797 29.8826 34.1739 30.5736C36.9144 31.2278 39.9967 32.7669 41.3563 33.8352L24.8486 7.36089C24.4571 6.73303 23.5429 6.73303 23.1514 7.36089L6.64374 33.8352C8.00331 32.7669 11.0856 31.2278 13.8261 30.5736Z" fill="currentColor"></path>
-          <path clip-rule="evenodd" d="M39.998 35.764C39.9944 35.7463 39.9875 35.7155 39.9748 35.6706C39.9436 35.5601 39.8949 35.4259 39.8346 35.2825C39.8168 35.2403 39.7989 35.1993 39.7813 35.1602C38.5103 34.2887 35.9788 33.0607 33.7095 32.5189C30.9875 31.8691 27.6413 31.4783 24 31.4783C20.3587 31.4783 17.0125 31.8691 14.2905 32.5189C12.0012 33.0654 9.44505 34.3104 8.18538 35.1832C8.17384 35.2075 8.16216 35.233 8.15052 35.2592C8.09919 35.3751 8.05721 35.4886 8.02977 35.589C8.00356 35.6848 8.00039 35.7333 8.00004 35.7388C8.00004 35.739 8 35.7393 8.00004 35.7388C8.00004 35.7641 8.0104 36.0767 8.68485 36.6314C9.34546 37.1746 10.4222 37.7531 11.9291 38.2772C14.9242 39.319 19.1919 40 24 40C28.8081 40 33.0758 39.319 36.0709 38.2772C37.5778 37.7531 38.6545 37.1746 39.3151 36.6314C39.9006 36.1499 39.9857 35.8511 39.998 35.764ZM4.95178 32.7688L21.4543 6.30267C22.6288 4.4191 25.3712 4.41909 26.5457 6.30267L43.0534 32.777C43.0709 32.8052 43.0878 32.8338 43.104 32.8629L41.3563 33.8352C43.104 32.8629 43.1038 32.8626 43.104 32.8629L43.1051 32.865L43.1065 32.8675L43.1101 32.8739L43.1199 32.8918C43.1276 32.906 43.1377 32.9246 43.1497 32.9473C43.1738 32.9925 43.2062 33.0545 43.244 33.1299C43.319 33.2792 43.4196 33.489 43.5217 33.7317C43.6901 34.1321 44 34.9311 44 35.7391C44 37.4427 43.003 38.7775 41.8558 39.7209C40.6947 40.6757 39.1354 41.4464 37.385 42.0552C33.8654 43.2794 29.133 44 24 44C18.867 44 14.1346 43.2794 10.615 42.0552C8.86463 41.4464 7.30529 40.6757 6.14419 39.7209C4.99695 38.7775 3.99999 37.4427 3.99999 35.7391C3.99999 34.8725 4.29264 34.0922 4.49321 33.6393C4.60375 33.3898 4.71348 33.1804 4.79687 33.0311C4.83898 32.9556 4.87547 32.8935 4.9035 32.8471C4.91754 32.8238 4.92954 32.8043 4.93916 32.7889L4.94662 32.777L4.95178 32.7688ZM35.9868 29.004L24 9.77997L12.0131 29.004C12.4661 28.8609 12.9179 28.7342 13.3617 28.6282C16.4281 27.8961 20.0901 27.4783 24 27.4783C27.9099 27.4783 31.5719 27.8961 34.6383 28.6282C35.082 28.7342 35.5339 28.8609 35.9868 29.004Z" fill="currentColor" fill-rule="evenodd"></path>
-        </svg>
+</head>
+<body class="antialiased overflow-x-hidden bg-background text-on-surface">
+<div id="pt-overlay" aria-hidden="true"></div>
+  <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300" id="main-nav">
+    <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto rounded-full">
+      <div class="flex items-center gap-4">
+        <a href="/" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
       </div>
-      <a href="/" class="text-[#111714] text-lg font-bold leading-tight tracking-[-0.015em]">Flamingo aur Maina</a>
-    </div>
-    <div class="hidden md:flex flex-1 justify-end gap-8">
-      <div class="flex items-center gap-9">
-        <a href="/" class="text-[#111714] text-sm font-medium leading-normal">Home</a>
-        <a href="/pages/rooms" class="text-[#111714] text-sm font-medium leading-normal">Rooms</a>
-        <a href="/pages/life" class="text-[#111714] text-sm font-medium leading-normal">Experience</a>
-        <a href="/pages/explore" class="text-[#111714] text-sm font-medium leading-normal">Explore</a>
-        <a href="/pages/gallery" class="text-[#111714] text-sm font-medium leading-normal">Gallery</a>
-        <a href="/pages/amenities" class="text-[#111714] text-sm font-medium leading-normal">Amenities</a>
-        <a href="/#contact" class="text-[#111714] text-sm font-medium leading-normal">Contact</a>
-      </div>
-      <a href="/pages/booking" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#234b32] text-[#f9fbfa] text-sm font-bold leading-normal tracking-[0.015em]">
-        <span class="truncate">Book Now</span>
-      </a>
-    </div>
-  </header>
-
-  <div class="mobile-nav-bar" id="mobile-nav-bar">
-    <a href="/" class="mobile-nav-logo">Flamingo aur Maina</a>
-    <a href="/pages/booking" class="mobile-book-btn" aria-label="Book Now">Book Now</a>
-    <button class="mobile-nav-toggle" id="mobile-menu-btn" aria-label="Open menu" aria-expanded="false">
-      <span class="menu-icon-line"></span>
-      <span class="menu-icon-line"></span>
-      <span class="menu-icon-line"></span>
-    </button>
-  </div>
-  <div class="mobile-overlay" id="mobile-overlay" aria-hidden="true"></div>
-  <div class="mobile-panel" id="mobile-panel" role="dialog" aria-modal="true" aria-label="Navigation menu">
-    <div class="mobile-panel-header">
-      <button class="mobile-panel-close" id="mobile-panel-close" aria-label="Close menu">
-        <div class="mobile-panel-close-wrap">
-          <span class="close-icon-line"></span>
-          <span class="close-icon-line"></span>
+      <div class="hidden lg:flex items-center gap-8">
+        <a href="/" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Home</a>
+        <a href="/pages/rooms" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Rooms</a>
+        <a href="/pages/life" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Life at FAM</a>
+        <a href="/pages/explore" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Explore</a>
+        <a href="/pages/gallery" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Gallery</a>
+        <a href="/pages/amenities" class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/30 pb-1">Amenities</a>
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="window.location.href='/pages/login'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
+          <button type="button" onclick="window.location.href='/pages/rooms'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
         </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <button class="lg:hidden text-primary p-2" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ====== MOBILE MENU ====== -->
+  <div class="mobile-menu-overlay" id="mobile-overlay" aria-hidden="true"></div>
+  <div class="mobile-menu-panel" id="mobile-panel" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <div class="mobile-menu-header">
+      <span class="font-headline-md text-xl text-primary">Menu</span>
+      <button class="mobile-menu-close" id="mobile-close" aria-label="Close navigation menu">
+        <span class="material-symbols-outlined">close</span>
       </button>
     </div>
-    <nav class="mobile-panel-links" aria-label="Mobile navigation">
-      <a href="/" class="mobile-panel-link" style="--i:0">Home</a>
-      <a href="/pages/rooms" class="mobile-panel-link" style="--i:1">Rooms</a>
-      <a href="/pages/life" class="mobile-panel-link" style="--i:2">Life at FAM</a>
-      <a href="/pages/explore" class="mobile-panel-link" style="--i:3">Explore</a>
-      <a href="/pages/gallery" class="mobile-panel-link" style="--i:4">Gallery</a>
-      <a href="/pages/amenities" class="mobile-panel-link" style="--i:5">Amenities</a>
-      <a href="/#contact" class="mobile-panel-link" style="--i:6">Contact</a>
+    <nav class="mobile-menu-links" aria-label="Mobile navigation">
+      <a href="/" class="mobile-menu-link">Home</a>
+      <a href="/pages/rooms" class="mobile-menu-link">Rooms</a>
+      <a href="/pages/life" class="mobile-menu-link">Life at FAM</a>
+      <a href="/pages/explore" class="mobile-menu-link">Explore</a>
+      <a href="/pages/gallery" class="mobile-menu-link">Gallery</a>
+      <a href="/pages/amenities" class="mobile-menu-link">Amenities</a>
+      <div class="mobile-menu-cta-group">
+        <button type="button" onclick="window.location.href='/pages/login'" class="nav-mobile-signin">Sign In</button>
+        <button type="button" onclick="window.location.href='/pages/rooms'" class="nav-mobile-book">Book Your Stay</button>
+      </div>
     </nav>
-    <div class="mobile-panel-cta">
-      <a href="/pages/booking" class="mobile-panel-book-btn">Book Your Stay</a>
-      <button type="button" onclick="window.location.href='/pages/login'" class="mobile-panel-signin-btn" data-direct-nav>Sign In</button>
+    <div class="mobile-menu-footer">
+      <a href="tel:9876575673" class="mobile-menu-phone">
+        <span class="material-symbols-outlined text-lg">phone</span>
+        Property Manager: 98765 75673
+      </a>
     </div>
   </div>
 
-<style>
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-</style>
 <div id="page-content">
-  <main>
-    <!-- Header -->
-    <section class="py-section-gap px-4 md:px-margin-desktop max-w-max-width mx-auto text-center reveal active">
-      <span class="font-label-sm text-primary uppercase tracking-widest mb-4 block">Amenities</span>
-      <h1 class="font-display-hero text-5xl md:text-7xl text-on-surface mb-6">Everything You Need</h1>
+  <main class="pt-24">
+    <section class="py-section-gap px-4 md:px-margin-desktop max-w-max-width mx-auto text-center reveal">
+      <span class="font-label-sm text-accent-gold uppercase tracking-widest mb-4 block">Comforts</span>
+      <h1 class="font-display-hero text-5xl md:text-7xl text-primary mb-6">Everything You Need</h1>
       <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">We've thought of every detail so you can focus on what matters most: unwinding and connecting.</p>
     </section>
 
-    <!-- Amenities Grid -->
     <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop pb-section-gap">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="reveal active p-8 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="animation: slideUp 0.5s ease-out 0s forwards; opacity: 1;">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center">
           <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">wifi</span>
-          <h2 class="font-headline-md text-xl text-on-surface mb-1">High Speed Wifi</h2>
+          <h3 class="font-headline-md text-xl text-primary mb-2">Complimentary Wi-Fi</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Stay connected with reliable high-speed internet throughout the property.</p>
         </div>
-        <div class="reveal active p-8 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="animation: slideUp 0.5s ease-out 0.1s forwards; opacity: 1;">
+        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:100ms">
           <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">ac_unit</span>
-          <h2 class="font-headline-md text-xl text-on-surface mb-1">Heater</h2>
+          <h3 class="font-headline-md text-xl text-primary mb-2">Room Heater</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Stay warm and toasty during chilly mountain evenings.</p>
         </div>
-        <div class="reveal active p-8 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="animation: slideUp 0.5s ease-out 0.2s forwards; opacity: 1;">
+        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:200ms">
           <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">bedtime</span>
-          <h2 class="font-headline-md text-xl text-on-surface mb-1">Electric Heating Blankets</h2>
+          <h3 class="font-headline-md text-xl text-primary mb-2">Electric Heating Blankets</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Ultra-cozy electric blankets in every room for deep, restful sleep.</p>
         </div>
-        <div class="reveal active p-8 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="animation: slideUp 0.5s ease-out 0.3s forwards; opacity: 1;">
+        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:300ms">
           <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">local_fire_department</span>
-          <h2 class="font-headline-md text-xl text-on-surface mb-1">Bonfire</h2>
+          <h3 class="font-headline-md text-xl text-primary mb-2">Bonfire</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Evening bonfires with seating under the stars.</p>
         </div>
-        <div class="reveal active p-8 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="animation: slideUp 0.5s ease-out 0.4s forwards; opacity: 1;">
+        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:400ms">
           <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">local_laundry_service</span>
-          <h2 class="font-headline-md text-xl text-on-surface mb-1">Laundry <span class="text-sm text-on-surface-variant font-body-md">(On demand)</span></h2>
+          <h3 class="font-headline-md text-xl text-primary mb-2">Laundry Service</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Convenient laundry service available for longer stays.</p>
         </div>
-        <div class="reveal active p-8 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="animation: slideUp 0.5s ease-out 0.5s forwards; opacity: 1;">
+        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:500ms">
           <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">iron</span>
-          <h2 class="font-headline-md text-xl text-on-surface mb-1">Ironing <span class="text-sm text-on-surface-variant font-body-md">(On Demand)</span></h2>
+          <h3 class="font-headline-md text-xl text-primary mb-2">Ironing Facility</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Iron and ironing board available on request.</p>
         </div>
-        <div class="reveal active p-8 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="animation: slideUp 0.5s ease-out 0.6s forwards; opacity: 1;">
+        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:600ms">
           <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">directions_car</span>
-          <h2 class="font-headline-md text-xl text-on-surface mb-1">Cab Service <span class="text-sm text-on-surface-variant font-body-md">(On Demand)</span></h2>
+          <h3 class="font-headline-md text-xl text-primary mb-2">Cab Service</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Reliable local cab arrangements for sightseeing and transfers.</p>
         </div>
-        <div class="reveal active p-8 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="animation: slideUp 0.5s ease-out 0.7s forwards; opacity: 1;">
+        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:700ms">
           <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">luggage</span>
-          <h2 class="font-headline-md text-xl text-on-surface mb-1">Luggage Assistance <span class="text-sm text-on-surface-variant font-body-md">(On Demand)</span></h2>
+          <h3 class="font-headline-md text-xl text-primary mb-2">Luggage Assistance</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Friendly staff to help with your bags on arrival and departure.</p>
         </div>
-        <div class="reveal active p-8 rounded-[20px] bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-300 text-center" style="animation: slideUp 0.5s ease-out 0.8s forwards; opacity: 1;">
+        <div class="reveal p-8 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:shadow-lg transition-all duration-500 text-center" style="transition-delay:800ms">
           <span class="material-symbols-outlined text-5xl text-accent-gold mb-4 block">hiking</span>
-          <h2 class="font-headline-md text-xl text-on-surface mb-1">Trek Guide <span class="text-sm text-on-surface-variant font-body-md">(On demand)</span></h2>
+          <h3 class="font-headline-md text-xl text-primary mb-2">Trek Guide</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Local trek guide to help you explore the best trails around Jibhi.</p>
         </div>
       </div>
     </section>
 
     <!-- CTA -->
-    <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop pb-section-gap reveal active">
-      <div class="relative w-full h-[400px] md:h-[500px] rounded-[3rem] overflow-hidden flex flex-col justify-center items-center text-center px-8">
+    <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop pb-section-gap reveal">
+      <div class="relative w-full h-[400px] rounded-[3rem] overflow-hidden flex flex-col justify-center items-center text-center px-8" role="img" aria-label="Mountain landscape">
         <div class="absolute inset-0 z-0 parallax-bg" data-parallax="true" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDadx8bWjHH5cRqMoFbR_LdcYa4CxHl3FFV9NsqEp9XtvIQh_uqQa45hQ2Cod6q38T6ya0IMd0KBa91W2Hwen3fFK3tUV3-OdkAmlBw1eQCE84R43TaCIjwe6gyYNOyIjbDrySAhi8GMO8zPNh4YMELlQ7MqEQGS5c8l8DSVDbyYEFV4iA2k3EkiX6S_OvkZvSob2MEOEEgoGHkZ1kfs6VzIWXsHw1O0uRbQ1bdTYGBXZAtS3a3Po4KFyKlHsb0rnAJaX2wXzNnL7o')"></div>
         <div class="absolute inset-0 bg-surface/80 z-10"></div>
         <div class="relative z-20 max-w-2xl">
-          <h2 class="font-headline-lg text-4xl md:text-5xl text-on-surface mb-6">Ready to Experience FAM?</h2>
+          <h2 class="font-headline-lg text-4xl md:text-5xl text-primary mb-6">Ready to Experience FAM?</h2>
           <p class="font-body-lg text-body-lg text-on-surface-variant mb-10">Book your stay and discover why our guests keep coming back.</p>
-          <a href="/pages/booking" class="bg-primary hover:bg-primary/90 text-on-primary font-label-sm py-4 px-10 rounded-full transition-transform hover:scale-105 inline-flex items-center gap-2">
+          <a href="/pages/rooms" class="btn-primary inline-flex items-center gap-2" aria-label="Book your stay at FAM">
             <span>Book Your Stay</span>
             <span class="material-symbols-outlined text-sm">arrow_forward</span>
           </a>
@@ -200,7 +196,6 @@ tailwind.config = {
       </div>
     </section>
   </main>
-  </div>
 
   <footer class="bg-charcoal text-on-primary">
     <div class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-16">
@@ -222,45 +217,20 @@ tailwind.config = {
             <h4 class="font-label-sm uppercase tracking-widest text-on-primary/40 text-xs mb-2">Connect</h4>
             <a href="/pages/amenities" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Amenities</a>
             <a href="/#contact" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Contact Us</a>
-            <a href="https://www.instagram.com/flamingoaurmaina?igsh=ejFucDV1MWkzam5x" target="_blank" rel="noopener noreferrer" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm" aria-label="Visit Flamingo aur Maina on Instagram">Instagram</a>
+            <a href="#" class="text-on-primary/80 hover:text-accent-gold transition-colors text-sm">Instagram</a>
           </div>
         </div>
       </div>
       <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-on-primary/40 font-body-md">
         <p>&copy; 2024 Flamingo aur Maina. All rights reserved.</p>
         <div class="flex gap-6">
-          <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Privacy Policy</a>
-          <a href="javascript:void(0)" class="hover:text-on-primary transition-colors" title="Page coming soon">Terms of Service</a>
+          <a href="#" class="hover:text-on-primary transition-colors">Privacy Policy</a>
+          <a href="#" class="hover:text-on-primary transition-colors">Terms of Service</a>
         </div>
       </div>
     </div>
   </footer>
 
-  <script src="../js/animations.js"></script>
-  <script src="../js/seasonal.js"></script>
-  <script src="../js/concierge.js"></script>
-  <script src="../js/mobile-nav.js"></script>
-  <script>
-    function initAmenitiesPage() {
-      if (typeof FAM !== 'undefined' && FAM.Animations) {
-        FAM.Animations.init({ gsap: false, lenis: false, cardParallax: false, parallax: false });
-      }
-    }
-    document.addEventListener('DOMContentLoaded', initAmenitiesPage);
-    window.__pageInit = initAmenitiesPage;
-  </script>
-  <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
-  <script src="../js/page-transitions.js"></script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js').catch(function(e) {
-        console.warn('[SW] Registration failed:', e);
-      });
-    });
-  }
-  </script>
-  <script type="module" src="//instant.page/5.2.0"></script>
 <div id="booking-modal" class="booking-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Book your stay">
   <div class="booking-modal-overlay"></div>
   <div class="booking-modal-panel">
@@ -292,5 +262,34 @@ tailwind.config = {
     </div>
   </div>
 </div>
+
+  <script src="../js/animations.js"></script>
+  <script src="../js/seasonal.js"></script>
+  <script src="../js/concierge.js"></script>
+  <script src="../js/page-transitions.js"></script>
+  <script src="../js/mobile-nav.js"></script>
+  <script>
+    function initAmenitiesPage() {
+      if (typeof FAM !== 'undefined' && FAM.Animations) {
+        FAM.Animations.init({ gsap: false, lenis: false, cardParallax: false, parallax: false });
+      }
+    }
+    document.addEventListener('DOMContentLoaded', initAmenitiesPage);
+    window.__pageInit = initAmenitiesPage;
+  </script>
+  <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').catch(function(e) {
+        console.warn('[SW] Registration failed:', e);
+      });
+    });
+  }
+  </script>
+  <script type="module" src="//instant.page/5.2.0"></script>
+</div>
+
+<script>try { var m = localStorage.getItem('fam-seasonal-mode'); if (m) { document.documentElement.setAttribute('data-seasonal', m); } } catch(e) {}</script>
 </body>
 </html>
