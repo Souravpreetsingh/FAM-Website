@@ -58,15 +58,36 @@ tailwind.config = {
   }
 }
 </script>
+<style>
+    body { margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f4ec; color: #1a1c1a; }
+    img { max-width: 100%; height: auto; }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    #main-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; margin: 8px 8px 0; border-radius: 9999px; background: rgba(248,244,236,0.8); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border: 1px solid rgba(193,200,192,0.2); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    #main-nav > div { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 8px 12px; max-width: 1400px; margin: 0 auto; }
+    #main-nav .nav-brand { font-family: 'Playfair Display', Georgia, serif; font-size: 14px; color: #0a341d; text-decoration: none; white-space: nowrap; }
+    #main-nav .nav-desktop { display: none; }
+    #main-nav .nav-mobile-actions { display: flex; align-items: center; gap: 8px; }
+    #main-nav .nav-hamburger { background: none; border: none; padding: 8px; color: #0a341d; cursor: pointer; display: flex; align-items: center; }
+    @media (min-width: 1024px) { #main-nav { margin: 8px 16px 0; } #main-nav > div { padding: 16px 64px; } #main-nav .nav-brand { font-size: 32px; } #main-nav .nav-desktop { display: flex; align-items: center; gap: 32px; } #main-nav .nav-mobile-actions { display: none; } }
+    .skip-link { position: absolute; left: -9999px; z-index: 999; padding: 8px 16px; background: #0a341d; color: #fff; text-decoration: none; }
+    .skip-link:focus { left: 8px; top: 8px; }
+  .img-fallback { background: #e8e8e4; min-height: 100px; display: flex; align-items: center; justify-content: center; color: #727972; font-family: Inter, sans-serif; font-size: 13px; }
+</style>
+  <script>document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('img').forEach(function(i){i.onerror=function(){this.onerror=null;this.style.display='none';var p=this.parentElement;if(p){var f=document.createElement('div');f.className='img-fallback';f.textContent='Image unavailable';p.appendChild(f)}}})})</script>
 </head>
 <body class="antialiased overflow-x-hidden bg-background text-on-surface">
   <a href="#main-content" class="skip-link">Skip to main content</a>
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300 mx-2 md:mx-4 mt-2 rounded-full" id="main-nav">
-    <div class="flex justify-between items-center w-full px-3 md:px-margin-desktop py-2 md:py-4 max-w-max-width mx-auto">
+  <nav id="main-nav">
+    <div>
       <div class="flex items-center gap-2 md:gap-4">
-        <a href="../index.html" class="font-headline-md text-sm md:text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
+        <a href="../index.html" class="nav-brand">Flamingo aur Maina</a>
       </div>
-      <div class="hidden lg:flex items-center gap-8">
+      <div class="nav-desktop">
         <a href="../index.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Home</a>
         <a href="rooms.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Rooms</a>
         <a href="life.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Life at FAM</a>
@@ -78,9 +99,9 @@ tailwind.config = {
           <button type="button" onclick="window.location.href='booking.html'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
         </div>
       </div>
-      <div class="flex items-center gap-3">
-        <button type="button" onclick="window.location.href='login.html'" class="nav-signin-btn lg:hidden" aria-label="Sign in to your account">Sign In</button>
-        <button class="lg:hidden text-primary p-2" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <div class="nav-mobile-actions">
+        <button type="button" onclick="window.location.href='login.html'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
+        <button class="nav-hamburger" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
       </div>
     </div>
   </nav>

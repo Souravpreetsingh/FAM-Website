@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html class="scroll-smooth" lang="en">
 <head>
-  <style>#pt-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;background:var(--mode-bg);opacity:1;transition:opacity .5s cubic-bezier(.65,0,.35,1)}</style>
+  <style>#pt-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;background:var(--mode-bg);opacity:1;transition:opacity .5s cubic-bezier(.65,0,.35,1)}
+    .img-fallback { background: #e8e8e4; min-height: 100px; display: flex; align-items: center; justify-content: center; color: #727972; font-family: Inter, sans-serif; font-size: 13px; }
+  </style>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Your Flamingo aur Maina email has been verified successfully. You can now sign in to your account." />
@@ -67,7 +69,8 @@ tailwind.config = {
   }
 }
 </script>
-  <link rel="stylesheet" href="../css/transitions.css?v=3" /></head>
+  <link rel="stylesheet" href="../css/transitions.css?v=3" /><script>document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('img').forEach(function(i){i.onerror=function(){this.onerror=null;this.style.display='none';var p=this.parentElement;if(p){var f=document.createElement('div');f.className='img-fallback';f.textContent='Image unavailable';p.appendChild(f)}}})})</script>
+</head>
 <body class="antialiased overflow-x-hidden bg-background text-on-surface">
 <a href="#main-content" class="skip-link">Skip to main content</a>
 <div id="pt-overlay" aria-hidden="true"></div>
