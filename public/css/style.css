@@ -208,7 +208,7 @@ html.mode-winter .seasonal-winter-glow {
   position: fixed;
   top: 94px;
   right: 24px;
-  z-index: 200;
+  z-index: 10050;
   width: 50px;
   height: 50px;
   border-radius: 50%;
