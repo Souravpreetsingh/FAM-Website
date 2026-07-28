@@ -62,7 +62,7 @@
     var el = document.createElement('div');
     el.className = 'leaf seasonal-leaf';
     el.style.cssText =
-      'position:fixed;pointer-events:none;z-index:50;font-size:18px;opacity:0.5;animation:leafSway linear infinite;user-select:none;';
+      'position:fixed;pointer-events:none;z-index:9999;font-size:18px;opacity:0.9;will-change:transform,opacity;animation:leafSway linear infinite;user-select:none;';
     el.style.left = Math.random() * 100 + '%';
     el.style.animationDuration = 8 + Math.random() * 10 + 's';
     var size = 14 + Math.random() * 12;
