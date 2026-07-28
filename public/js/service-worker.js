@@ -43,8 +43,14 @@
       return;
     }
 
-    navigator.serviceWorker.register('/sw.js').catch(function(e) {
-      console.warn('[SW] Registration failed:', e);
-    });
+    /* Unregister any existing service worker and delete caches to avoid stale-content issues */
+    if ('caches' in window) {
+      caches.keys().then(function(names) {
+        return Promise.all(names.map(function(name) { return caches.delete(name); }));
+      }).catch(function(){});
+    }
+    navigator.serviceWorker.getRegistrations().then(function(regs) {
+      regs.forEach(function(r) { r.unregister(); });
+    }).catch(function(){});
   });
 })();
