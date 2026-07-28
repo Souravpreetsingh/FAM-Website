@@ -381,18 +381,26 @@ html.mode-winter .seasonal-winter-glow {
 
 /* ------ Reveal Animations ------ */
 .reveal {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.reveal.reveal-pending:not(.active) {
   opacity: 0;
   transform: translateY(40px);
-  transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
 }
 .reveal.active {
   opacity: 1;
   transform: translateY(0);
 }
 .reveal-hidden {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+}
+.reveal-hidden.reveal-pending:not(.reveal-visible) {
   opacity: 0;
   transform: translateY(30px);
-  transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
 }
 .reveal-visible {
   opacity: 1;
@@ -3723,10 +3731,16 @@ html.dark .hamburger-line {
   letter-spacing: -0.02em;
   color: #0a341d;
 }
+.mobile-menu-panel {
+  width: 280px;
+  max-width: 72vw;
+}
+
+.mobile-menu-close,
 .mobile-menu-close-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
   border: none;
   background: rgba(10, 52, 29, 0.06);
   color: #414942;
@@ -3736,15 +3750,18 @@ html.dark .hamburger-line {
   justify-content: center;
   transition: all 0.25s ease;
 }
+.mobile-menu-close:hover,
 .mobile-menu-close-btn:hover {
   background: rgba(10, 52, 29, 0.1);
   color: #0a341d;
   transform: rotate(90deg);
 }
+.mobile-menu-close:focus-visible,
 .mobile-menu-close-btn:focus-visible {
   outline: 2px solid #0a341d;
   outline-offset: 2px;
 }
+.mobile-menu-close:active,
 .mobile-menu-close-btn:active {
   transform: rotate(90deg) scale(0.92);
 }
@@ -3754,24 +3771,24 @@ html.dark .hamburger-line {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 8px 12px;
+  padding: 6px 10px;
 }
 .mobile-menu-link {
-  padding: 16px 20px;
-  min-height: 52px;
+  padding: 12px 16px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   font-family: 'Inter', sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   color: #1a1c1a;
   text-decoration: none;
-  border-radius: 12px;
+  border-radius: 10px;
   transition: all 0.2s ease;
   opacity: 0;
-  transform: translateX(24px);
+  transform: translateX(20px);
   transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, color 0.2s ease;
-  transition-delay: calc(var(--i, 0) * 0.025s);
+  transition-delay: calc(var(--i, 0) * 0.02s);
 }
 .mobile-menu-panel.open .mobile-menu-link {
   opacity: 1;
@@ -3780,7 +3797,7 @@ html.dark .hamburger-line {
 .mobile-menu-link:focus-visible {
   outline: 2px solid #0a341d;
   outline-offset: -2px;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 .mobile-menu-link:hover {
   background: rgba(10, 52, 29, 0.06);
@@ -3795,11 +3812,11 @@ html.dark .hamburger-line {
 .mobile-menu-cta-group {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 8px 20px 24px;
+  gap: 8px;
+  padding: 6px 16px 20px;
   width: 100%;
   opacity: 0;
-  transform: translateX(24px);
+  transform: translateX(20px);
   transition: opacity 0.2s ease 0.15s, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
 }
 .mobile-menu-panel.open .mobile-menu-cta-group {
@@ -3809,11 +3826,11 @@ html.dark .hamburger-line {
 
 /* --- Mobile Footer --- */
 .mobile-menu-footer {
-  padding: 16px 24px calc(24px + env(safe-area-inset-bottom, 0px));
+  padding: 12px 18px calc(18px + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid rgba(10, 52, 29, 0.06);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   opacity: 0;
   transition: opacity 0.2s ease 0.18s;
 }
@@ -3823,18 +3840,18 @@ html.dark .hamburger-line {
 .mobile-menu-phone {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   font-family: 'Inter', sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   color: #414942;
   text-decoration: none;
-  padding: 8px 0;
+  padding: 6px 0;
 }
 .mobile-menu-phone:hover {
   color: #0a341d;
 }
 .mobile-menu-phone .material-symbols-outlined {
-  font-size: 18px;
+  font-size: 16px;
   color: #C9A86A;
 }
 
@@ -4082,6 +4099,15 @@ img { max-width: 100%; height: auto; }
     animation: none !important;
     opacity: 0 !important;
     pointer-events: none !important;
+  }
+
+  /* Keep the seasonal toggle icon visible on smaller screens */
+  .seasonal-toggle-icon.leaf,
+  .seasonal-toggle-icon.snowflake {
+    display: flex !important;
+    opacity: 1 !important;
+    animation: none !important;
+    pointer-events: auto !important;
   }
 
   /* Ken Burns animation - disable on mobile for performance */
@@ -4948,28 +4974,30 @@ img { max-width: 100%; height: auto; }
   }
 }
 
-/* Hide mobile nav elements on desktop (they use display:flex in mobile media query) */
-.mobile-nav-bar,
-.mobile-nav-toggle,
-.mobile-book-btn,
-.mobile-overlay,
-.mobile-panel,
-.mobile-panel-header,
-.mobile-panel-links,
-.mobile-panel-cta,
-.nav-mobile-book,
-.nav-mobile-signin,
-.hamburger-btn,
-.mobile-menu-overlay,
-.mobile-menu-panel,
-.mobile-menu-header,
-.mobile-menu-links,
-.mobile-menu-cta-group,
-.mobile-menu-footer,
-.mobile-menu-phone,
-.mobile-menu-brand,
-.mobile-menu-close-btn {
-  display: none;
+@media (min-width: 768px) {
+  /* Hide mobile nav elements on desktop (they use display:flex in mobile media query) */
+  .mobile-nav-bar,
+  .mobile-nav-toggle,
+  .mobile-book-btn,
+  .mobile-overlay,
+  .mobile-panel,
+  .mobile-panel-header,
+  .mobile-panel-links,
+  .mobile-panel-cta,
+  .nav-mobile-book,
+  .nav-mobile-signin,
+  .hamburger-btn,
+  .mobile-menu-overlay,
+  .mobile-menu-panel,
+  .mobile-menu-header,
+  .mobile-menu-links,
+  .mobile-menu-cta-group,
+  .mobile-menu-footer,
+  .mobile-menu-phone,
+  .mobile-menu-brand,
+  .mobile-menu-close-btn {
+    display: none;
+  }
 }
 
 /* ====== AUTH PAGE NAV HIDE ====== */
@@ -6166,17 +6194,6 @@ html.mode-winter .nav-mobile-book {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   }
 
-  /* ---- Content-visibility: skip rendering for below-fold sections ---- */
-  #story-chapter, #our-vision,
-  section:has(.parallax-bg),
-  section:has(#gallery-preview),
-  section:has(#rooms-preview),
-  #contact, #map-section, #newsletter-section,
-  footer {
-    content-visibility: auto;
-    contain-intrinsic-size: 1px 500px;
-  }
-
   /* ---- Touch Performance: eliminate 300ms tap delay ---- */
   a, button, input, select, textarea, .btn-primary, .btn-secondary,
   .hero-btn-primary, .hero-btn-secondary, .nav-link, .mobile-menu-link,
@@ -6195,9 +6212,13 @@ html.mode-winter .nav-mobile-book {
 
   /* ---- Scroll Reveal Animations ---- */
   .reveal-mobile {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-mobile.reveal-mobile-pending:not(.visible) {
     opacity: 0;
     transform: translateY(24px);
-    transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .reveal-mobile.visible {
     opacity: 1;
@@ -6569,15 +6590,16 @@ html.mode-winter .nav-mobile-book {
     width: 100%;
   }
 
-  .mobile-menu-overlay,
-  .mobile-menu-panel,
-  .mobile-menu-header,
-  .mobile-menu-links,
-  .mobile-menu-cta-group,
-  .mobile-menu-footer,
-  .mobile-menu-phone,
-  .mobile-menu-brand,
-  .mobile-menu-close-btn,
+  .mobile-panel,
+  .mobile-panel-header,
+  .mobile-panel-links,
+  .mobile-panel-cta,
+  .mobile-panel-book-btn,
+  .mobile-panel-signin-btn,
+  .mobile-panel-footer,
+  .mobile-panel-phone,
+  .mobile-panel-brand,
+  .mobile-panel-close-btn,
   .hamburger-btn {
     display: none !important;
   }

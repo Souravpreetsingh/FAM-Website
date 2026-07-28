@@ -147,7 +147,7 @@
 
     var icon = document.createElement('span');
     icon.className = 'seasonal-toggle-icon leaf';
-    icon.textContent = '\uD83C\uDF43';
+    icon.textContent = '\uD83C\uDF3F';
     toggle.appendChild(icon);
 
     toggle.addEventListener('click', function () {
@@ -166,7 +166,7 @@
 
     function setIcon() {
       if (mode === 'green') {
-        icon.textContent = '\uD83C\uDF43';
+        icon.textContent = '\uD83C\uDF3F';
         icon.className = 'seasonal-toggle-icon leaf';
         toggle.setAttribute('aria-label', 'Switch to Winter Mode');
       } else {

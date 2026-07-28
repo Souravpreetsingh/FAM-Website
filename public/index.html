@@ -62,7 +62,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </noscript>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link rel="stylesheet" href="css/style.css?v=18" />
+  <link rel="stylesheet" href="css/style.css?v=19" />
   <link rel="stylesheet" href="css/scroll-story.css?v=3" />
   <link rel="stylesheet" href="css/transitions.css?v=3" />
   
@@ -159,20 +159,12 @@ tailwind.config = {
 <body class="antialiased overflow-x-hidden bg-background text-on-surface">
 <a href="#main-content" class="skip-link">Skip to main content</a>
 <div id="pt-overlay" aria-hidden="true"></div>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js').catch(function(e) {
-      console.warn('[SW] Registration failed:', e);
-    });
-  });
-}
-</script>
+<script src="/js/service-worker.js"></script>
 <script type="module" src="//instant.page/5.2.0"></script>
 
     <!-- ====== NAVBAR ====== -->
-  <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300" id="main-nav">
-    <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto rounded-full">
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300 mx-2 md:mx-4 mt-2 rounded-full" id="main-nav">
+    <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto">
       <div class="flex items-center gap-4">
         <a href="/" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
       </div>
@@ -188,7 +180,8 @@ if ('serviceWorker' in navigator) {
           <button type="button" onclick="window.location.href='pages/booking.html'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
         </div>
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="window.location.href='pages/login.html'" class="nav-signin-btn lg:hidden" aria-label="Sign in to your account">Sign In</button>
         <button class="lg:hidden text-primary p-2" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button>
       </div>
     </div>
@@ -1125,10 +1118,12 @@ if ('serviceWorker' in navigator) {
     if ('IntersectionObserver' in window) {
       var obs = new IntersectionObserver(function(entries) {
         entries.forEach(function(e) {
-          if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+          if (e.isIntersecting) { e.target.classList.add('visible'); e.target.classList.remove('reveal-mobile-pending'); obs.unobserve(e.target); }
         });
       }, { threshold: 0.15 });
-      els.forEach(function(el) { obs.observe(el); });
+      els.forEach(function(el) { el.classList.add('reveal-mobile-pending'); obs.observe(el); });
+    } else {
+      els.forEach(function(el) { el.classList.add('visible'); });
     }
   }
   function initMobileMenu() {} /* handled by mobile-nav.js */

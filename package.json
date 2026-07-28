@@ -1,0 +1,12 @@
+{
+  "name": "fam-website",
+  "version": "1.0.0",
+  "description": "Flamingo aur Maina - Luxury Boutique Café & Mountain Retreat",
+  "scripts": {
+    "dev": "tailwindcss -i ./public/css/input.css -o ./public/css/style.css --watch",
+    "build": "tailwindcss -i ./public/css/input.css -o ./public/css/style.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+}

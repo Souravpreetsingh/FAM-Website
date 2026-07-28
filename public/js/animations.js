@@ -7,29 +7,47 @@
   FAM.Animations.initReveal = function() {
     var els = document.querySelectorAll('.reveal');
     if (!els.length) return;
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(function(el) { el.classList.add('active'); });
+      return;
+    }
     var observer = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
           entry.target.classList.add('active');
+          entry.target.classList.remove('reveal-pending');
           observer.unobserve(entry.target);
         }
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-    els.forEach(function(el) { observer.observe(el); });
+    els.forEach(function(el) {
+      if (el.classList.contains('active')) return;
+      el.classList.add('reveal-pending');
+      observer.observe(el);
+    });
   };
 
   FAM.Animations.initRevealHidden = function() {
     var els = document.querySelectorAll('.reveal-hidden');
     if (!els.length) return;
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(function(el) { el.classList.add('reveal-visible'); });
+      return;
+    }
     var observer = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
           entry.target.classList.add('reveal-visible');
+          entry.target.classList.remove('reveal-pending');
           observer.unobserve(entry.target);
         }
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-    els.forEach(function(el) { observer.observe(el); });
+    els.forEach(function(el) {
+      if (el.classList.contains('reveal-visible')) return;
+      el.classList.add('reveal-pending');
+      observer.observe(el);
+    });
   };
 
   FAM.Animations.initParallax = function() {

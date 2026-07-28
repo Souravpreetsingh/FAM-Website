@@ -45,7 +45,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </noscript>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link rel="stylesheet" href="../css/style.css?v=16" />
+  <link rel="stylesheet" href="../css/style.css?v=19" />
   <link rel="stylesheet" href="../css/login.css?v=1" />
   <link rel="stylesheet" href="../css/transitions.css?v=3" />
 </head>
@@ -105,7 +105,7 @@
   </div>
 
   <div class="login-page" id="main-content" role="main" aria-label="Sign in to Flamingo aur Maina">
-    <div class="login-hero" aria-hidden="true">
+    <div class="login-hero reveal" aria-hidden="true">
       <div class="login-hero-bg">
         <img src="../images/hero/luxury-hero.jpg" alt="" loading="lazy" />
       </div>
@@ -135,7 +135,7 @@
       </div>
     </div>
 
-    <div class="login-card-panel">
+    <div class="login-card-panel reveal">
       <div class="login-card" data-parallax>
         <div class="login-card-shine"></div>
         <div class="login-card-inner">
@@ -249,6 +249,14 @@
   document.addEventListener('DOMContentLoaded', initAuthMobileMenu);
   </script>
   <script src="../js/auth.js"></script>
+  <script src="../js/animations.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof FAM !== 'undefined' && FAM.Animations) {
+        FAM.Animations.init({ gsap: false, lenis: false, cardParallax: false, parallax: false });
+      }
+    });
+  </script>
   <script>
   document.addEventListener('DOMContentLoaded', function() {
     FAM.Auth.setupAuthPage();
@@ -473,15 +481,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="../js/supabase.js"></script>
   <script src="../js/page-transitions.js"></script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js').catch(function(e) {
-        console.warn('[SW] Registration failed:', e);
-      });
-    });
-  }
-  </script>
+  <script src="/js/service-worker.js"></script>
   <script type="module" src="//instant.page/5.2.0"></script>
 </body>
 </html>

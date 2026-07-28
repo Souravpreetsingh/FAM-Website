@@ -45,7 +45,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </noscript>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link rel="stylesheet" href="../css/style.css?v=16" />
+  <link rel="stylesheet" href="../css/style.css?v=19" />
 <script id="tailwind-config">
 tailwind.config = {
   darkMode: "class",
@@ -78,10 +78,10 @@ tailwind.config = {
     </div>
   </nav>
 
-  <main class="auth-page" id="main-content">
+  <main class="auth-page reveal" id="main-content">
     <div class="auth-container" style="justify-content: center;">
       <div class="auth-form-section" style="width: 100%; max-width: 520px;">
-        <div class="auth-form-card auth-slide-up" style="max-width: 100%; padding: 60px 48px;">
+        <div class="auth-form-card auth-slide-up reveal" style="max-width: 100%; padding: 60px 48px;">
           <div class="auth-success-card">
             <div class="auth-success-icon" style="width: 88px; height: 88px;">
               <span class="material-symbols-outlined" style="font-size: 44px;">check_circle</span>
@@ -113,17 +113,17 @@ tailwind.config = {
   </main>
 
   <script src="../js/auth.js"></script>
+  <script src="../js/animations.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof FAM !== 'undefined' && FAM.Animations) {
+        FAM.Animations.init({ gsap: false, lenis: false, cardParallax: false, parallax: false });
+      }
+    });
+  </script>
   <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
   <script src="../js/page-transitions.js"></script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js').catch(function(e) {
-        console.warn('[SW] Registration failed:', e);
-      });
-    });
-  }
-  </script>
+  <script src="/js/service-worker.js"></script>
   <script type="module" src="//instant.page/5.2.0"></script>
 </body>
 </html>

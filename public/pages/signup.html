@@ -45,7 +45,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </noscript>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link rel="stylesheet" href="../css/style.css?v=16" />
+  <link rel="stylesheet" href="../css/style.css?v=19" />
   <link rel="stylesheet" href="../css/signup.css?v=1" />
 <script id="tailwind-config">
 tailwind.config = {
@@ -107,7 +107,8 @@ tailwind.config = {
           <button type="button" onclick="window.location.href='booking.html'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
         </div>
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="window.location.href='login.html'" class="nav-signin-btn lg:hidden" aria-label="Sign in to your account">Sign In</button>
         <button class="lg:hidden text-primary p-2" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button>
       </div>
     </div>
@@ -142,7 +143,7 @@ tailwind.config = {
   </div>
 
 <main class="signup-page" id="main-content" role="main">
-  <div class="signup-hero" aria-hidden="true">
+  <div class="signup-hero reveal" aria-hidden="true">
     <div class="signup-hero-bg">
       <img src="../images/hero/luxury-hero.jpg" alt="" loading="lazy" />
     </div>
@@ -163,7 +164,7 @@ tailwind.config = {
     </div>
   </div>
 
-  <div class="signup-card-panel">
+  <div class="signup-card-panel reveal">
     <div class="signup-card">
       <div class="signup-card-shine"></div>
       <div class="signup-card-inner">
@@ -656,16 +657,16 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="../js/supabase.js"></script>
-<script src="../js/page-transitions.js"></script>
+<script src="../js/animations.js"></script>
   <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js').catch(function(e) {
-        console.warn('[SW] Registration failed:', e);
-      });
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof FAM !== 'undefined' && FAM.Animations) {
+        FAM.Animations.init({ gsap: false, lenis: false, cardParallax: false, parallax: false });
+      }
     });
-  }
   </script>
+  <script src="../js/page-transitions.js"></script>
+  <script src="/js/service-worker.js"></script>
   <script type="module" src="//instant.page/5.2.0"></script>
 </body>
 </html>

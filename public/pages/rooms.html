@@ -25,7 +25,7 @@
     "name": "Flamingo aur Maina Rooms",
     "description": "Boutique stays in Jibhi, Himachal Pradesh with mountain views and warm hospitality.",
     "url": "https://flamingoaurmaina.netlify.app/pages/rooms",
-    "image": "https://flamingoaurmaina.netlify.app/images/hero-bg.jpg",
+    "image": "https://flingoaurmaina.netlify.app/images/hero-bg.jpg",
     "offers": {
       "@type": "AggregateOffer",
       "priceCurrency": "INR",
@@ -39,7 +39,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link rel="stylesheet" href="../css/style.css?v=18" />
+  <link rel="stylesheet" href="../css/style.css?v=19" />
   <link rel="stylesheet" href="../css/transitions.css?v=3" />
 <script id="tailwind-config">
 tailwind.config = {
@@ -103,7 +103,8 @@ tailwind.config = {
 }
 </script>
   <style>
-    .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+    .reveal { opacity: 1; transform: translateY(0); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+    .reveal.reveal-pending:not(.active) { opacity: 0; transform: translateY(30px); }
     .reveal.active { opacity: 1; transform: translateY(0); }
     @keyframes blurFocus { from { filter: blur(20px); } to { filter: blur(0); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -114,8 +115,8 @@ tailwind.config = {
 <a href="#main-content" class="skip-link">Skip to main content</a>
 <div id="pt-overlay" aria-hidden="true"></div>
 
-  <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300" id="main-nav">
-    <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto rounded-full">
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300 mx-2 md:mx-4 mt-2 rounded-full" id="main-nav">
+    <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto">
       <div class="flex items-center gap-4">
         <a href="../index.html" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
       </div>
@@ -131,7 +132,8 @@ tailwind.config = {
           <button type="button" onclick="window.location.href='booking.html'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
         </div>
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="window.location.href='login.html'" class="nav-signin-btn lg:hidden" aria-label="Sign in to your account">Sign In</button>
         <button class="lg:hidden text-primary p-2" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button>
       </div>
     </div>
@@ -516,15 +518,7 @@ tailwind.config = {
   </script>
   <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
   <script src="../js/page-transitions.js"></script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js').catch(function(e) {
-        console.warn('[SW] Registration failed:', e);
-      });
-    });
-  }
-  </script>
+  <script src="/js/service-worker.js"></script>
   <script type="module" src="//instant.page/5.2.0"></script>
 </body>
 </html>

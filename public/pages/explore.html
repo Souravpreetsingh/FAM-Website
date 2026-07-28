@@ -39,7 +39,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-<link rel="stylesheet" href="../css/style.css?v=9" />
+<link rel="stylesheet" href="../css/style.css?v=19" />
 <script id="tailwind-config">
 tailwind.config = {
   darkMode: "class", theme: { extend: {
@@ -53,7 +53,8 @@ tailwind.config = {
 </script>
 <style>
   .reveal-text { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
-  .reveal-text span { display: inline-block; transform: translateY(100%); transition: transform 1s cubic-bezier(0.2, 0, 0.2, 1); }
+  .reveal-text span { display: inline-block; transform: translateY(0); transition: transform 1s cubic-bezier(0.2, 0, 0.2, 1); }
+  html.reveal-text-js .reveal-text:not(.is-visible) span { transform: translateY(100%); }
   .reveal-text.is-visible span { transform: translateY(0); }
   .image-scale-container { overflow: hidden; position: relative; }
   .ken-burns { animation: kenBurns 20s ease-in-out infinite alternate; transform-origin: center center; will-change: transform; }
@@ -61,13 +62,13 @@ tailwind.config = {
   .leaf { position: absolute; background: #a5d1b0; width: 15px; height: 15px; border-radius: 15px 0 15px 0; opacity: 0.7; pointer-events: none; animation: fall linear infinite; }
   .leaf.gold { background: #C9A86A; }
   @keyframes fall { 0% { transform: translateY(-10px) translateX(0) rotate(0deg); opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.8; } 100% { transform: translateY(100vh) translateX(100px) rotate(360deg); opacity: 0; } }
-  .gsap-reveal { opacity: 0; transform: translateY(30px); }
-  .gsap-mask { clip-path: inset(100% 0 0 0); }
+  .gsap-reveal { opacity: 1; transform: translateY(0); }
+  .gsap-mask { clip-path: inset(0 0 0 0); }
 </style>
 </head>
 <body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden">
   <a href="#main-content" class="skip-link">Skip to main content</a>
-  <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300" id="main-nav">
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300 mx-2 md:mx-4 mt-2 rounded-full" id="main-nav">
     <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto">
       <div class="flex items-center gap-4">
         <a href="../index.html" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
@@ -84,7 +85,8 @@ tailwind.config = {
           <button type="button" onclick="window.location.href='booking.html'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
         </div>
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="window.location.href='login.html'" class="nav-signin-btn lg:hidden" aria-label="Sign in to your account">Sign In</button>
         <button class="lg:hidden text-primary p-2" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button>
       </div>
     </div>
@@ -543,18 +545,24 @@ tailwind.config = {
       FAM.Animations.init({ gsap: true, lenis: false });
     }
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); } });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal-text').forEach(el => observer.observe(el));
+    const revealTextElements = document.querySelectorAll('.reveal-text');
+    if ('IntersectionObserver' in window) {
+      document.documentElement.classList.add('reveal-text-js');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); } });
+      }, { threshold: 0.1 });
+      revealTextElements.forEach(el => observer.observe(el));
+    } else {
+      revealTextElements.forEach(el => el.classList.add('is-visible'));
+    }
 
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       gsap.registerPlugin(ScrollTrigger);
       gsap.utils.toArray('.gsap-reveal').forEach(element => {
-        gsap.to(element, { scrollTrigger: { trigger: element, start: "top 85%", toggleActions: "play none none reverse" }, y: 0, opacity: 1, duration: 1, ease: "power3.out" });
+        gsap.fromTo(element, { y: 30, opacity: 0 }, { scrollTrigger: { trigger: element, start: "top 85%", toggleActions: "play none none reverse" }, y: 0, opacity: 1, duration: 1, ease: "power3.out" });
       });
       gsap.utils.toArray('.gsap-mask').forEach(element => {
-        gsap.to(element, { scrollTrigger: { trigger: element, start: "top 80%", toggleActions: "play none none reverse" }, clipPath: "inset(0% 0 0 0)", duration: 1.5, ease: "power4.inOut" });
+        gsap.fromTo(element, { clipPath: "inset(100% 0 0 0)" }, { scrollTrigger: { trigger: element, start: "top 80%", toggleActions: "play none none reverse" }, clipPath: "inset(0% 0 0 0)", duration: 1.5, ease: "power4.inOut" });
       });
     }
     initMobileMenu();
@@ -599,5 +607,6 @@ tailwind.config = {
   <script src="../js/concierge.js"></script>
   <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
   <script src="../js/page-transitions.js"></script>
+  <script src="/js/service-worker.js"></script>
 </body>
 </html>

@@ -37,7 +37,7 @@
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="../css/style.css?v=9" />
+<link rel="stylesheet" href="../css/style.css?v=19" />
 <link rel="stylesheet" href="../css/gallery.css" />
 <script id="tailwind-config">
 tailwind.config = {
@@ -51,8 +51,13 @@ tailwind.config = {
 }
 </script>
 <style>
-  .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
+  .reveal { opacity: 1; transform: translateY(0); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
+  .reveal.reveal-pending:not(.active) { opacity: 0; transform: translateY(30px); }
   .reveal.active { opacity: 1; transform: translateY(0); }
+  .gallery-header-row { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; }
+  @media (min-width: 768px) {
+    .gallery-header-row { flex-direction: row; justify-content: space-between; align-items: center; }
+  }
   .reel-wrapper { position: relative; overflow: hidden; border-radius: 1rem; background: #e8ece4; aspect-ratio: 9/16; max-width: 340px; width: 100%; margin: 0 auto; box-shadow: 0 4px 20px rgba(10,52,29,0.1); }
   .reel-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
   .reel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
@@ -61,8 +66,8 @@ tailwind.config = {
 </head>
 <body class="bg-background text-on-surface antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
   <a href="#main-content" class="skip-link">Skip to main content</a>
-  <nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300" id="main-nav">
-    <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto rounded-full">
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border border-outline-variant/20 shadow-sm transition-all duration-300 mx-2 md:mx-4 mt-2 rounded-full" id="main-nav">
+    <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-max-width mx-auto">
       <div class="flex items-center gap-4">
         <a href="../index.html" class="font-headline-md text-headline-md text-primary tracking-tight">Flamingo aur Maina</a>
       </div>
@@ -78,7 +83,8 @@ tailwind.config = {
           <button type="button" onclick="window.location.href='booking.html'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
         </div>
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="window.location.href='login.html'" class="nav-signin-btn lg:hidden" aria-label="Sign in to your account">Sign In</button>
         <button class="lg:hidden text-primary p-2" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button>
       </div>
     </div>
@@ -113,34 +119,36 @@ tailwind.config = {
 <main id="main-content" class="pt-32 pb-section-gap">
 
 <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop text-center mb-16 reveal">
-  <h1 class="font-display-hero-mobile md:font-display-hero text-display-hero-mobile md:text-display-hero text-primary mb-6">Moments from FAM</h1>
+  <div class="gallery-header-row">
+    <h1 class="font-display-hero-mobile md:font-display-hero text-display-hero-mobile md:text-display-hero text-primary mb-6">Moments from FAM</h1>
+  </div>
 </section>
 
 <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop mb-section-gap reveal">
   <div class="reel-grid">
     <div class="reel-wrapper" data-reel="DXBaJK9icmf">
-      <iframe src="https://www.instagram.com/reel/DXBaJK9icmf/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
+      <iframe src="https://www.instagram.com/reel/DXBaJK9icmf/embed/?autoplay=1" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="no-referrer-when-downgrade" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
     </div>
     <div class="reel-wrapper" data-reel="DZ9w6M8p2JT">
-      <iframe src="https://www.instagram.com/reel/DZ9w6M8p2JT/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
+      <iframe src="https://www.instagram.com/reel/DZ9w6M8p2JT/embed/?autoplay=1" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="no-referrer-when-downgrade" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
     </div>
     <div class="reel-wrapper" data-reel="DWdi7wPibHh">
-      <iframe src="https://www.instagram.com/reel/DWdi7wPibHh/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
+      <iframe src="https://www.instagram.com/reel/DWdi7wPibHh/embed/?autoplay=1" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="no-referrer-when-downgrade" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
     </div>
     <div class="reel-wrapper" data-reel="DWTAMv3CVAw">
-      <iframe src="https://www.instagram.com/reel/DWTAMv3CVAw/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
+      <iframe src="https://www.instagram.com/reel/DWTAMv3CVAw/embed/?autoplay=1" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="no-referrer-when-downgrade" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
     </div>
     <div class="reel-wrapper" data-reel="DWEJB-bCahr">
-      <iframe src="https://www.instagram.com/reel/DWEJB-bCahr/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
+      <iframe src="https://www.instagram.com/reel/DWEJB-bCahr/embed/?autoplay=1" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="no-referrer-when-downgrade" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
     </div>
     <div class="reel-wrapper" data-reel="DT7P79_ifmt">
-      <iframe src="https://www.instagram.com/reel/DT7P79_ifmt/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
+      <iframe src="https://www.instagram.com/reel/DT7P79_ifmt/embed/?autoplay=1" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="no-referrer-when-downgrade" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
     </div>
     <div class="reel-wrapper" data-reel="DaVZtdqJ0op">
-      <iframe src="https://www.instagram.com/reel/DaVZtdqJ0op/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
+      <iframe src="https://www.instagram.com/reel/DaVZtdqJ0op/embed/?autoplay=1" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="no-referrer-when-downgrade" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
     </div>
     <div class="reel-wrapper" data-reel="DT0Pe4OCTJE">
-      <iframe src="https://www.instagram.com/reel/DT0Pe4OCTJE/embed/?autoplay=1&muted=1" allow="autoplay; encrypted-media; fullscreen" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
+      <iframe src="https://www.instagram.com/reel/DT0Pe4OCTJE/embed/?autoplay=1" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="no-referrer-when-downgrade" loading="lazy" title="Video from Flamingo aur Maina"></iframe>
     </div>
   </div>
 </section>
@@ -216,6 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   initMobileMenu();
 });
+
+// Gallery audio toggle removed: rely on user interaction inside iframe to enable sound
 </script>
 <script>
 function initMobileMenu() {
@@ -236,5 +246,6 @@ function initMobileMenu() {
 <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
 <script src="../js/page-transitions.js"></script>
 <script src="../js/gallery.js"></script>
+<script src="/js/service-worker.js"></script>
 </body>
 </html>

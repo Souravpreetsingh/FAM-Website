@@ -36,9 +36,24 @@ A luxury hospitality website for Flamingo aur Maina, a boutique café and mounta
 
 ## Getting Started
 
-### 1. Static HTML Site
+### 1. Install Dependencies
+
+This project uses `npm` to manage development dependencies for the static site (like Tailwind CSS).
 
 ```bash
+npm install
+```
+
+### 2. Run the Development Server
+
+To work on the static HTML site, you need to run two commands in separate terminals:
+
+1.  **Start the Tailwind CSS watcher:** This will automatically re-compile your CSS file whenever you make changes to your HTML or JS files.
+    ```bash
+    npm run dev
+    ```
+2.  **Serve the `public` directory:** This will start a local server to view your site.
+    ```bash
 npx serve public -l 3000
 ```
 

@@ -46,7 +46,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </noscript>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link rel="stylesheet" href="/css/style.css?v=16" />
+  <link rel="stylesheet" href="/css/style.css?v=19" />
 
 <script id="tailwind-config">
 tailwind.config = {
@@ -129,7 +129,6 @@ tailwind.config = {
   }
 }
 </script>
-
   <style>
     body { margin: 0; font-family: 'Inter', sans-serif; background: #f8f4ec; color: #1a1c1a; }
     .glass-panel {
@@ -228,7 +227,8 @@ tailwind.config = {
           <button type="button" onclick="window.location.href='booking.html'" class="nav-book-btn" aria-label="Book your stay at FAM" aria-current="page">Book Your Stay</button>
         </div>
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="window.location.href='login.html'" class="nav-signin-btn lg:hidden" aria-label="Sign in to your account">Sign In</button>
         <button class="lg:hidden text-primary p-2" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button>
       </div>
     </div>
@@ -275,7 +275,7 @@ tailwind.config = {
 <div id="page-content">
   <main id="main-content">
     <!-- Hero with dynamic step title -->
-    <section class="relative h-[35vh] min-h-[300px] overflow-hidden">
+    <section class="relative h-[35vh] min-h-[300px] overflow-hidden reveal">
       <img src="/images/hero/luxury-hero.jpg" alt="" class="absolute inset-0 w-full h-full object-cover" />
       <div class="absolute inset-0 bg-gradient-to-b from-surface/60 via-surface/30 to-surface"></div>
       <div class="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
@@ -290,7 +290,7 @@ tailwind.config = {
     </section>
 
     <!-- Wizard Section -->
-    <section class="max-w-[1200px] mx-auto px-4 md:px-8 pb-24 -mt-8 relative z-10 booking-wizard-section">
+    <section class="max-w-[1200px] mx-auto px-4 md:px-8 pb-24 -mt-8 relative z-10 booking-wizard-section reveal">
 
       <!-- Step Indicator -->
       <div class="flex items-center justify-center gap-1 md:gap-3 mb-8" id="step-indicator"></div>
@@ -598,7 +598,6 @@ tailwind.config = {
   };
   var HOTEL_INFO = { checkIn: '2:00 PM', checkOut: '11:00 AM' };
   var CANCELLATION = 'Free cancellation up to 7 days before check-in. 50% refund 3–7 days before check-in. No refund within 3 days.';
-
   // ====== STATE ======
   var STEPS = ['room', 'dates', 'guests', 'info', 'review', 'payment', 'confirmation'];
   var STEP_LABELS = ['Room', 'Dates', 'Guests', 'Details', 'Review', 'Payment', 'Done'];
@@ -1133,17 +1132,16 @@ tailwind.config = {
   <script src="/js/seasonal.js"></script>
   <script src="/js/concierge.js"></script>
   <script src="/js/animations.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof FAM !== 'undefined' && FAM.Animations) {
+        FAM.Animations.init({ gsap: false, lenis: false, cardParallax: false, parallax: false });
+      }
+    });
+  </script>
   <script src="/js/page-transitions.js"></script>
   <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js').catch(function(e) {
-        console.warn('[SW] Registration failed:', e);
-      });
-    });
-  }
-  </script>
+  <script src="/js/service-worker.js"></script>
   <script type="module" src="//instant.page/5.2.0"></script>
 </body>
 </html>
