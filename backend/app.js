@@ -22,7 +22,22 @@ const swaggerSpec = require('./swagger');
 
 const app = express();
 
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "cdn.tailwindcss.com", "cdnjs.cloudflare.com", "unpkg.com", "instant.page", "fonts.googleapis.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com", "fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https://*.googleusercontent.com", "https://*.supabase.co"],
+      fontSrc: ["'self'", "fonts.gstatic.com", "https:", "data:"],
+      connectSrc: ["'self'"],
+      frameSrc: ["'self'", "https://www.google.com"],
+      mediaSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: [],
+    },
+  },
+}));
 
 const corsOptions = {
   origin: process.env.FRONTEND_URL || '*',
