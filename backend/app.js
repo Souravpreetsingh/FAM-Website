@@ -28,7 +28,7 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "cdn.tailwindcss.com", "cdnjs.cloudflare.com", "unpkg.com", "instant.page", "fonts.googleapis.com"],
       styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com", "fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:", "https://*.googleusercontent.com", "https://*.supabase.co"],
+      imgSrc: ["'self'", "data:", "https://*.googleusercontent.com", "https://*.supabase.co", "https://images.unsplash.com"],
       fontSrc: ["'self'", "fonts.gstatic.com", "https:", "data:"],
       connectSrc: ["'self'"],
       frameSrc: ["'self'", "https://www.google.com"],
