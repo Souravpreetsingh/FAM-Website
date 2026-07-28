@@ -725,7 +725,6 @@
   function init() {
     if (document.getElementById('concierge-btn')) return;
 
-    buildBookingShortcut();
     initOverlapPrevention();
 
     loadKnowledgeBase(function () {
