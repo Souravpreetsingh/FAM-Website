@@ -112,6 +112,11 @@ app.get('/api/v1/health', (req, res) => {
 const publicPath = path.join(__dirname, '..', 'public');
 app.use(express.static(publicPath, {
   maxAge: process.env.NODE_ENV === 'production' ? '1y' : 0,
+  setHeaders: function(res, filePath) {
+    if (filePath.endsWith('.html')) {
+      res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+  },
 }));
 
 // SPA fallback — serve index.html for non-API, non-file routes
