@@ -241,9 +241,61 @@ html.mode-winter .seasonal-winter-glow {
   pointer-events: none;
   transform: translateY(-8px);
 }
+
+/* Keep the toggle visible in green (seasonal) mode even if JS adds 'hidden' */
+html:not(.mode-winter) .seasonal-toggle.hidden {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateY(0) !important;
+}
 .seasonal-toggle:hover {
   transform: scale(1.1);
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+/* Keep white background and make branch+leaf visible in green mode */
+html:not(.mode-winter) .seasonal-toggle {
+  background: rgba(255,255,255,0.95) !important;
+  border: 1px solid rgba(10,52,29,0.08) !important;
+  box-shadow: 0 6px 18px rgba(10,52,29,0.08) !important;
+}
+html:not(.mode-winter) .seasonal-toggle .seasonal-toggle-icon,
+html:not(.mode-winter) .seasonal-toggle .seasonal-toggle-icon.leaf {
+  color: var(--mode-primary) !important;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.12)) !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.6) !important;
+}
+
+/* Prevent global `.leaf` animations from affecting the toggle icon */
+html:not(.mode-winter) .seasonal-toggle .seasonal-toggle-icon.leaf {
+  animation: leafFloat 3s ease-in-out infinite !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+html:not(.mode-winter) .seasonal-toggle .seasonal-toggle-icon {
+  opacity: 1 !important;
+}
+
+/* Toggle-specific icon classes (avoid clashing with global .leaf rules) */
+.seasonal-toggle .seasonal-toggle-icon.toggle-branch {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  color: var(--mode-primary) !important;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.12)) !important;
+}
+.seasonal-toggle .seasonal-toggle-icon.toggle-snowflake {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  color: #1E3A8A !important;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.12)) !important;
+}
+
+/* Ensure a visible branch+leaf icon via an inline SVG pseudo-element (desktop fallback) */
+/* desktop branch graphic removed to match mobile leaf icon */
+html:not(.mode-winter) .seasonal-toggle .seasonal-toggle-icon::after {
+  display: none !important;
 }
 .seasonal-toggle:active {
   transform: scale(0.93);

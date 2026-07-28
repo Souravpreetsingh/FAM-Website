@@ -146,8 +146,8 @@
     toggle.setAttribute('aria-label', 'Switch to Winter Mode');
 
     var icon = document.createElement('span');
-    icon.className = 'seasonal-toggle-icon leaf';
-    icon.textContent = '\uD83C\uDF3F';
+    icon.className = 'seasonal-toggle-icon toggle-branch';
+    icon.textContent = '';
     toggle.appendChild(icon);
 
     toggle.addEventListener('click', function () {
@@ -167,11 +167,11 @@
     function setIcon() {
       if (mode === 'green') {
         icon.textContent = '\uD83C\uDF3F';
-        icon.className = 'seasonal-toggle-icon leaf';
+        icon.className = 'seasonal-toggle-icon toggle-branch';
         toggle.setAttribute('aria-label', 'Switch to Winter Mode');
       } else {
         icon.textContent = '\u2744\uFE0F';
-        icon.className = 'seasonal-toggle-icon snowflake';
+        icon.className = 'seasonal-toggle-icon toggle-snowflake';
         toggle.setAttribute('aria-label', 'Switch to Green Mode');
       }
     }
