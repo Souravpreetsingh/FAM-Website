@@ -80,6 +80,11 @@ textarea:focus-visible,
 /* ------ Seasonal Mode: Green (default) accents ------ */
 html:not(.mode-winter) .seasonal-leaf {
   display: block;
+  /* Ensure leaves are visible on desktop: increase opacity and stacking */
+  opacity: 1 !important;
+  z-index: 10001 !important;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+  text-shadow: 0 1px 2px rgba(0,0,0,0.35);
 }
 html:not(.mode-winter) .seasonal-snowflake {
   display: none;
