@@ -1,4 +1,4 @@
-var CACHE_NAME = 'fam-v3';
+var CACHE_NAME = 'fam-v4';
 
 var PRECACHE_URLS = [
   '/',
