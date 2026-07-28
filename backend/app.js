@@ -93,7 +93,21 @@ app.get('/api/v1/health', (req, res) => {
   });
 });
 
-app.all('*', (req, res, next) => {
+// Serve frontend static files
+const publicPath = path.join(__dirname, '..', 'public');
+app.use(express.static(publicPath, {
+  maxAge: process.env.NODE_ENV === 'production' ? '1y' : 0,
+}));
+
+// SPA fallback — serve index.html for non-API, non-file routes
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api/') || req.path.includes('.')) {
+    return next(ApiError.notFound(`Route ${req.originalUrl} not found`));
+  }
+  res.sendFile(path.join(publicPath, 'index.html'));
+});
+
+app.use((req, res, next) => {
   next(ApiError.notFound(`Route ${req.originalUrl} not found`));
 });
 

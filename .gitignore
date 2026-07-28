@@ -52,7 +52,7 @@ backend/node_modules
 backend/.env
 backend/uploads/*
 !backend/uploads/.gitkeep
-backend/package-lock.json
+# backend/package-lock.json — kept for reproducible builds
 
 # Temp files
 *.tmp
