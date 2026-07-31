@@ -605,61 +605,6 @@
     }
   }
 
-  /* === Booking Shortcut === */
-  function buildBookingShortcut() {
-    if (document.getElementById('booking-shortcut-btn')) return;
-
-    var btn = document.createElement('button');
-    btn.className = 'booking-shortcut-btn';
-    btn.id = 'booking-shortcut-btn';
-    btn.setAttribute('aria-label', 'Check Availability');
-    btn.innerHTML =
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
-        '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>' +
-        '<line x1="16" y1="2" x2="16" y2="6"/>' +
-        '<line x1="8" y1="2" x2="8" y2="6"/>' +
-        '<line x1="3" y1="10" x2="21" y2="10"/>' +
-        '<path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/>' +
-      '</svg>';
-    document.body.appendChild(btn);
-
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      if (typeof window.navigateTo === 'function') {
-        window.navigateTo('/pages/booking');
-      } else {
-        window.location.href = '/pages/booking';
-      }
-    });
-
-    var tooltip = document.createElement('div');
-    tooltip.className = 'booking-tooltip';
-    tooltip.id = 'booking-tooltip';
-    tooltip.textContent = '\uD83D\uDCC5 Check Availability';
-    document.body.appendChild(tooltip);
-
-    var tooltipTimer;
-    btn.addEventListener('mouseenter', function () {
-      clearTimeout(tooltipTimer);
-      tooltip.classList.add('visible');
-    });
-    btn.addEventListener('mouseleave', function () {
-      tooltipTimer = setTimeout(function () {
-        tooltip.classList.remove('visible');
-      }, 2000);
-    });
-
-    if (!localStorage.getItem('bookingTooltipSeen')) {
-      setTimeout(function () {
-        tooltip.classList.add('visible');
-        setTimeout(function () {
-          tooltip.classList.remove('visible');
-        }, 4000);
-      }, 2000);
-      localStorage.setItem('bookingTooltipSeen', 'true');
-    }
-  }
-
   /* === Overlap Prevention === */
   function initOverlapPrevention() {
     if (window.innerWidth > 767) return;
@@ -684,8 +629,7 @@
 
     function onScroll() {
       var btn = document.getElementById('concierge-btn');
-      var bookBtn = document.getElementById('booking-shortcut-btn');
-      if (!btn && !bookBtn) { ticking = false; return; }
+      if (!btn) { ticking = false; return; }
 
       var zone = window.innerWidth < 480 ? 150 : 130;
       var sections = getCriticalSections();
@@ -699,11 +643,8 @@
         }
       }
 
-      [btn, bookBtn].forEach(function (el) {
-        if (!el) return;
-        if (hide) { el.classList.add('hide-overlap'); }
-        else { el.classList.remove('hide-overlap'); }
-      });
+      if (hide) { btn.classList.add('hide-overlap'); }
+      else { btn.classList.remove('hide-overlap'); }
 
       ticking = false;
     }
@@ -725,9 +666,7 @@
   function init() {
     if (document.getElementById('concierge-btn')) return;
 
-    buildBookingShortcut();
     initOverlapPrevention();
-
     loadKnowledgeBase(function () {
       buildButton();
       buildPanel();
