@@ -40,9 +40,54 @@ class AuthService {
       throw ApiError.unauthorized('Invalid email or password');
     }
 
+    if (!user.password) {
+      const provider = user.oauthProvider === 'apple' ? 'Apple' : 'Google';
+      throw ApiError.unauthorized(`This account uses ${provider} sign-in. Please sign in with ${provider}.`);
+    }
+
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       throw ApiError.unauthorized('Invalid email or password');
+    }
+
+    const accessToken = generateAccessToken(user._id, user.role);
+    const refreshToken = generateRefreshToken(user._id, user.role);
+
+    user.refreshTokens.push({
+      token: refreshToken,
+      expiresAt: new Date(Date.now() + REFRESH_TOKEN_EXPIRY_MS),
+    });
+
+    if (user.refreshTokens.length > 5) {
+      user.refreshTokens = user.refreshTokens.slice(-5);
+    }
+    await user.save();
+
+    return { user, accessToken, refreshToken };
+  }
+
+  async loginWithOAuth({ provider, providerId, email, name, avatar }) {
+    let user = await User.findOne({ email }).select('+password');
+
+    if (user) {
+      if (!user.oauthProviderId) {
+        user.oauthProvider = provider;
+        user.oauthProviderId = providerId;
+      }
+      user.isVerified = true;
+      if (avatar && !user.avatar?.url) {
+        user.avatar = { url: avatar };
+      }
+      await user.save();
+    } else {
+      user = await User.create({
+        name: name || email.split('@')[0] || 'Guest',
+        email,
+        isVerified: true,
+        oauthProvider: provider,
+        oauthProviderId: providerId,
+        avatar: avatar ? { url: avatar } : undefined,
+      });
     }
 
     const accessToken = generateAccessToken(user._id, user.role);

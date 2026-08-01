@@ -8,7 +8,23 @@ services:
       - key: NODE_ENV
         value: production
       - key: FRONTEND_URL
-        value: https://your-app-name.onrender.com
+        value: https://fam-website-wq2e.onrender.com
+      - key: APP_URL
+        value: https://fam-website-wq2e.onrender.com
+      - key: SESSION_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: APPLE_CLIENT_ID
+        sync: false
+      - key: APPLE_TEAM_ID
+        sync: false
+      - key: APPLE_KEY_ID
+        sync: false
+      - key: APPLE_PRIVATE_KEY
+        sync: false
       - key: MONGODB_URI
         sync: false
       - key: JWT_ACCESS_SECRET

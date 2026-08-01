@@ -134,6 +134,41 @@ FAM.Auth = (() => {
     return !!getAccessToken();
   }
 
+  function storeTokens(accessToken, refreshToken) {
+    setTokens(accessToken, refreshToken);
+  }
+
+  async function oauthLogin(provider) {
+    if (provider !== 'google' && provider !== 'apple') {
+      throw new Error('Unsupported OAuth provider');
+    }
+
+    let redirectTo = '/';
+    try {
+      const query = new URLSearchParams(window.location.search);
+      const requested = query.get('redirect');
+      if (requested && requested.startsWith('/') && !requested.startsWith('//')) {
+        redirectTo = requested;
+      }
+    } catch (e) { /* ignore */ }
+
+    const response = await fetch('/api/v1/auth/oauth/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider, redirectTo }),
+    });
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Unable to start sign-in. Please try again.');
+    }
+    if (!data.data || !data.data.url) {
+      throw new Error('Unable to start sign-in. Please try again.');
+    }
+
+    window.location.href = data.data.url;
+  }
+
   // ── Form Validation ──
 
   const VALIDATORS = {
@@ -444,7 +479,9 @@ FAM.Auth = (() => {
     logout,
     isAuthenticated,
     getAccessToken,
+    storeTokens,
     clearTokens,
+    oauthLogin,
 
     validateField,
     validateForm,

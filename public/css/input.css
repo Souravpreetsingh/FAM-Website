@@ -2587,7 +2587,7 @@ html.time-night .mt-bonfire {
   .seasonal-toggle-icon.switching { transition: none !important; }
 }
 /* ============================================
-   Explore Around FAM G�� Magazine Style
+   Explore Around FAM — Magazine Style
    ============================================ */
 .explore-card {
   position: relative;
@@ -5123,14 +5123,16 @@ img { max-width: 100%; height: auto; }
 
 /* Winter mode overrides */
 html.mode-winter .nav-signin-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: #1E3A8A;
+  color: #ffffff;
+  border-color: #1E3A8A;
+  box-shadow: 0 10px 24px rgba(30, 58, 138, 0.22);
 }
 
 html.mode-winter .nav-signin-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
-  box-shadow: 0 0 24px rgba(226, 232, 240, 0.15);
-  border-color: rgba(255, 255, 255, 0.35);
+  background: #2748A8;
+  color: #ffffff;
+  border-color: #2748A8;
 }
 
 html.mode-winter .nav-book-btn {
@@ -5202,9 +5204,9 @@ html.mode-winter .nav-book-btn:hover {
 
 /* Winter mode overrides for mobile */
 html.mode-winter .nav-mobile-signin {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(30, 58, 138, 0.2);
-  color: #1E3A8A;
+  background: #1E3A8A;
+  border-color: #1E3A8A;
+  color: #ffffff;
 }
 
 html.mode-winter .nav-mobile-book {
@@ -5230,7 +5232,7 @@ html.mode-winter .nav-mobile-book {
 }
 
 /* ============================================
-   Mobile Hero G�� 768px and below only
+   Mobile Hero — 768px and below only
    Does NOT affect desktop (769px+)
    ============================================ */
 @media (max-width: 767px) {
@@ -5365,7 +5367,7 @@ html.mode-winter .nav-mobile-book {
     line-height: 1.6 !important;
   }
 
-  /* Amenities grid G�� single column, 420px max */
+  /* Amenities grid — single column, 420px max */
   #amenities-grid {
     max-width: 420px !important;
     margin-left: auto !important;
@@ -5526,7 +5528,7 @@ html.mode-winter .nav-mobile-book {
     width: 100%;
   }
 
-  /* Experience cards G�� mobile only styling */
+  /* Experience cards — mobile only styling */
   #experiences-section {
     max-width: 420px !important;
     margin-left: auto !important;
@@ -5564,7 +5566,7 @@ html.mode-winter .nav-mobile-book {
 }
 
 /* ============================================
-   Mobile Booking G�� Room Cards (768px and below)
+   Mobile Booking — Room Cards (768px and below)
    ============================================ */
 @media (max-width: 767px) {
   /* Booking wizard section max-width */
@@ -5574,7 +5576,7 @@ html.mode-winter .nav-mobile-book {
     padding-right: 0 !important;
   }
 
-  /* Progress stepper G�� larger dots with arrows */
+  /* Progress stepper — larger dots with arrows */
   #step-indicator .w-2 { width: 10px; height: 10px; }
   #step-indicator .w-2\.5 { width: 12px; height: 12px; }
 
@@ -5591,7 +5593,7 @@ html.mode-winter .nav-mobile-book {
     box-shadow: 0 0 0 2px #C9A86A, 0 8px 32px rgba(201, 168, 106, 0.15);
   }
 
-  /* Image G�� 16:9 ratio */
+  /* Image — 16:9 ratio */
   .m-card-image {
     position: relative;
     aspect-ratio: 16 / 9;
@@ -5802,7 +5804,7 @@ html.mode-winter .nav-mobile-book {
     background: rgba(10, 52, 29, 0.06);
   }
   .room-card.selected .m-card-image::before {
-    content: 'G�� Selected';
+    content: '✓ Selected';
     position: absolute;
     top: 12px;
     left: 12px;
@@ -6570,7 +6572,7 @@ html.mode-winter .nav-mobile-book {
 
 }
 
-/* --- Small Screen Overrides (G�� 360px) --- */
+/* --- Small Screen Overrides (≤ 360px) --- */
 @media (max-width: 360px) {
   .mobile-nav-bar {
     padding: 8px 10px 8px 14px;

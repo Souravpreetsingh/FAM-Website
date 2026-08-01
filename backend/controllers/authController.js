@@ -1,7 +1,21 @@
+const crypto = require('crypto');
 const authService = require('../services/authService');
+const oauthService = require('../services/oauthService');
 const emailService = require('../services/emailService');
 const ApiResponse = require('../utils/ApiResponse');
+const ApiError = require('../utils/ApiError');
 const asyncHandler = require('../utils/asyncHandler');
+const {
+  FRONTEND_URL,
+  STATE_COOKIE,
+  STATE_TTL_MS,
+  buildAuthorizeUrl,
+  signState,
+  verifyState,
+  parseCookies,
+  requireConfig,
+  sanitizeRedirect,
+} = require('../config/oauth');
 
 const register = asyncHandler(async (req, res) => {
   const { name, email, password, phone } = req.validated?.body || {};
@@ -83,6 +97,106 @@ const resetPassword = asyncHandler(async (req, res) => {
   ApiResponse.success(null, 'Password reset successful').send(res);
 });
 
+const startOAuth = asyncHandler(async (req, res) => {
+  const { provider, redirectTo } = req.body || {};
+  if (provider !== 'google' && provider !== 'apple') {
+    throw ApiError.badRequest('Unsupported OAuth provider');
+  }
+  requireConfig(provider);
+
+  const state = crypto.randomBytes(24).toString('hex');
+  const nonce = crypto.randomBytes(24).toString('hex');
+  const stateToken = signState({
+    state,
+    nonce,
+    provider,
+    redirectTo: sanitizeRedirect(redirectTo),
+  });
+
+  const stateCookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    path: '/',
+    maxAge: STATE_TTL_MS,
+  };
+  res.cookie(STATE_COOKIE, stateToken, stateCookieOptions);
+
+  const url = buildAuthorizeUrl(provider, state, nonce);
+  ApiResponse.success({ url, provider }, 'OAuth authorization URL generated').send(res);
+});
+
+const redirectOAuthError = (res, message) => {
+  const params = new URLSearchParams({ oauth_error: message });
+  res.redirect(`${FRONTEND_URL}/pages/login.html?${params.toString()}`);
+};
+
+const completeOAuth = (res, session, { user, accessToken, refreshToken }) => {
+  res.clearCookie(STATE_COOKIE, {
+    path: '/',
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+  });
+  const params = new URLSearchParams({
+    access_token: accessToken,
+    refresh_token: refreshToken,
+    user_name: user.name || '',
+    redirect: session.redirectTo || '/',
+  });
+  res.redirect(`${FRONTEND_URL}/pages/oauth-redirect.html#${params.toString()}`);
+};
+
+const readOAuthSession = (req, state) => {
+  const cookies = parseCookies(req.headers.cookie);
+  const token = cookies[STATE_COOKIE];
+  if (!token) {
+    throw ApiError.unauthorized('OAuth state is missing');
+  }
+  let session;
+  try {
+    session = verifyState(token);
+  } catch {
+    throw ApiError.unauthorized('OAuth state is invalid or expired');
+  }
+  if (!session || session.state !== state) {
+    throw ApiError.unauthorized('OAuth state mismatch');
+  }
+  return session;
+};
+
+const googleCallback = asyncHandler(async (req, res) => {
+  try {
+    const { code, state, error } = req.query;
+    if (error) {
+      return redirectOAuthError(res, `Google sign-in failed: ${error}`);
+    }
+    if (!code || !state) {
+      return redirectOAuthError(res, 'Google sign-in failed: missing parameters');
+    }
+    const session = readOAuthSession(req, state);
+    const profile = await oauthService.exchangeGoogleCode(code);
+    const { user, accessToken, refreshToken } = await authService.loginWithOAuth(profile);
+    return completeOAuth(res, session, { user, accessToken, refreshToken });
+  } catch (err) {
+    return redirectOAuthError(res, err.message || 'Google sign-in failed');
+  }
+});
+
+const appleCallback = asyncHandler(async (req, res) => {
+  try {
+    const { code, state, user: userJson } = req.body || {};
+    if (!code || !state) {
+      return redirectOAuthError(res, 'Apple sign-in failed: missing parameters');
+    }
+    const session = readOAuthSession(req, state);
+    const profile = await oauthService.exchangeAppleCode(code, userJson, session.nonce);
+    const { user, accessToken, refreshToken } = await authService.loginWithOAuth(profile);
+    return completeOAuth(res, session, { user, accessToken, refreshToken });
+  } catch (err) {
+    return redirectOAuthError(res, err.message || 'Apple sign-in failed');
+  }
+});
+
 module.exports = {
   register,
   login,
@@ -92,4 +206,7 @@ module.exports = {
   resendVerification,
   forgotPassword,
   resetPassword,
+  startOAuth,
+  googleCallback,
+  appleCallback,
 };

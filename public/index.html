@@ -61,7 +61,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </noscript>
-  <link rel="stylesheet" href="css/style.css?v=21" />
+  <link rel="stylesheet" href="css/style.css?v=22" />
   <link rel="stylesheet" href="css/scroll-story.css?v=3" />
   <link rel="stylesheet" href="css/transitions.css?v=3" />
   
@@ -301,10 +301,10 @@
           </div>
           <h3 class="font-headline-md text-xl text-primary mb-1">Flamingo 1</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;6,000 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="pages/booking.html" class="btn-primary text-sm py-2 px-5">Book Now</a>
+          <a href="pages/booking.html?room=flamingo-1" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
-
+ 
       <!-- Flamingo 2 -->
       <div class="bg-surface-container-low rounded-2xl overflow-hidden reveal border border-outline-variant/20 hover:shadow-xl transition-all duration-500" style="transition-delay:80ms">
         <div class="h-56 overflow-hidden">
@@ -317,7 +317,7 @@
           </div>
           <h3 class="font-headline-md text-xl text-primary mb-1">Flamingo 2</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;5,000 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="pages/booking.html" class="btn-primary text-sm py-2 px-5">Book Now</a>
+          <a href="pages/booking.html?room=flamingo-2" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
 
@@ -333,7 +333,7 @@
           </div>
           <h3 class="font-headline-md text-xl text-primary mb-1">Flamingo 3</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;6,000 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="pages/booking.html" class="btn-primary text-sm py-2 px-5">Book Now</a>
+          <a href="pages/booking.html?room=flamingo-3" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
 
@@ -349,7 +349,7 @@
           </div>
           <h3 class="font-headline-md text-xl text-primary mb-1">Maina 1</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;2,500 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="pages/booking.html" class="btn-primary text-sm py-2 px-5">Book Now</a>
+          <a href="pages/booking.html?room=maina-1" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
 
@@ -365,7 +365,7 @@
           </div>
           <h3 class="font-headline-md text-xl text-primary mb-1">Maina 2</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;2,000 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="pages/booking.html" class="btn-primary text-sm py-2 px-5">Book Now</a>
+          <a href="pages/booking.html?room=maina-2" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
 
@@ -381,7 +381,7 @@
           </div>
           <h3 class="font-headline-md text-xl text-primary mb-1">Maina 3</h3>
           <p class="font-headline-md text-base text-accent-gold mb-4">&#8377;2,500 <span class="text-sm text-on-surface-variant">/ night (incl. GST)</span></p>
-          <a href="pages/booking.html" class="btn-primary text-sm py-2 px-5">Book Now</a>
+          <a href="pages/booking.html?room=maina-3" class="btn-primary text-sm py-2 px-5">Book Now</a>
         </div>
       </div>
     </div>
@@ -552,10 +552,10 @@
     ];
 
     var roomData = {
-      couple: { name:'Flamingo 2', img:'https://lh3.googleusercontent.com/aida-public/AB6AXuA4nlrjlGhGlQ1VJgZIpTbY7YapqlA_1BMfRG6-4JTpuKR5FIr-kCoGL2oLmf0vKEa4o4eCj4Cax_Lhik-W4Ye44HUpjMiiaBTCiS4heB0TPb8hgsU22edlGNxbK_RfEKDi2WEB3RurNCgyGvmQBNRG_vhq3OHgc8qMsHP7unAqt2hCjeV_YhoLtev37NNelTZhQ53GsVmZZ6GcvkW7TCoFrfGKEjGOS9l8v2N3WY6nXIvyOgDh09t3w0iWhvsIqOAURwZoWjIGhDI', guests:'2 Guests', price:'&#8377;5,000 / night (incl. GST)', desc:'A cozy attic retreat with a skylight, heater, and bonfire — perfect for a romantic mountain escape.' },
-      solo: { name:'Maina 2', img:'https://lh3.googleusercontent.com/aida-public/AB6AXuA4nlrjlGhGlQ1VJgZIpTbY7YapqlA_1BMfRG6-4JTpuKR5FIr-kCoGL2oLmf0vKEa4o4eCj4Cax_Lhik-W4Ye44HUpjMiiaBTCiS4heB0TPb8hgsU22edlGNxbK_RfEKDi2WEB3RurNCgyGvmQBNRG_vhq3OHgc8qMsHP7unAqt2hCjeV_YhoLtev37NNelTZhQ53GsVmZZ6GcvkW7TCoFrfGKEjGOS9l8v2N3WY6nXIvyOgDh09t3w0iWhvsIqOAURwZoWjIGhDI', guests:'1 Guest', price:'&#8377;2,000 / night (incl. GST)', desc:'A compact, cosy private room with valley views and a peaceful nook for quiet reflection.' },
-      friends: { name:'Flamingo 1', img:'https://lh3.googleusercontent.com/aida-public/AB6AXuBrzL8aFnw29G--xO0xB7cJw5bUF6iErudebJK_udr_C-zjP4VVlPtTWtaytwm4XB9bodkmUPBFKrwg5wyEST0zHHzbh0yonox_YJAvHikynJjdiUhZFewW5B-CsIt8NgwdA3jZp77wdsLitsm4LimVKuNeWhudbzgqJBAT5IPUysrbNaWPH2y-7GiKzxfxaF6_4Lm1WjF9TxgQVW_6qgR5P0LdecGYW9beSuPCGHckRsHLUSsMdykqIEYZNHQqm2lcRClynYC64wM', guests:'4 Guests', price:'&#8377;6,000 / night (incl. GST)', desc:'A spacious duplex with mountain views, Wi-Fi, heater, bonfire, and a private sit-out — ideal for groups.' },
-      family: { name:'Flamingo 3', img:'https://lh3.googleusercontent.com/aida-public/AB6AXuBCI3D7XP8c2d9NoG6DCIaUFiJyZlKrabk2SD7ICCgHWNCu1PIHQ01YENmMI9CIfj1BNXL1d1F-k5cyS3XktNDhDdgsUGREW3RwIN3ejOroEEohHh1n01W2yxlmNIlR4zd_GsAoZ9mt9eQwcVAKctuAikc_KpHc0hV0sSIbLtOs3Gu44ScfhirNpqTGya3Tw7klCmACZaVm60KtTAhqi_mzWYZBoTUjvvQsUsOWO71h3e8WqVaQpot4tDSeDxURzBy6v_H0A9G-l28', guests:'4 Guests', price:'&#8377;6,000 / night (incl. GST)', desc:'A generous duplex with garden access, heater, bonfire, and tea/coffee — built for family comfort.' }
+      couple: { id: 'flamingo-2', name:'Flamingo 2', img:'https://lh3.googleusercontent.com/aida-public/AB6AXuA4nlrjlGhGlQ1VJgZIpTbY7YapqlA_1BMfRG6-4JTpuKR5FIr-kCoGL2oLmf0vKEa4o4eCj4Cax_Lhik-W4Ye44HUpjMiiaBTCiS4heB0TPb8hgsU22edlGNxbK_RfEKDi2WEB3RurNCgyGvmQBNRG_vhq3OHgc8qMsHP7unAqt2hCjeV_YhoLtev37NNelTZhQ53GsVmZZ6GcvkW7TCoFrfGKEjGOS9l8v2N3WY6nXIvyOgDh09t3w0iWhvsIqOAURwZoWjIGhDI', guests:'2 Guests', price:'&#8377;5,000 / night (incl. GST)', desc:'A cozy attic retreat with a skylight, heater, and bonfire — perfect for a romantic mountain escape.' },
+      solo: { id: 'maina-2', name:'Maina 2', img:'https://lh3.googleusercontent.com/aida-public/AB6AXuA4nlrjlGhGlQ1VJgZIpTbY7YapqlA_1BMfRG6-4JTpuKR5FIr-kCoGL2oLmf0vKEa4o4eCj4Cax_Lhik-W4Ye44HUpjMiiaBTCiS4heB0TPb8hgsU22edlGNxbK_RfEKDi2WEB3RurNCgyGvmQBNRG_vhq3OHgc8qMsHP7unAqt2hCjeV_YhoLtev37NNelTZhQ53GsVmZZ6GcvkW7TCoFrfGKEjGOS9l8v2N3WY6nXIvyOgDh09t3w0iWhvsIqOAURwZoWjIGhDI', guests:'1 Guest', price:'&#8377;2,000 / night (incl. GST)', desc:'A compact, cosy private room with valley views and a peaceful nook for quiet reflection.' },
+      friends: { id: 'flamingo-1', name:'Flamingo 1', img:'https://lh3.googleusercontent.com/aida-public/AB6AXuBrzL8aFnw29G--xO0xB7cJw5bUF6iErudebJK_udr_C-zjP4VVlPtTWtaytwm4XB9bodkmUPBFKrwg5wyEST0zHHzbh0yonox_YJAvHikynJjdiUhZFewW5B-CsIt8NgwdA3jZp77wdsLitsm4LimVKuNeWhudbzgqJBAT5IPUysrbNaWPH2y-7GiKzxfxaF6_4Lm1WjF9TxgQVW_6qgR5P0LdecGYW9beSuPCGHckRsHLUSsMdykqIEYZNHQqm2lcRClynYC64wM', guests:'4 Guests', price:'&#8377;6,000 / night (incl. GST)', desc:'A spacious duplex with mountain views, Wi-Fi, heater, bonfire, and a private sit-out — ideal for groups.' },
+      family: { id: 'flamingo-3', name:'Flamingo 3', img:'https://lh3.googleusercontent.com/aida-public/AB6AXuBCI3D7XP8c2d9NoG6DCIaUFiJyZlKrabk2SD7ICCgHWNCu1PIHQ01YENmMI9CIfj1BNXL1d1F-k5cyS3XktNDhDdgsUGREW3RwIN3ejOroEEohHh1n01W2yxlmNIlR4zd_GsAoZ9mt9eQwcVAKctuAikc_KpHc0hV0sSIbLtOs3Gu44ScfhirNpqTGya3Tw7klCmACZaVm60KtTAhqi_mzWYZBoTUjvvQsUsOWO71h3e8WqVaQpot4tDSeDxURzBy6v_H0A9G-l28', guests:'4 Guests', price:'&#8377;6,000 / night (incl. GST)', desc:'A generous duplex with garden access, heater, bonfire, and tea/coffee — built for family comfort.' }
     };
 
     var interestAddons = {
@@ -791,7 +791,7 @@
       html += '<div class="tp-room-info"><h5>' + room.name + '</h5>';
       html += '<div class="tp-room-tags"><span>' + room.guests + '</span><span>' + room.price + '</span></div>';
       html += '<p>' + room.desc + '</p>';
-      html += '<a href="pages/booking.html" class="tp-room-book">Book Now </a>';
+      html += '<a href="pages/booking.html?room=' + room.id + '" class="tp-room-book">Book Now </a>';
       html += '</div></div>';
 
       // Summary
@@ -807,7 +807,7 @@
       html += '<div class="tp-export">';
       html += '<button class="tp-export-btn" onclick="alert(\'PDF download coming soon. Your itinerary will be available as a beautifully formatted PDF.\')"><span>&#128196;</span> Download Itinerary</button>';
       html += '<button class="tp-export-btn" onclick="if(navigator.share){navigator.share({title:\'My Jibhi Trip at Flamingo aur Maina\',text:\'Check out my personalized itinerary from FAM!\',url:window.location.href})}else{prompt(\'Copy this link to share:\',window.location.href)}"><span>&#128228;</span> Share Trip</button>';
-      html += '<a href="pages/booking.html" class="tp-export-btn solid"><span>&#128205;</span> Book Recommended Room</a>';
+      html += '<a href="pages/booking.html?room=' + room.id + '" class="tp-export-btn solid"><span>&#128205;</span> Book Recommended Room</a>';
       html += '</div>';
 
       html += '</div>';

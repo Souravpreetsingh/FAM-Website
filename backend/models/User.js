@@ -20,9 +20,17 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, 'Password is required'],
       minlength: [8, 'Password must be at least 8 characters'],
       select: false,
+    },
+    oauthProvider: {
+      type: String,
+      enum: ['google', 'apple'],
+      default: null,
+    },
+    oauthProviderId: {
+      type: String,
+      default: '',
     },
     phone: {
       type: String,
@@ -67,8 +75,8 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.index({ email: 1 });
 userSchema.index({ role: 1 });
+userSchema.index({ oauthProviderId: 1 });
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();

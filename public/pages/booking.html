@@ -45,7 +45,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </noscript>
-  <link rel="stylesheet" href="/css/style.css?v=21" />
+  <link rel="stylesheet" href="/css/style.css?v=22" />
 
   <style>
     body { margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f4ec; color: #1a1c1a; }
@@ -66,6 +66,19 @@
     .skip-link { position: absolute; left: -9999px; z-index: 999; padding: 8px 16px; background: #0a341d; color: #fff; text-decoration: none; }
     .skip-link:focus { left: 8px; top: 8px; }
   .img-fallback { background: #e8e8e4; min-height: 100px; display: flex; align-items: center; justify-content: center; color: #727972; font-family: Inter, sans-serif; font-size: 13px; }
+  .m-card-image { position: relative; }
+  .m-selected-badge { position: absolute; top: 1rem; right: 1rem; z-index: 10; padding: 0.4rem 0.8rem; border-radius: 9999px; background: #C9A86A; color: #fff; font-family: Inter, sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .room-card.selected {
+    border-color: rgba(201, 168, 106, 0.7);
+    box-shadow: 0 16px 40px rgba(201, 168, 106, 0.16);
+    transform: translateY(-2px);
+  }
+  .room-card.selected .select-btn,
+  .room-card.selected .m-select-btn {
+    background: #1f7a45;
+    color: #fff;
+    border-color: #1f7a45;
+  }
 </style>
   <script>document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('img').forEach(function(i){i.onerror=function(){this.onerror=null;this.style.display='none';var p=this.parentElement;if(p){var f=document.createElement('div');f.className='img-fallback';f.textContent='Image unavailable';p.appendChild(f)}}})})</script>
 </head>
@@ -176,6 +189,7 @@
           <div class="relative rounded-[24px] bg-surface-container-low border border-outline-variant/20 p-6 md:p-8">
             <h3 class="font-display text-lg text-primary font-semibold mb-2">Select Your Dates</h3>
             <p class="text-on-surface-variant/50 font-body text-sm mb-6">Choose your check-in and check-out dates.</p>
+            <div id="dates-room-summary" class="mb-6"></div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <div class="text-on-surface-variant/50 font-body text-[11px] tracking-[0.15em] uppercase mb-3">Check-In</div>
@@ -365,7 +379,6 @@
 
               <div class="flex flex-col gap-3">
                 <a href="../index.html" class="w-full py-3.5 rounded-full font-body text-[12px] font-medium tracking-[0.15em] uppercase transition-all duration-400 text-center bg-primary text-on-primary hover:bg-primary-container shadow-lg">Return Home</a>
-                <a href="../index.html" class="w-full py-3.5 rounded-full font-body text-[12px] font-medium tracking-[0.15em] uppercase transition-all duration-400 text-center border border-outline-variant/40 text-on-surface-variant hover:text-primary">Return Home</a>
               </div>
             </div>
           </div>
@@ -528,24 +541,30 @@
   }
 
   // ====== SHOW/HIDE STEPS ======
-  function goToStep(index) {
+  function goToStep(index, scrollToId) {
     currentStep = index;
     document.querySelectorAll('.step-panel').forEach(function(el, i) {
       el.style.display = i === index ? 'block' : 'none';
     });
     var nav = document.getElementById('nav-buttons');
-    nav.style.display = index === STEPS.length - 1 ? 'none' : 'flex';
+    nav.style.display = index === STEPS.length - 1 ? 'none' : (index === 0 ? 'none' : 'flex');
     document.getElementById('btn-back').style.display = index === 0 ? 'none' : 'block';
-    document.getElementById('btn-next').textContent = index === 4 ? 'Confirm & Proceed to Payment' : index === 5 ? 'Pay Now' : 'Next';
+    var nextBtn = document.getElementById('btn-next');
+    nextBtn.style.display = index === 4 || index === 5 ? 'none' : 'inline-block';
+    nextBtn.textContent = index === 4 ? 'Confirm & Proceed to Payment' : index === 5 ? 'Pay Now' : 'Next';
     renderIndicator();
     updateNavState();
-    window.scrollTo({ top: 280, behavior: 'smooth' });
+    if (scrollToId) {
+      focusBookingSection(scrollToId);
+    } else {
+      window.scrollTo({ top: 280, behavior: 'smooth' });
+    }
   }
 
   function canGoNext() {
     switch (currentStep) {
       case 0: return booking.room !== null;
-      case 1: return booking.checkIn !== null && booking.checkOut !== null;
+      case 1: return Boolean(booking.checkIn && booking.checkOut && getNights() > 0);
       case 2: return booking.adults + booking.children > 0;
       case 3: return booking.fullName.trim().length > 0 && booking.email.trim().length > 0 && booking.phone.trim().length > 0;
       case 4: return true;
@@ -557,22 +576,39 @@
 
   function updateNavState() {
     var btn = document.getElementById('btn-next');
-    btn.disabled = !canGoNext();
+    if (btn) btn.disabled = !canGoNext();
+    var payBtn = document.getElementById('pay-btn');
+    if (payBtn) {
+      payBtn.disabled = currentStep !== 5 || !booking.paymentMethod;
+    }
   }
-
+ 
+  function focusBookingSection(id) {
+    var section = document.getElementById(id);
+    if (!section) return;
+    section.setAttribute('tabindex', '-1');
+    try {
+      section.focus({ preventScroll: true });
+    } catch (e) {
+      section.focus();
+    }
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+ 
   // ====== ROOM SELECTION ======
   function buildRoomCard(room, index) {
     var delay = index * 80;
     var amens = room.amenities.slice(0, 5);
     var more = room.amenities.length - 5;
     var sel = booking.room && booking.room.id === room.id;
+    var selectedBadge = sel ? '<div class="absolute top-4 right-4 z-10 check-wrap">' +
+          '<div class="px-3 py-1.5 rounded-full bg-accent-gold text-surface font-body text-[10px] font-bold tracking-[0.15em] uppercase">Selected</div>' +
+        '</div>' : '';
     return '<div class="room-card page-fade-in bg-surface-container-low rounded-[20px] overflow-hidden border border-outline-variant/20' + (sel ? ' selected' : '') + '" data-id="' + room.id + '" style="animation-delay:' + delay + 'ms">' +
       '<div class="relative h-56 md:h-64 overflow-hidden">' +
         '<img src="' + room.image + '" alt="' + room.name + '" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />' +
         '<div class="absolute inset-0 bg-gradient-to-t from-surface/80 via-surface/20 to-transparent"></div>' +
-        '<div class="absolute top-4 right-4 z-10 check-wrap">' +
-          '<div class="px-3 py-1.5 rounded-full bg-accent-gold text-surface font-body text-[10px] font-bold tracking-[0.15em] uppercase">Selected</div>' +
-        '</div>' +
+        selectedBadge +
         '<div class="absolute bottom-4 left-5 right-5 flex items-center gap-2 text-on-surface-variant/70 font-body text-[12px]">' +
           '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="5.5" cy="5" r="2.5"/><path d="M1 12.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5" stroke-linecap="round"/></svg>' +
           room.capacity + ' Guests' +
@@ -593,7 +629,7 @@
           }).join('') +
           (more > 0 ? '<div class="flex items-center gap-2.5"><div class="w-[14px]"></div><span class="text-on-surface-variant/30 font-body text-[12px]">+' + more + ' more</span></div>' : '') +
         '</div>' +
-        '<button class="select-btn w-full py-3.5 rounded-full font-body text-[12px] font-medium tracking-[0.15em] uppercase transition-all duration-400 bg-surface/60 text-on-surface-variant/70 hover:bg-surface hover:text-primary border border-outline-variant/30">Select Room</button>' +
+        '<button class="select-btn w-full py-3.5 rounded-full font-body text-[12px] font-medium tracking-[0.15em] uppercase transition-all duration-400 ' + (sel ? 'bg-[#1f7a45] text-white border-[#1f7a45]' : 'bg-primary text-on-primary hover:bg-primary-container border border-transparent') + '">' + (sel ? 'Selected' : 'Select Room') + '</button>' +
       '</div>' +
     '</div>';
   }
@@ -607,9 +643,11 @@
       return '<div class="m-amenity"><span class="material-symbols-outlined">' + icon + '</span><span>' + a + '</span></div>';
     }).join('');
     var rulesHtml = 'Check-in: ' + HOTEL_INFO.checkIn + '<br>Check-out: ' + HOTEL_INFO.checkOut + '<br>No smoking · No parties · Quiet hours after 10 PM';
+    var selectedBadge = sel ? '<div class="m-selected-badge">Selected</div>' : '';
     return '<div class="room-card' + (sel ? ' selected' : '') + '" data-id="' + room.id + '" style="animation-delay:' + delay + 'ms">' +
       '<div class="m-card-image">' +
         '<img src="' + room.image + '" alt="' + room.name + '" loading="lazy" />' +
+        selectedBadge +
         '<div class="m-price-badge">₹' + room.price.toLocaleString('en-IN') + '<span>/night</span></div>' +
       '</div>' +
       '<div class="m-card-body">' +
@@ -629,12 +667,22 @@
           '<div class="m-section-label">Maximum Occupancy</div>' +
           '<p class="m-rules-text">' + room.capacity + ' guests maximum including adults and children. Infants under 2 stay free.</p>' +
         '</div>' +
-        '<button class="m-select-btn">Select Room</button>' +
+        '<button class="m-select-btn py-3.5 rounded-full font-body text-[12px] font-medium tracking-[0.15em] uppercase transition-all duration-400 ' + (sel ? 'bg-[#1f7a45] text-white' : 'bg-primary text-on-primary hover:bg-primary-container') + '">' + (sel ? 'Selected' : 'Select Room') + '</button>' +
       '</div>' +
     '</div>';
   }
 
   var _isMobileView = false;
+
+  function renderDatesRoomContext() {
+    var container = document.getElementById('dates-room-summary');
+    if (!container) return;
+    if (!booking.room) {
+      container.innerHTML = '';
+      return;
+    }
+    container.innerHTML = '<div class="rounded-[20px] border border-outline-variant/20 bg-white/80 p-4 md:p-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"><div><div class="text-[11px] uppercase tracking-[0.15em] text-on-surface-variant/40 mb-1">Selected Room</div><div class="font-display text-lg text-primary">' + booking.room.name + '</div><div class="text-sm text-on-surface-variant/60">' + booking.room.type + ' · ' + booking.room.capacity + ' Guests · ₹' + booking.room.price.toLocaleString('en-IN') + ' / night</div></div><button type="button" onclick="goToStep(0)" class="self-start md:self-auto px-4 py-2.5 rounded-full border border-outline-variant/40 text-primary font-body text-[11px] font-medium tracking-[0.15em] uppercase transition-all hover:bg-surface">Change Room</button></div>';
+  }
 
   function renderRooms() {
     var grid = document.getElementById('room-grid');
@@ -647,6 +695,8 @@
         c.classList.toggle('selected', c.dataset.id === booking.room.id);
       });
     }
+
+    renderDatesRoomContext();
 
     document.querySelectorAll('.room-card').forEach(function(card) {
       card.addEventListener('click', function(e) {
@@ -680,9 +730,6 @@
   function selectRoom(id) {
     var room = ROOMS.find(function(r) { return r.id === id; });
     booking.room = room;
-    document.querySelectorAll('.room-card').forEach(function(c) {
-      c.classList.toggle('selected', c.dataset.id === id);
-    });
     document.getElementById('max-guests-count').textContent = room.capacity;
     if (booking.adults + booking.children > room.capacity) {
       booking.adults = Math.min(booking.adults, room.capacity);
@@ -690,7 +737,12 @@
       document.getElementById('adults-count').textContent = booking.adults;
       document.getElementById('children-count').textContent = booking.children;
     }
-    updateNavState();
+    renderRooms();
+    if (currentStep === 0) {
+      goToStep(1, 'step-dates');
+    } else {
+      updateNavState();
+    }
   }
 
   // ====== CALENDAR ======
@@ -873,12 +925,38 @@
 
   // ====== INIT ======
   function initBookingPage() {
+    // Preselect room from URL (?room=<room-id>) — general booking has no param
+    var preselectedRoom = null;
+    try {
+      var roomParam = new URLSearchParams(window.location.search).get('room');
+      if (roomParam) {
+        preselectedRoom = ROOMS.find(function(r) { return r.id === roomParam; }) || null;
+      }
+    } catch (e) { preselectedRoom = null; }
+
+    if (preselectedRoom) {
+      booking.room = preselectedRoom;
+      document.getElementById('max-guests-count').textContent = preselectedRoom.capacity;
+      if (booking.adults + booking.children > preselectedRoom.capacity) {
+        booking.adults = Math.min(booking.adults, preselectedRoom.capacity);
+        booking.children = 0;
+        document.getElementById('adults-count').textContent = booking.adults;
+        document.getElementById('children-count').textContent = booking.children;
+        updateGuestTotal();
+      }
+    }
+
     renderRooms();
     renderCal('checkin');
     renderCal('checkout');
-    goToStep(0);
+    updateGuestTotal();
+    goToStep(preselectedRoom ? 1 : 0);
+    if (preselectedRoom) {
+      focusBookingSection('step-dates');
+    }
 
     // Navbar scroll effect
+
     if (!window._bookingNavScrollInit) {
       window._bookingNavScrollInit = true;
       var nav = document.getElementById('main-nav');

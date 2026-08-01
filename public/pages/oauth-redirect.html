@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Signing you in &mdash; Flamingo aur Maina</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8f4ec;
+      color: #0a341d;
+      font-family: 'Inter', system-ui, sans-serif;
+      text-align: center;
+    }
+    .oauth-loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      padding: 32px;
+    }
+    .oauth-loader p {
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: 0.02em;
+    }
+    .oauth-spinner {
+      width: 34px;
+      height: 34px;
+      border: 3px solid rgba(10, 52, 29, 0.15);
+      border-top-color: #0a341d;
+      border-radius: 50%;
+      animation: oauthSpin 0.8s linear infinite;
+    }
+    @keyframes oauthSpin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="oauth-loader" role="status" aria-live="polite">
+    <div class="oauth-spinner"></div>
+    <p>Completing your sign-in&hellip;</p>
+  </div>
+  <script src="../js/auth.js"></script>
+  <script>
+    (function () {
+      var safeRedirect = function (value) {
+        if (!value) return '/';
+        if (value.charAt(0) !== '/') return '/';
+        if (value.slice(0, 2) === '//') return '/';
+        return value;
+      };
+
+      var params = new URLSearchParams(window.location.hash.substring(1));
+      var accessToken = params.get('access_token');
+      var refreshToken = params.get('refresh_token');
+      var name = params.get('user_name');
+      var redirect = safeRedirect(params.get('redirect'));
+
+      if (!accessToken || !refreshToken) {
+        window.location.replace('login.html?oauth_error=' + encodeURIComponent('Sign-in could not be completed. Please try again.'));
+        return;
+      }
+
+      try {
+        if (window.FAM && window.FAM.Auth && window.FAM.Auth.storeTokens) {
+          window.FAM.Auth.storeTokens(accessToken, refreshToken);
+        } else {
+          localStorage.setItem('fam_auth', JSON.stringify({
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            updatedAt: Date.now(),
+          }));
+        }
+
+        if (name) {
+          localStorage.setItem('fam_user', JSON.stringify({ name: name }));
+        }
+      } catch (e) {
+        /* token storage failure — still attempt redirect */
+      }
+
+      window.location.replace(redirect);
+    })();
+  </script>
+</body>
+</html>
