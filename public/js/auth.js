@@ -46,7 +46,22 @@ FAM.Auth = (() => {
 
     if (body) config.body = JSON.stringify(body);
 
-    const response = await fetch(`${API_BASE}${endpoint}`, config);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
+    config.signal = controller.signal;
+
+    let response;
+    try {
+      response = await fetch(`${API_BASE}${endpoint}`, config);
+    } catch (err) {
+      clearTimeout(timeoutId);
+      if (err.name === 'AbortError') {
+        throw new Error('Request timed out. Please check your connection and try again.');
+      }
+      throw err;
+    }
+    clearTimeout(timeoutId);
+
     const data = await response.json();
 
     if (!response.ok) {

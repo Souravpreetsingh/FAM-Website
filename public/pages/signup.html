@@ -381,6 +381,9 @@ document.addEventListener('DOMContentLoaded', initAuthMobileMenu);
 document.addEventListener('DOMContentLoaded', function() {
   FAM.Auth.setupAuthPage();
 
+  var sb = document.getElementById('signupBtn');
+  if (sb) { sb.classList.remove('loading'); sb.disabled = false; }
+
   var form = document.getElementById('signupForm');
   var nameInput = document.getElementById('signupName');
   var emailInput = document.getElementById('signupEmail');
