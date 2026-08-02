@@ -311,7 +311,7 @@
                 <label for="termsCheck">I accept the <a href="#" title="Page coming soon">Terms &amp; Conditions</a> and <a href="#" title="Page coming soon">Privacy Policy</a></label>
               </div>
               <div class="signup-error-text" id="termsError" role="alert" style="margin:-8px 0 12px;"></div>
-              <div class="signup-submit-row">
+              <div class="signup-submit-row" id="submitRow" style="display:none;">
                 <button type="button" class="signup-btn-secondary" id="step4Back" aria-label="Go back to travel style" style="margin-top:0;">
                   <span class="material-symbols-outlined" style="font-size:18px">arrow_back</span>
                 </button>
@@ -569,6 +569,16 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('step3Back').addEventListener('click', function() { setStep(2); });
 
   document.getElementById('step4Back').addEventListener('click', function() { setStep(3); });
+
+  termsInput.addEventListener('change', function() {
+    var submitRow = document.getElementById('submitRow');
+    if (submitRow) {
+      submitRow.style.display = termsInput.checked ? '' : 'none';
+    }
+    if (termsInput.checked) {
+      document.getElementById('termsError').textContent = '';
+    }
+  });
 
   travelCards.forEach(function(card) {
     card.addEventListener('click', function() {
