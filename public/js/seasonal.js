@@ -15,13 +15,6 @@
   prefersReducedMotion = mediaQuery.matches;
   mediaQuery.addEventListener('change', function (e) {
     prefersReducedMotion = e.matches;
-    if (currentMode === 'winter') {
-      if (prefersReducedMotion) {
-        destroySnowflakes();
-      } else {
-        spawnSnowflakes();
-      }
-    }
   });
 
   /* --- Snowflake management --- */
@@ -41,7 +34,6 @@
   }
 
   function spawnSnowflakes() {
-    if (prefersReducedMotion) return;
     if (snowflakes.length > 0) return;
     if (window.innerWidth < 1024) return;
     for (var i = 0; i < SNOWFLAKE_COUNT; i++) {

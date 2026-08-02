@@ -387,7 +387,7 @@ html:not(.mode-winter) .seasonal-toggle .seasonal-toggle-icon::after {
 
 /* ------ Reduced Motion ------ */
 @media (prefers-reduced-motion: reduce) {
-    .seasonal-snowflake, .seasonal-grass::before,
+    .seasonal-grass::before,
     .bird-1, .bird-2, .bird-3,
     .leaf, .leaf-2, .leaf-3, .fog-layer, .fog-layer-2,
     .ember, .ember-2, .ember-3, .star, .star-2, .star-3,
