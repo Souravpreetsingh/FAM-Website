@@ -288,6 +288,16 @@
     var headingEl = document.getElementById('loginHeading');
     var subtitleEl = document.getElementById('loginSubtitle');
 
+    var queryParams = new URLSearchParams(window.location.search);
+    var registeredEmail = queryParams.get('email');
+    if (registeredEmail && emailInput) {
+      emailInput.value = registeredEmail;
+      emailInput.classList.add('has-value');
+    }
+    if (queryParams.get('justRegistered')) {
+      showToast('Account created successfully. Please sign in.', 'success');
+    }
+
     var rememberedUser = (function() {
       try {
         var stored = localStorage.getItem('fam_user');

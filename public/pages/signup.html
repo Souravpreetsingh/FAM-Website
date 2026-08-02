@@ -348,8 +348,8 @@
     <div class="success-icon">
       <span class="material-symbols-outlined">check</span>
     </div>
-    <h2 class="success-title">Welcome to Flamingo aur Maina</h2>
-    <p class="success-subtitle">Your mountain sanctuary awaits. Redirecting you...</p>
+    <h2 class="success-title">Sign Up Complete</h2>
+    <p class="success-subtitle">Your account is ready. You can now sign in with the same credentials.</p>
     <div class="success-dots">
       <span></span><span></span><span></span>
     </div>
@@ -612,7 +612,7 @@ document.addEventListener('DOMContentLoaded', function() {
       overlay.setAttribute('aria-hidden', 'false');
 
       setTimeout(function() {
-        window.location.href = 'verify-email.html?email=' + encodeURIComponent(emailInput.value.trim());
+        window.location.href = 'login.html?email=' + encodeURIComponent(emailInput.value.trim()) + '&justRegistered=1';
       }, 2800);
     } catch (err) {
       if (err.status === 409) {
