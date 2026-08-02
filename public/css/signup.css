@@ -733,6 +733,34 @@
   opacity: 0;
   animation: fadeUp 0.6s ease 0.5s forwards;
 }
+.signup-success-overlay .success-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: #0a341d;
+  padding: 14px 48px;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  margin-top: 32px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease 0.6s forwards;
+  transition:
+    background 0.35s ease,
+    transform 0.35s cubic-bezier(0.22,1,0.36,1),
+    box-shadow 0.35s ease;
+}
+.signup-success-overlay .success-btn:hover {
+  background: #1a4a2d;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(10,52,29,0.25);
+}
+.signup-success-overlay .success-btn:active {
+  transform: translateY(0);
+}
 .signup-success-overlay .success-dots {
   display: flex;
   gap: 8px;
@@ -850,6 +878,7 @@
   .signup-success-overlay .success-icon { animation: none; }
   .signup-success-overlay .success-title,
   .signup-success-overlay .success-subtitle,
+  .signup-success-overlay .success-btn,
   .signup-success-overlay .success-dots { animation: none; opacity: 1; }
   .signup-travel-card.selected .card-check { transform: none; }
 }
