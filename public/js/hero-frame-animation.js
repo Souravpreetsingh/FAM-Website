@@ -85,6 +85,8 @@
   function setupCanvas() {
     canvas = document.getElementById('hero-canvas');
     if (!canvas) return false;
+    canvas.style.setProperty('display', 'block', 'important');
+    canvas.style.setProperty('visibility', 'visible', 'important');
     canvas.style.opacity = '0';
     ctx = canvas.getContext('2d', { alpha: false, willReadFrequently: false });
     if (!ctx) return false;
@@ -194,12 +196,6 @@
   }
 
   function boot() {
-    var reducedMotion = false;
-    try {
-      reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    } catch (e) {}
-    if (reducedMotion) return;
-
     if (!setupCanvas()) return;
 
     totalFrames = CONFIG.total;
