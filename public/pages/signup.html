@@ -307,7 +307,7 @@
                 <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;"><span style="font-family:'Inter',sans-serif;font-size:13px;color:#727972;">Travel Style</span><span style="font-family:'Inter',sans-serif;font-size:13px;color:#1a1c1a;font-weight:500;" id="reviewTravel">—</span></div>
               </div>
               <div class="signup-terms">
-                <input type="checkbox" id="termsCheck" required />
+                <input type="checkbox" id="termsCheck" required onchange="document.getElementById('submitRow').style.display = this.checked ? '' : 'none'; if (this.checked) { var te = document.getElementById('termsError'); if (te) te.textContent = ''; }" />
                 <label for="termsCheck">I accept the <a href="#" title="Page coming soon">Terms &amp; Conditions</a> and <a href="#" title="Page coming soon">Privacy Policy</a></label>
               </div>
               <div class="signup-error-text" id="termsError" role="alert" style="margin:-8px 0 12px;"></div>
