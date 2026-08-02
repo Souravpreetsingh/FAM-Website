@@ -171,6 +171,69 @@
   }
 
   /* -------------------------------------------
+     REEL VIDEOS (exclusive playback)
+     ------------------------------------------- */
+  function initReels() {
+    var wrappers = document.querySelectorAll('.reel-wrapper');
+    if (!wrappers.length) return;
+    if (document.querySelector('.reel-play-overlay')) return;
+
+    var active = null;
+
+    function baseUrl(frame) {
+      var base = frame.getAttribute('data-base');
+      if (!base) {
+        base = frame.src.split('?')[0];
+        frame.setAttribute('data-base', base);
+      }
+      return base;
+    }
+
+    function stopReel(w) {
+      var frame = w.querySelector('iframe');
+      if (!frame) return;
+      frame.src = baseUrl(frame);
+      w.classList.remove('is-playing');
+    }
+
+    function stopAllExcept(except) {
+      wrappers.forEach(function (w) {
+        if (w !== except) stopReel(w);
+      });
+    }
+
+    wrappers.forEach(function (w) {
+      var frame = w.querySelector('iframe');
+      if (!frame) return;
+
+      frame.src = baseUrl(frame);
+
+      var overlay = document.createElement('button');
+      overlay.type = 'button';
+      overlay.className = 'reel-play-overlay';
+      overlay.setAttribute('aria-label', 'Play video');
+      overlay.innerHTML =
+        '<span class="reel-play-icon">' +
+          '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>' +
+        '</span>';
+      w.appendChild(overlay);
+
+      overlay.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (active === w) {
+          stopReel(w);
+          active = null;
+          return;
+        }
+        stopAllExcept(w);
+        frame.src = baseUrl(frame) + '?autoplay=1';
+        w.classList.add('is-playing');
+        active = w;
+      });
+    });
+  }
+
+  /* -------------------------------------------
      WIRE UP GALLERY ITEMS
      ------------------------------------------- */
   function initGallery() {
@@ -203,6 +266,7 @@
 
     buildLightbox();
     initScrollReveal();
+    initReels();
   }
 
   /* -------------------------------------------

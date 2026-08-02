@@ -470,3 +470,49 @@
     gap: 20px;
   }
 }
+
+/* --- Reel Play Overlay (exclusive playback) --- */
+.reel-play-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.25);
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.3s ease;
+}
+
+.reel-play-overlay:hover {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.reel-play-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #0a341d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reel-play-icon svg {
+  width: 24px;
+  height: 24px;
+  margin-left: 3px;
+}
+
+.reel-play-overlay:hover .reel-play-icon {
+  transform: scale(1.1);
+}
+
+.reel-wrapper.is-playing .reel-play-overlay {
+  display: none;
+}
