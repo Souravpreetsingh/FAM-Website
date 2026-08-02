@@ -8,16 +8,27 @@
     prefix: 'ezgif-frame-',
     path: '/assets/frames/'
   };
+
+  // Frames to keep decoded ahead of / behind the current scrub position.
+  var LOAD_AHEAD = 24;
+  var LOAD_BEHIND = 8;
+  // Frames retained in memory beyond the load window before eviction.
+  var KEEP_AHEAD = 48;
+  var KEEP_BEHIND = 24;
+
   var canvas = null;
   var ctx = null;
   var frames = [];
+  var pending = [];
   var totalFrames = 0;
   var currentIndex = -1;
   var rafResize = null;
-  var isLoading = false;
+  var rafDraw = null;
+  var pendingDraw = -1;
   var firstFrameDrawn = false;
   var dprCached = 1;
   var lastScrollProgress = -1;
+  var idlePending = false;
 
   function pad(n, len) {
     var s = String(n);
@@ -37,33 +48,44 @@
   }
 
   function loadImage(idx) {
-    return new Promise(function (resolve) {
-      var img = new Image();
-      var src = frameSrc(idx);
-      img.onload = function () {
-        frames[idx] = img;
-        resolve(true);
-      };
-      img.onerror = function () {
-        resolve(false);
-      };
-      img.src = src;
-      if (img.complete && img.naturalWidth > 0) {
-        frames[idx] = img;
-        resolve(true);
-      } else if (img.complete) {
-        resolve(false);
+    if (frames[idx] || pending[idx]) return;
+    pending[idx] = true;
+    var img = new Image();
+    img.decoding = 'async';
+    var src = frameSrc(idx);
+    img.onload = function () {
+      frames[idx] = img;
+      pending[idx] = false;
+      if (idx === pendingDraw) scheduleDraw();
+    };
+    img.onerror = function () {
+      pending[idx] = false;
+    };
+    img.src = src;
+  }
+
+  function ensureWindow(center) {
+    var from = Math.max(0, center - LOAD_BEHIND);
+    var to = Math.min(totalFrames - 1, center + LOAD_AHEAD);
+    for (var i = from; i <= to; i++) {
+      if (!frames[i] && !pending[i]) loadImage(i);
+    }
+  }
+
+  function evictFrames(center) {
+    var minKeep = center - KEEP_BEHIND;
+    var maxKeep = center + KEEP_AHEAD;
+    for (var i = 0; i < frames.length; i++) {
+      if (frames[i] && (i < minKeep || i > maxKeep)) {
+        frames[i] = null;
       }
-    });
+    }
   }
 
   function setupCanvas() {
     canvas = document.getElementById('hero-canvas');
     if (!canvas) return false;
-    canvas.style.setProperty('display', 'block', 'important');
-    canvas.style.setProperty('visibility', 'visible', 'important');
     canvas.style.opacity = '0';
-    canvas.style.willChange = 'transform';
     ctx = canvas.getContext('2d', { alpha: false, willReadFrequently: false });
     if (!ctx) return false;
     dprCached = Math.min(window.devicePixelRatio || 1, 2);
@@ -97,7 +119,6 @@
     currentIndex = idx;
     var cw = canvas.width, ch = canvas.height;
     if (cw === 0 || ch === 0) return;
-    ctx.clearRect(0, 0, cw, ch);
     var scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
     var sx = (cw - img.naturalWidth * scale) / 2;
     var sy = (ch - img.naturalHeight * scale) / 2;
@@ -106,6 +127,18 @@
       firstFrameDrawn = true;
       canvas.style.opacity = '1';
     }
+  }
+
+  function scheduleDraw() {
+    if (rafDraw) return;
+    rafDraw = requestAnimationFrame(function () {
+      rafDraw = null;
+      if (pendingDraw >= 0) {
+        var idx = pendingDraw;
+        pendingDraw = -1;
+        drawFrame(idx);
+      }
+    });
   }
 
   function initScrollBehavior() {
@@ -127,46 +160,67 @@
         lastScrollProgress = progress;
         var idx = Math.round(progress * (totalFrames - 1));
         idx = Math.max(0, Math.min(idx, totalFrames - 1));
-        drawFrame(idx);
+        ensureWindow(idx);
+        evictFrames(idx);
+        pendingDraw = idx;
+        scheduleDraw();
       }
     });
   }
 
-  function loadBatch(start) {
-    if (start >= totalFrames || isLoading) return;
-    isLoading = true;
-    var end = Math.min(start + 8, totalFrames);
-    var promises = [];
-    for (var i = start; i < end; i++) {
-      if (frames[i]) continue;
-      promises.push(loadImage(i));
+  function backgroundFill() {
+    if (idlePending) return;
+    idlePending = true;
+    var fill = function () {
+      idlePending = false;
+      if (!canvas || window.scrollY > window.innerHeight * 2) return;
+      var target = currentIndex < 0 ? 0 : currentIndex;
+      var maxTarget = Math.min(totalFrames - 1, target + KEEP_AHEAD);
+      var loaded = 0;
+      for (var i = target; i <= maxTarget && loaded < 16; i++) {
+        if (!frames[i] && !pending[i]) {
+          loadImage(i);
+          loaded++;
+        }
+      }
+      if (loaded === 0) return;
+      if (window.requestIdleCallback) {
+        requestIdleCallback(fill, { timeout: 3000 });
+      } else {
+        setTimeout(fill, 400);
+      }
+    };
+    if (window.requestIdleCallback) {
+      requestIdleCallback(fill, { timeout: 2000 });
+    } else {
+      setTimeout(fill, 200);
     }
-    Promise.all(promises).then(function () {
-      isLoading = false;
-      loadBatch(end);
-    });
   }
 
   function boot() {
+    var reducedMotion = false;
+    try {
+      reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    } catch (e) {}
+    if (reducedMotion) return;
+
     if (!setupCanvas()) return;
 
     totalFrames = CONFIG.total;
 
-    loadImage(0).then(function (ok) {
-      if (ok) drawFrame(0);
-    });
+    loadImage(0);
+    ensureWindow(0);
+    pendingDraw = 0;
+    scheduleDraw();
 
     fetchConfig().then(function () {
       totalFrames = CONFIG.total;
     });
 
-    if (window.requestIdleCallback) {
-      requestIdleCallback(function () { loadBatch(1); }, { timeout: 3000 });
-    } else {
-      setTimeout(function () { loadBatch(1); }, 200);
-    }
-
-    setTimeout(initScrollBehavior, 300);
+    setTimeout(function () {
+      initScrollBehavior();
+      backgroundFill();
+    }, 300);
   }
 
   function handleResize() {

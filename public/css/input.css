@@ -919,7 +919,6 @@ body {
   display: block;
   image-rendering: auto;
   transform-origin: center center;
-  will-change: transform;
 }
 
 .hero-gradient-overlay {
