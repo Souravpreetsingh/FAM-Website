@@ -22,9 +22,9 @@
   var pending = [];
   var totalFrames = 0;
   var currentIndex = -1;
+  var desiredIndex = -1;
   var rafResize = null;
   var rafDraw = null;
-  var pendingDraw = -1;
   var firstFrameDrawn = false;
   var dprCached = 1;
   var lastScrollProgress = -1;
@@ -56,7 +56,7 @@
     img.onload = function () {
       frames[idx] = img;
       pending[idx] = false;
-      if (idx === pendingDraw) scheduleDraw();
+      if (idx === desiredIndex || (idx === 0 && !firstFrameDrawn)) scheduleDraw();
     };
     img.onerror = function () {
       pending[idx] = false;
@@ -133,11 +133,7 @@
     if (rafDraw) return;
     rafDraw = requestAnimationFrame(function () {
       rafDraw = null;
-      if (pendingDraw >= 0) {
-        var idx = pendingDraw;
-        pendingDraw = -1;
-        drawFrame(idx);
-      }
+      if (desiredIndex >= 0) drawFrame(desiredIndex);
     });
   }
 
@@ -160,9 +156,9 @@
         lastScrollProgress = progress;
         var idx = Math.round(progress * (totalFrames - 1));
         idx = Math.max(0, Math.min(idx, totalFrames - 1));
+        desiredIndex = idx;
         ensureWindow(idx);
         evictFrames(idx);
-        pendingDraw = idx;
         scheduleDraw();
       }
     });
@@ -174,7 +170,7 @@
     var fill = function () {
       idlePending = false;
       if (!canvas || window.scrollY > window.innerHeight * 2) return;
-      var target = currentIndex < 0 ? 0 : currentIndex;
+      var target = desiredIndex < 0 ? 0 : desiredIndex;
       var maxTarget = Math.min(totalFrames - 1, target + KEEP_AHEAD);
       var loaded = 0;
       for (var i = target; i <= maxTarget && loaded < 16; i++) {
@@ -207,10 +203,10 @@
     if (!setupCanvas()) return;
 
     totalFrames = CONFIG.total;
+    desiredIndex = 0;
 
     loadImage(0);
     ensureWindow(0);
-    pendingDraw = 0;
     scheduleDraw();
 
     fetchConfig().then(function () {
