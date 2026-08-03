@@ -374,8 +374,6 @@ document.addEventListener('DOMContentLoaded', initAuthMobileMenu);
 <script src="../js/auth.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  FAM.Auth.setupAuthPage();
-
   var sb = document.getElementById('signupBtn');
   var tc = document.getElementById('termsCheck');
   if (sb) { sb.classList.remove('loading'); sb.disabled = !(tc && tc.checked); }
