@@ -318,7 +318,7 @@
 .signup-input {
   width: 100%;
   height: 56px;
-  padding: 24px 16px 8px 48px;
+  padding: 24px 16px 8px 16px;
   background: rgba(255,255,255,0.8);
   border: 1.5px solid rgba(193,200,192,0.4);
   border-radius: 14px;
@@ -350,7 +350,7 @@
 
 .signup-input-label {
   position: absolute;
-  left: 48px;
+  left: 16px;
   top: 50%;
   transform: translateY(-50%);
   font-family: 'Inter', sans-serif;
@@ -932,8 +932,8 @@
   .signup-travel-card .card-desc { display: none; }
   .signup-btn { height: 50px; }
   .signup-btn-secondary { height: 44px; }
-  .signup-input { height: 50px; padding-top: 20px; padding-left: 42px; }
-  .signup-input-label { left: 42px; font-size: 14px; }
+  .signup-input { height: 50px; padding-top: 20px; padding-left: 16px; }
+  .signup-input-label { left: 16px; font-size: 14px; }
   .signup-input:focus ~ .signup-input-label,
   .signup-input.has-value ~ .signup-input-label { top: 10px; }
   .signup-submit-row { flex-direction: column; gap: 8px; }
