@@ -285,7 +285,7 @@
 .login-input {
   width: 100%;
   height: 56px;
-  padding: 24px 16px 8px 48px;
+  padding: 24px 16px 8px 16px;
   background: rgba(255,255,255,0.8);
   border: 1.5px solid rgba(193,200,192,0.4);
   border-radius: 14px;
@@ -317,7 +317,7 @@
 
 .login-input-label {
   position: absolute;
-  left: 48px;
+  left: 16px;
   top: 50%;
   transform: translateY(-50%);
   font-family: 'Inter', sans-serif;
@@ -845,8 +845,8 @@
   .login-concierge-icon svg { width: 14px; height: 14px; }
   .login-submit-btn { height: 50px; }
   .login-guest-btn { height: 44px; }
-  .login-input { height: 50px; padding-top: 20px; padding-left: 42px; }
-  .login-input-label { left: 42px; font-size: 14px; }
+  .login-input { height: 50px; padding-top: 20px; padding-left: 16px; }
+  .login-input-label { left: 16px; font-size: 14px; }
   .login-input:focus ~ .login-input-label,
   .login-input.has-value ~ .login-input-label { top: 10px; }
   .login-row { flex-direction: column; align-items: flex-start; gap: 8px; }
