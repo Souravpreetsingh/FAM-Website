@@ -470,7 +470,10 @@ FAM.Auth = (() => {
         const input = btn.closest('.auth-input-group').querySelector('.auth-input');
         const isPassword = input.type === 'password';
         input.type = isPassword ? 'text' : 'password';
-        btn.querySelector('.material-symbols-outlined').textContent = isPassword ? 'visibility_off' : 'visibility';
+        const open = btn.querySelector('.eye-open');
+        const closed = btn.querySelector('.eye-closed');
+        if (open) open.style.display = isPassword ? '' : 'none';
+        if (closed) closed.style.display = isPassword ? 'none' : '';
       });
     });
   }
