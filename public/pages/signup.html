@@ -307,15 +307,15 @@
                 <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;"><span style="font-family:'Inter',sans-serif;font-size:13px;color:#727972;">Travel Style</span><span style="font-family:'Inter',sans-serif;font-size:13px;color:#1a1c1a;font-weight:500;" id="reviewTravel">—</span></div>
               </div>
               <div class="signup-terms">
-                <input type="checkbox" id="termsCheck" required onchange="document.getElementById('submitRow').style.display = this.checked ? '' : 'none'; if (this.checked) { var te = document.getElementById('termsError'); if (te) te.textContent = ''; }" />
+                <input type="checkbox" id="termsCheck" required onchange="var sr = document.getElementById('submitRow'); var btn = document.getElementById('signupBtn'); if (sr) sr.classList.toggle('terms-accepted', this.checked); if (btn) btn.disabled = !this.checked; if (this.checked) { var te = document.getElementById('termsError'); if (te) te.textContent = ''; }" />
                 <label for="termsCheck">I accept the <a href="#" title="Page coming soon">Terms &amp; Conditions</a> and <a href="#" title="Page coming soon">Privacy Policy</a></label>
               </div>
               <div class="signup-error-text" id="termsError" role="alert" style="margin:-8px 0 12px;"></div>
-              <div class="signup-submit-row" id="submitRow" style="display:none;">
+              <div class="signup-submit-row" id="submitRow">
                 <button type="button" class="signup-btn-secondary" id="step4Back" aria-label="Go back to travel style" style="margin-top:0;">
                   <span class="material-symbols-outlined" style="font-size:18px">arrow_back</span>
                 </button>
-                <button type="submit" class="signup-btn" id="signupBtn">
+                <button type="submit" class="signup-btn" id="signupBtn" disabled>
                   <span class="btn-text">Create Account</span>
                   <span class="btn-spinner"><span class="material-symbols-outlined" style="font-size:20px;animation:spin 1s linear infinite;">progress_activity</span></span>
                 </button>
@@ -382,7 +382,12 @@ document.addEventListener('DOMContentLoaded', function() {
   FAM.Auth.setupAuthPage();
 
   var sb = document.getElementById('signupBtn');
-  if (sb) { sb.classList.remove('loading'); sb.disabled = false; }
+  var tc = document.getElementById('termsCheck');
+  if (sb) { sb.classList.remove('loading'); sb.disabled = !(tc && tc.checked); }
+  if (tc) {
+    var sr0 = document.getElementById('submitRow');
+    if (sr0) sr0.classList.toggle('terms-accepted', tc.checked);
+  }
 
   var form = document.getElementById('signupForm');
   var nameInput = document.getElementById('signupName');

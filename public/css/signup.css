@@ -672,6 +672,13 @@
 .signup-submit-row .signup-btn {
   flex: 1;
 }
+.signup-submit-row .signup-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.signup-submit-row.terms-accepted .signup-btn:disabled {
+  opacity: 1;
+}
 
 .signup-success-overlay {
   position: fixed;
