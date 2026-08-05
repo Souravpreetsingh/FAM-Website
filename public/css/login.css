@@ -7,7 +7,7 @@
 }
 
 .login-hero {
-  flex: 0 0 60%;
+  flex: 0 0 65%;
   position: relative;
   overflow: hidden;
 }
@@ -163,12 +163,12 @@
 }
 
 .login-card-panel {
-  flex: 0 0 40%;
+  flex: 0 0 35%;
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 40px;
+  padding: 112px 48px 40px;
   background: #f8f4ec;
   overflow-y: auto;
 }
@@ -183,7 +183,7 @@
 
 .login-card {
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   position: relative;
 }
 
@@ -218,7 +218,7 @@
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
   border: 1px solid rgba(255,255,255,0.25);
   border-radius: 32px;
-  padding: 48px 40px;
+  padding: 36px 36px;
   box-shadow:
     0 4px 24px rgba(10,52,29,0.04),
     0 24px 80px rgba(10,52,29,0.06),
@@ -230,7 +230,7 @@
 
 .login-card-header {
   text-align: center;
-  margin-bottom: 36px;
+  margin-bottom: 24px;
 }
 
 .login-heading,
@@ -263,7 +263,7 @@
 
 .login-input-group {
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 .login-input-group .input-icon {
@@ -391,7 +391,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 8px 0 28px;
+  margin: 4px 0 18px;
   flex-wrap: wrap;
   gap: 12px;
 }
@@ -507,7 +507,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 8px;
 }
 .login-guest-btn:hover {
   border-color: #c1c8c0;
@@ -519,7 +519,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  margin: 24px 0;
+  margin: 16px 0;
 }
 .login-divider::before,
 .login-divider::after {
@@ -573,7 +573,7 @@
 
 .login-footer-text {
   text-align: center;
-  margin-top: 28px;
+  margin-top: 16px;
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   color: #9ca3af;
@@ -597,7 +597,7 @@
 .login-concierge {
   position: fixed;
   bottom: 32px;
-  right: max(calc(40% + 40px), 100px);
+  right: max(calc(35% + 40px), 100px);
   z-index: 100;
   display: flex;
   align-items: flex-start;
