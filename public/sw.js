@@ -1,4 +1,4 @@
-var CACHE_NAME = 'fam-v6';
+var CACHE_NAME = 'fam-v7';
 
 self.addEventListener('install', function() {
   self.skipWaiting();
@@ -22,6 +22,17 @@ self.addEventListener('fetch', function(event) {
   var url = new URL(event.request.url);
   if (url.origin !== location.origin) return;
   if (event.request.method !== 'GET') return;
+
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(function() {
+        return caches.match(event.request).then(function(cached) {
+          return cached || caches.match('/');
+        });
+      })
+    );
+    return;
+  }
 
   event.respondWith(
     fetch(event.request).then(function(networkRes) {
