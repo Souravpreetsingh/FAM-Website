@@ -1390,75 +1390,6 @@ html.time-night .mt-icon {
   margin: 0 auto;
 }
 
-/* --- Floating Glass Control Panel --- */
-.mt-control {
-  position: fixed;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 200;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 6px 5px 18px;
-  background: rgba(255,255,255,0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(193, 200, 192, 0.35);
-  border-radius: 9999px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-  font-family: 'Inter', sans-serif;
-  transition: box-shadow 0.4s ease, transform 0.4s ease;
-}
-.mt-control:hover {
-  box-shadow: 0 8px 36px rgba(0,0,0,0.12);
-  transform: translateX(-50%) translateY(-2px);
-}
-.mt-control-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  color: #6B7280;
-  white-space: nowrap;
-  padding-right: 8px;
-  border-right: 1px solid rgba(193, 200, 192, 0.3);
-}
-.mt-control-options {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-.mt-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  padding: 6px 11px;
-  border: none;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  transition: all 0.5s ease;
-  background: transparent;
-  color: #9CA3AF;
-  font-family: inherit;
-  line-height: 1;
-  white-space: nowrap;
-}
-.mt-btn .icon { font-size: 14px; transition: transform 0.3s ease; }
-.mt-btn:hover:not(.mt-active) { background: rgba(0,0,0,0.04); }
-.mt-btn:hover .icon { transform: scale(1.15); }
-.mt-btn.mt-active {
-  background: var(--mt-accent, #C9A86A);
-  color: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  transition: all 0.8s ease;
-}
-.mt-btn[data-mode="auto"] { font-size: 11px; }
-.mt-btn[data-mode="auto"].mt-active { background: #6B7280; box-shadow: 0 2px 8px rgba(107,114,128,0.25); }
-
 /* --- Atmospheric Particles --- */
 .mt-particle {
   position: fixed;
@@ -1648,11 +1579,6 @@ html.time-night .mt-bonfire {
   .mt-icon { font-size: 42px; }
   .mt-headline { font-size: 28px; }
   .mt-sub { font-size: 14px; }
-  .mt-control { bottom: 18px; padding: 4px 4px 4px 12px; gap: 2px; }
-  .mt-control-label { font-size: 10px; padding-right: 4px; }
-  .mt-btn { padding: 5px 8px; font-size: 10px; }
-  .mt-btn .icon { font-size: 12px; }
-  .mt-btn[data-mode="auto"] { font-size: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1660,8 +1586,7 @@ html.time-night .mt-bonfire {
   body { transition: none !important; }
   .mt-hero, .mt-hero::before,
   .mt-badge, .mt-headline, .mt-sub,
-  .mt-icon, .mt-control, .mt-btn,
-  .mt-bonfire, .mt-fog { transition: none !important; }
+  .mt-icon, .mt-bonfire, .mt-fog { transition: none !important; }
   .mt-bird, .mt-cloud, .mt-star, .mt-firefly,
   .mt-bonfire, .mt-icon {
     animation: none !important;
