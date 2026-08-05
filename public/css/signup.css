@@ -913,7 +913,7 @@
 
   .signup-card-panel {
     flex: 1;
-    padding: 20px 16px 32px;
+    padding: 64px 16px 32px;
     align-items: flex-start;
     overflow-y: auto;
   }
@@ -947,7 +947,7 @@
   .signup-hero { flex: 0 0 180px; min-height: 180px; }
   .signup-hero-bg { inset: -30%; }
   .signup-hero-tagline { font-size: 18px; }
-  .signup-card-panel { padding: 12px 10px 24px; }
+  .signup-card-panel { padding: 56px 10px 24px; }
   .signup-card-inner { padding: 24px 16px; border-radius: 20px; }
   .signup-card-title { font-size: 22px; }
   .signup-travel-grid { gap: 6px; }
