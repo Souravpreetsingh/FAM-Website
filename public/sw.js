@@ -1,4 +1,4 @@
-var CACHE_NAME = 'fam-v4';
+var CACHE_NAME = 'fam-v5';
 
 self.addEventListener('install', function() {
   self.skipWaiting();
@@ -21,9 +21,11 @@ self.addEventListener('activate', function(event) {
 self.addEventListener('fetch', function(event) {
   var url = new URL(event.request.url);
   if (url.origin !== location.origin) return;
+  if (event.request.method !== 'GET') return;
 
   event.respondWith(
     fetch(event.request).then(function(networkRes) {
+      if (networkRes.status === 206) return networkRes;
       var clone = networkRes.clone();
       caches.open(CACHE_NAME).then(function(cache) {
         if (networkRes && networkRes.ok && networkRes.type === 'basic') {
