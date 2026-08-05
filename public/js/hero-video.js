@@ -3,25 +3,12 @@
 
   var video = null;
   var hero = null;
-  var playAttempted = false;
   var interactionRetryBound = null;
 
-  function tryPlay() {
-    if (!video || playAttempted) return;
-    playAttempted = true;
+  function playVideo() {
+    if (!video) return;
     var p = video.play();
-    if (p && p.catch) {
-      p.catch(function () {
-        playAttempted = false;
-      });
-    }
-  }
-
-  function retryOnInteraction() {
-    tryPlay();
-    if (playAttempted && interactionRetryBound) {
-      removeInteractionListeners();
-    }
+    if (p && p.catch) p.catch(function () {});
   }
 
   function removeInteractionListeners() {
@@ -30,6 +17,10 @@
       window.removeEventListener(type, interactionRetryBound, { passive: true });
     });
     interactionRetryBound = null;
+  }
+
+  function onInteraction() {
+    playVideo();
   }
 
   function initScrollBehavior() {
@@ -46,12 +37,12 @@
     });
   }
 
-  function initVisibilityPause() {
+  function initVisibility() {
     if (!video || !('IntersectionObserver' in window)) return;
     var obs = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          if (playAttempted && video.paused && !document.hidden) tryPlay();
+          if (video.paused && !document.hidden) playVideo();
         } else {
           video.pause();
         }
@@ -67,19 +58,25 @@
     if (!hero) return;
 
     var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reducedMotion) {
-      tryPlay();
-    }
 
-    if (playAttempted) {
-      interactionRetryBound = retryOnInteraction;
+    if (!reducedMotion) {
+      playVideo();
+      interactionRetryBound = onInteraction;
       ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (type) {
         window.addEventListener(type, interactionRetryBound, { passive: true });
       });
+      if (video.readyState >= 3) {
+        removeInteractionListeners();
+      } else {
+        video.addEventListener('playing', function onPlaying() {
+          removeInteractionListeners();
+          video.removeEventListener('playing', onPlaying);
+        }, { once: true });
+      }
     }
 
     setTimeout(initScrollBehavior, 300);
-    initVisibilityPause();
+    initVisibility();
   }
 
   if (document.readyState === 'loading') {
