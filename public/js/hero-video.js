@@ -73,6 +73,16 @@
     hero = document.querySelector('.hero-root');
     if (!hero) return;
 
+    try {
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.defaultMuted = true;
+      video.setAttribute('autoplay', '');
+      video.setAttribute('muted', '');
+      video.setAttribute('playsinline', '');
+    } catch (e) {}
+
     applyRate();
     video.addEventListener('loadedmetadata', applyRate, { once: true });
 
