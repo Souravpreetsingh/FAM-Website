@@ -223,7 +223,7 @@
           '<span class="concierge-online-dot"></span>Online - Ask me anything' +
         '</div>' +
       '</div>' +
-      '<button class="concierge-close" id="concierge-close" aria-label="Close"><span class="material-symbols-outlined">close</span></button>';
+      '<button class="concierge-close" id="concierge-close" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
 
     var messages = document.createElement('div');
     messages.className = 'concierge-messages';
@@ -269,7 +269,7 @@
     inputArea.style.display = 'none';
     inputArea.innerHTML =
       '<input type="text" class="concierge-input" id="concierge-input" placeholder="Ask anything about FAM..." autocomplete="off">' +
-      '<button class="concierge-send" id="concierge-send" aria-label="Send"><span class="material-symbols-outlined">arrow_upward</span></button>';
+      '<button class="concierge-send" id="concierge-send" aria-label="Send"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></button>';
 
     var footer = document.createElement('div');
     footer.className = 'concierge-footer';
