@@ -152,19 +152,94 @@
 <div id="page-content">
   <main id="main-content">
     <!-- Hero with dynamic step title -->
-    <section class="relative h-[35vh] min-h-[300px] overflow-hidden reveal">
-      <img src="/images/hero/luxury-hero.jpg" alt="" class="absolute inset-0 w-full h-full object-cover" />
-      <div class="absolute inset-0 bg-gradient-to-b from-surface/60 via-surface/30 to-surface"></div>
-      <div class="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+    <section id="bk-hero" class="relative h-[35vh] min-h-[300px] overflow-hidden reveal">
+      <div id="bk-hero-bg" class="absolute inset-0 will-change-transform">
+        <video id="bk-hero-video" class="w-full h-full object-cover bk-kenburns" autoplay muted loop playsinline preload="metadata" poster="/images/hero/hero-video-poster.jpg" aria-hidden="true"></video>
+        <div class="absolute inset-0 bg-gradient-to-b from-surface/60 via-surface/30 to-surface"></div>
+        <div class="bk-hero-mist" aria-hidden="true"></div>
+      </div>
+      <div id="bk-hero-content" class="absolute inset-0 flex flex-col items-center justify-center px-6 text-center will-change-transform">
         <span class="text-accent-gold font-body text-[11px] tracking-[0.25em] uppercase mb-2">Flamingo Aur Maina</span>
         <h1 class="font-display text-[clamp(1.8rem,4vw,3.5rem)] text-primary font-bold tracking-[-0.02em] leading-[1.1] mb-2" id="step-title">
-          <span class="bg-gradient-to-r from-[#C9A86A] via-[#B8925A] to-[#A07840] bg-clip-text text-transparent">
+          <span class="bk-shimmer bg-gradient-to-r from-[#C9A86A] via-[#B8925A] to-[#A07840] bg-clip-text text-transparent">
             Book Your Stay
           </span>
         </h1>
         <p class="text-on-surface-variant/60 font-body text-[clamp(0.8rem,1vw,1rem)]" id="step-subtitle">Select your perfect mountain retreat</p>
       </div>
     </section>
+    <style>
+      .bk-kenburns { animation: bkKenBurns 24s ease-in-out infinite alternate; transform-origin: center; }
+      @keyframes bkKenBurns { from { transform: scale(1); } to { transform: scale(1.12); } }
+      .bk-shimmer { background-size: 200% auto; animation: bkShimmer 6s linear infinite; }
+      @keyframes bkShimmer { from { background-position: 0% center; } to { background-position: -200% center; } }
+      .bk-hero-mist { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+      .bk-hero-mist::before, .bk-hero-mist::after {
+        content: ''; position: absolute; top: 0; height: 100%; width: 40%;
+        background: linear-gradient(90deg, transparent, rgba(248,244,236,0.10) 40%, rgba(248,244,236,0.05) 60%, transparent);
+        animation: bkMistDrift 14s ease-in-out infinite;
+      }
+      .bk-hero-mist::after { top: 25%; width: 30%; animation-delay: -7s; animation-duration: 18s; }
+      @keyframes bkMistDrift { from { transform: translateX(-60%); } to { transform: translateX(320%); } }
+      @media (prefers-reduced-motion: reduce) {
+        .bk-kenburns { animation: none; }
+        .bk-shimmer { animation: none; }
+        .bk-hero-mist { display: none; }
+      }
+    </style>
+    <script>
+    (function () {
+      var hero = document.getElementById('bk-hero');
+      var video = document.getElementById('bk-hero-video');
+      var bg = document.getElementById('bk-hero-bg');
+      var content = document.getElementById('bk-hero-content');
+      if (!hero) return;
+      var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (video) {
+        video.muted = true;
+        video.defaultMuted = true;
+        function tryPlay() {
+          if (!video.paused) return;
+          var p = video.play();
+          if (p && p.catch) p.catch(function () {});
+        }
+        if (video.readyState >= 2) tryPlay();
+        video.addEventListener('canplay', tryPlay);
+        document.addEventListener('visibilitychange', function () { if (!document.hidden) tryPlay(); });
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) tryPlay(); else video.pause();
+            });
+          }, { rootMargin: '150px' }).observe(hero);
+        }
+        setInterval(function () {
+          var r = hero.getBoundingClientRect();
+          if (!document.hidden && r.bottom > 0 && r.top < window.innerHeight && video.paused) tryPlay();
+        }, 4000);
+      }
+      if (reduced) return;
+      var ticking = false;
+      function onScroll() {
+        var r = hero.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > window.innerHeight) return;
+        var offset = -r.top;
+        if (bg) bg.style.transform = 'translateY(' + (offset * 0.28) + 'px)';
+      }
+      window.addEventListener('scroll', function () {
+        if (!ticking) { ticking = true; requestAnimationFrame(function () { onScroll(); ticking = false; }); }
+      }, { passive: true });
+      if (window.matchMedia('(pointer: fine)').matches && content) {
+        hero.addEventListener('mousemove', function (e) {
+          var r = hero.getBoundingClientRect();
+          var x = (e.clientX - r.left) / r.width - 0.5;
+          var y = (e.clientY - r.top) / r.height - 0.5;
+          content.style.transform = 'translate(' + (x * 16) + 'px, ' + (y * 12) + 'px)';
+        });
+        hero.addEventListener('mouseleave', function () { content.style.transform = ''; });
+      }
+    })();
+    </script>
 
     <!-- Wizard Section -->
     <section class="max-w-[1200px] mx-auto px-4 md:px-8 pb-24 -mt-8 relative z-10 booking-wizard-section reveal">
