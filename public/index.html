@@ -11,7 +11,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='8' fill='%23f8f4ec'/><path d='M24 4C24 4 10 14 10 28C10 36 16 44 24 44C32 44 38 36 38 28C38 14 24 4 24 4Z' fill='%230a341d'/><path d='M24 8C24 8 14 18 14 28C14 35 18 40 24 40C30 40 34 35 34 28C34 18 24 8 24 8Z' fill='%23234b32'/></svg>" />
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='8' fill='%23f8f4ec'/><path d='M24 4C24 4 10 14 10 28C10 36 16 44 24 44C32 44 38 36 38 28C38 14 24 4 24 4Z' fill='%230a341d'/><path d='M24 8C24 8 14 18 14 28C14 35 18 40 24 40C30 40 34 35 34 28C34 18 24 8 24 8Z' fill='%23234b32'/></svg>" />
-  <link rel="preload" as="image" href="/assets/frames/ezgif-frame-001.jpg" />
+  <link rel="preload" as="image" href="/images/hero/hero-video-poster.jpg" />
   <title>Flamingo aur Maina | Boutique Stays in Jibhi</title>
   <meta property="og:title" content="Flamingo aur Maina | Boutique Stays in Jibhi" />
   <meta property="og:description" content="A sanctuary of refined luxury and untold stories amidst nature's embrace. Boutique stays in Jibhi, Himachal Pradesh." />
@@ -62,7 +62,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   </noscript>
-  <link rel="stylesheet" href="css/style.css?v=23" />
+  <link rel="stylesheet" href="css/style.css?v=24" />
   <link rel="stylesheet" href="css/scroll-story.css?v=3" />
   <link rel="stylesheet" href="css/transitions.css?v=3" />
   
@@ -150,7 +150,9 @@
   <main id="main-content">
   <!-- ====== CINEMATIC SCROLL HERO ====== -->
   <section class="hero-root" id="hero" data-scroll-hero>
-    <canvas id="hero-canvas" class="hero-canvas"></canvas>
+    <video id="hero-video" class="hero-canvas" autoplay muted loop playsinline preload="metadata" aria-hidden="true" poster="/images/hero/hero-video-poster.jpg" tabindex="-1">
+      <source src="/videos/hero.mp4" type="video/mp4" />
+    </video>
     <div class="hero-gradient-overlay"></div>
 
     <div class="hero-content">
@@ -1011,12 +1013,11 @@
   <!-- Scripts -->
   <script src="js/shader.js" defer></script>
   <script src="js/animations.js" defer></script>
-  <!-- hero-effects.js removed - replaced by hero-frame-animation.js -->
   <script src="js/seasonal.js" defer></script>
   <script src="js/mountain-time.js" defer></script>
   <script src="js/concierge.js" defer></script>
 
-  <script src="js/hero-frame-animation.js" defer></script>
+  <script src="js/hero-video.js" defer></script>
   <script src="js/scroll-story.js" defer></script>
   <script>
     function initHomePage() {
