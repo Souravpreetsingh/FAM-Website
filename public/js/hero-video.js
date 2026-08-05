@@ -43,12 +43,12 @@
     });
   }
 
-  function initVisibility(reducedMotion) {
+  function initVisibility() {
     if (!video || !('IntersectionObserver' in window)) return;
     var obs = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          if (!reducedMotion && video.paused && !document.hidden) playVideo();
+          if (video.paused && !document.hidden) playVideo();
         } else {
           video.pause();
         }
@@ -57,37 +57,42 @@
     obs.observe(video);
   }
 
+  function initWatchdog() {
+    if (!video) return;
+    window.setInterval(function () {
+      if (document.hidden || !video) return;
+      var r = video.getBoundingClientRect();
+      var inView = r.bottom > 0 && r.top < window.innerHeight;
+      if (inView && video.paused && !video.ended && !video.error) playVideo();
+    }, 4000);
+  }
+
   function boot() {
     video = document.getElementById('hero-video');
     if (!video) return;
     hero = document.querySelector('.hero-root');
     if (!hero) return;
 
-    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
     applyRate();
     video.addEventListener('loadedmetadata', applyRate, { once: true });
 
-    if (reducedMotion) {
-      video.pause();
+    playVideo();
+    interactionRetryBound = onInteraction;
+    ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (type) {
+      window.addEventListener(type, interactionRetryBound, { passive: true });
+    });
+    if (video.readyState >= 3) {
+      removeInteractionListeners();
     } else {
-      playVideo();
-      interactionRetryBound = onInteraction;
-      ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (type) {
-        window.addEventListener(type, interactionRetryBound, { passive: true });
-      });
-      if (video.readyState >= 3) {
+      video.addEventListener('playing', function onPlaying() {
         removeInteractionListeners();
-      } else {
-        video.addEventListener('playing', function onPlaying() {
-          removeInteractionListeners();
-          video.removeEventListener('playing', onPlaying);
-        }, { once: true });
-      }
+        video.removeEventListener('playing', onPlaying);
+      }, { once: true });
     }
 
     setTimeout(initScrollBehavior, 300);
-    initVisibility(reducedMotion);
+    initVisibility();
+    initWatchdog();
   }
 
   if (document.readyState === 'loading') {
