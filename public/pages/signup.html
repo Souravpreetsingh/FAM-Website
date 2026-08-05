@@ -304,12 +304,12 @@
                 <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;"><span style="font-family:'Inter',sans-serif;font-size:13px;color:#727972;">Travel Style</span><span style="font-family:'Inter',sans-serif;font-size:13px;color:#1a1c1a;font-weight:500;" id="reviewTravel">—</span></div>
               </div>
               <div class="signup-terms">
-                <input type="checkbox" id="termsCheck" required onchange="var sr = document.getElementById('submitRow'); var btn = document.getElementById('signupBtn'); if (sr) sr.classList.toggle('terms-accepted', this.checked); if (btn) btn.disabled = !this.checked; if (this.checked) { var te = document.getElementById('termsError'); if (te) te.textContent = ''; }" />
+                <input type="checkbox" id="termsCheck" required onchange="var sr = document.getElementById('submitRow'); if (sr) sr.classList.toggle('terms-accepted', this.checked); if (this.checked) { var te = document.getElementById('termsError'); if (te) te.textContent = ''; }" />
                 <label for="termsCheck">I accept the <a href="#" title="Page coming soon">Terms &amp; Conditions</a> and <a href="#" title="Page coming soon">Privacy Policy</a></label>
               </div>
               <div class="signup-error-text" id="termsError" role="alert" style="margin:-8px 0 12px;"></div>
               <div class="signup-submit-row" id="submitRow">
-                <button type="submit" class="signup-btn" id="signupBtn" disabled>
+                <button type="submit" class="signup-btn" id="signupBtn">
                   <span class="btn-text">Account Created</span>
                   <span class="btn-spinner"><span class="material-symbols-outlined" style="font-size:20px;animation:spin 1s linear infinite;">progress_activity</span></span>
                 </button>
@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', initAuthMobileMenu);
 document.addEventListener('DOMContentLoaded', function() {
   var sb = document.getElementById('signupBtn');
   var tc = document.getElementById('termsCheck');
-  if (sb) { sb.classList.remove('loading'); sb.disabled = !(tc && tc.checked); }
+  if (sb) { sb.classList.remove('loading'); }
   if (tc) {
     var sr0 = document.getElementById('submitRow');
     if (sr0) sr0.classList.toggle('terms-accepted', tc.checked);
@@ -557,10 +557,6 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('step3Back').addEventListener('click', function() { setStep(2); });
 
   termsInput.addEventListener('change', function() {
-    var submitRow = document.getElementById('submitRow');
-    if (submitRow) {
-      submitRow.style.display = termsInput.checked ? '' : 'none';
-    }
     if (termsInput.checked) {
       document.getElementById('termsError').textContent = '';
     }
