@@ -4,6 +4,12 @@
   var video = null;
   var hero = null;
   var interactionRetryBound = null;
+  var PLAYBACK_RATE = 0.5;
+
+  function applyRate() {
+    if (!video) return;
+    try { video.playbackRate = PLAYBACK_RATE; } catch (e) {}
+  }
 
   function playVideo() {
     if (!video) return;
@@ -58,6 +64,9 @@
     if (!hero) return;
 
     var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    applyRate();
+    video.addEventListener('loadedmetadata', applyRate, { once: true });
 
     if (!reducedMotion) {
       playVideo();
