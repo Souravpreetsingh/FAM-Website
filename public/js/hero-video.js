@@ -4,7 +4,7 @@
   var video = null;
   var hero = null;
   var interactionRetryBound = null;
-  var PLAYBACK_RATE = 0.5;
+  var PLAYBACK_RATE = 1;
 
   function applyRate() {
     if (!video) return;
