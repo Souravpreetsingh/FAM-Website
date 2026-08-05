@@ -152,7 +152,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
+  padding: 88px 36px 32px;
   background: #f8f4ec;
   overflow-y: auto;
 }
@@ -167,7 +167,7 @@
 
 .signup-card {
   width: 100%;
-  max-width: 480px;
+  max-width: 450px;
   position: relative;
 }
 
@@ -202,12 +202,12 @@
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
   border: 1px solid rgba(255,255,255,0.25);
   border-radius: 32px;
-  padding: 40px 36px;
+  padding: 32px 28px;
   box-shadow:
     0 4px 24px rgba(10,52,29,0.04),
     0 24px 80px rgba(10,52,29,0.06),
     inset 0 1px 0 rgba(255,255,255,0.5);
-  min-height: 500px;
+  min-height: 480px;
 }
 
 .signup-card-header {
@@ -217,7 +217,7 @@
 
 .signup-card-title {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(24px, 3vw, 30px);
+  font-size: clamp(22px, 2.6vw, 27px);
   font-weight: 600;
   color: #1a1c1a;
   line-height: 1.25;
@@ -317,8 +317,8 @@
 
 .signup-input {
   width: 100%;
-  height: 56px;
-  padding: 24px 16px 8px 16px;
+  height: 48px;
+  padding: 20px 14px 6px 14px;
   background: rgba(255,255,255,0.8);
   border: 1.5px solid rgba(193,200,192,0.4);
   border-radius: 14px;
@@ -364,7 +364,7 @@
 
 .signup-input:focus ~ .signup-input-label,
 .signup-input.has-value ~ .signup-input-label {
-  top: 14px;
+  top: 11px;
   transform: translateY(0) scale(0.75);
   color: #0a341d;
 }
@@ -459,6 +459,9 @@
 }
 .signup-password-strength .ps-req .req-icon {
   font-size: 14px;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
   color: #9ca3af;
   transition: color 0.3s ease;
 }
@@ -471,7 +474,7 @@
 
 .signup-btn {
   width: 100%;
-  height: 54px;
+  height: 48px;
   border-radius: 14px;
   background: linear-gradient(135deg, #0a341d 0%, #1a5a30 100%);
   color: #ffffff;
@@ -552,7 +555,7 @@
   border-radius: 16px;
   border: 1.5px solid rgba(193,200,192,0.4);
   background: rgba(255,255,255,0.5);
-  padding: 20px 16px;
+  padding: 14px 12px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
   text-align: center;
@@ -573,10 +576,10 @@
     0 4px 16px rgba(10,52,29,0.06);
 }
 .signup-travel-card .card-icon {
-  font-size: 28px;
+  font-size: 22px;
   color: #0a341d;
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   transition: transform 0.3s ease;
 }
 .signup-travel-card.selected .card-icon {
@@ -584,7 +587,7 @@
 }
 .signup-travel-card .card-title {
   font-family: 'Inter', sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: #1a1c1a;
   display: block;
@@ -618,8 +621,8 @@
   border-color: #0a341d;
   color: #fff;
 }
-.signup-travel-card .card-check span {
-  font-size: 14px;
+.signup-travel-card .card-check span,
+.signup-travel-card .card-check svg {
   color: #fff;
 }
 
