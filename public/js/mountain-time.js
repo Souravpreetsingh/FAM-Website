@@ -4,7 +4,6 @@
 (function () {
   'use strict';
 
-  var STORAGE_KEY = 'fam-mt-mode';
   var MODE_LIST = ['auto', 'morning', 'afternoon', 'sunset', 'night'];
   var MODE_DATA = {
     morning:  { icon: '\u2600\uFE0F', badge: 'Good Morning',  headline: 'Wake up with the mountains.',       sub: 'Golden sunlight, birds, and the soft hum of the valley.' },
@@ -58,36 +57,7 @@
     }
   }
 
-  /* --- Control panel --- */
-  function buildControl() {
-    var panel = document.createElement('div');
-    panel.className = 'mt-control';
-    panel.innerHTML =
-      '<span class="mt-control-label">\uD83D\uDD50 Mountain Time</span>' +
-      '<div class="mt-control-options">' +
-        '<button class="mt-btn" data-mode="auto">Auto</button>' +
-        '<button class="mt-btn" data-mode="morning"><span class="icon">\u2600\uFE0F</span></button>' +
-        '<button class="mt-btn" data-mode="afternoon"><span class="icon">\u26C5</span></button>' +
-        '<button class="mt-btn" data-mode="sunset"><span class="icon">\uD83C\uDF07</span></button>' +
-        '<button class="mt-btn" data-mode="night"><span class="icon">\uD83C\uDF19</span></button>' +
-      '</div>';
-    document.body.appendChild(panel);
-
-    panel.addEventListener('click', function (e) {
-      var btn = e.target.closest('.mt-btn');
-      if (!btn) return;
-      var mode = btn.getAttribute('data-mode');
-      if (mode === 'auto') {
-        userMode = null;
-        frozen = false;
-      } else {
-        userMode = mode;
-        frozen = true;
-      }
-      applyMode(getMode());
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ override: userMode })); } catch (ex) {}
-    });
-  }
+  /* --- Control panel (removed) --- */
 
   function updatePills(mode) {
     var btns = document.querySelectorAll('.mt-btn');
@@ -182,15 +152,6 @@
 
   /* --- Init --- */
   function init() {
-    try {
-      var saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      if (saved && saved.override) {
-        userMode = saved.override;
-        frozen = true;
-      }
-    } catch (e) {}
-
-    buildControl();
     applyMode(getMode(), true);
 
     timeCheckInterval = setInterval(function () {
