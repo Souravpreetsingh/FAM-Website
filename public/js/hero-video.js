@@ -29,20 +29,6 @@
     playVideo();
   }
 
-  function initScrollBehavior() {
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined' || !hero) return;
-    var SCROLL_DISTANCE = '+=300vh';
-    ScrollTrigger.create({
-      trigger: hero,
-      start: 'top top',
-      end: SCROLL_DISTANCE,
-      pin: true,
-      pinSpacing: true,
-      anticipatePin: 1,
-      scrub: 1.5
-    });
-  }
-
   function initVisibility() {
     if (!video || !('IntersectionObserver' in window)) return;
     var obs = new IntersectionObserver(function (entries) {
@@ -100,8 +86,7 @@
       }, { once: true });
     }
 
-    setTimeout(initScrollBehavior, 300);
-    initVisibility();
+    setTimeout(initVisibility, 300);
     initWatchdog();
   }
 
