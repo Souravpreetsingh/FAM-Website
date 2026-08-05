@@ -68,7 +68,9 @@
     applyRate();
     video.addEventListener('loadedmetadata', applyRate, { once: true });
 
-    if (!reducedMotion) {
+    if (reducedMotion) {
+      video.pause();
+    } else {
       playVideo();
       interactionRetryBound = onInteraction;
       ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (type) {
