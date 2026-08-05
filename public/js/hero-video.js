@@ -43,12 +43,12 @@
     });
   }
 
-  function initVisibility() {
+  function initVisibility(reducedMotion) {
     if (!video || !('IntersectionObserver' in window)) return;
     var obs = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          if (video.paused && !document.hidden) playVideo();
+          if (!reducedMotion && video.paused && !document.hidden) playVideo();
         } else {
           video.pause();
         }
@@ -85,7 +85,7 @@
     }
 
     setTimeout(initScrollBehavior, 300);
-    initVisibility();
+    initVisibility(reducedMotion);
   }
 
   if (document.readyState === 'loading') {

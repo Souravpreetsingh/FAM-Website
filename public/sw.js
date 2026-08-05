@@ -1,4 +1,4 @@
-var CACHE_NAME = 'fam-v5';
+var CACHE_NAME = 'fam-v6';
 
 self.addEventListener('install', function() {
   self.skipWaiting();
