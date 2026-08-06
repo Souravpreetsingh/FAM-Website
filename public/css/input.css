@@ -6825,3 +6825,82 @@ html.mode-winter .nav-mobile-book {
   outline: 2px solid #C9A86A;
   outline-offset: 2px;
 }
+
+/* ============================================
+   Desktop Fluid Scaling Layer
+   Keeps the design pixel-identical at >=1440px
+   wide; proportions stay constant on smaller
+   desktop CSS viewports (display scaling 125/150%,
+   smaller laptops, 4K letterboxed). Desktop only;
+   mobile/tablet breakpoints below are untouched.
+   ============================================ */
+@media (min-width: 1024px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  html,
+  body {
+    overflow-x: clip;
+  }
+
+  /* Site-wide horizontal gutters (nav + sections) */
+  .px-margin-desktop {
+    padding-left: clamp(20px, 4.44vw, 64px) !important;
+    padding-right: clamp(20px, 4.44vw, 64px) !important;
+  }
+
+  .grid-container {
+    padding-left: clamp(20px, 4.44vw, 64px);
+    padding-right: clamp(20px, 4.44vw, 64px);
+  }
+
+  footer .max-w-max-width,
+  .footer .max-w-max-width {
+    padding-left: clamp(20px, 4.44vw, 64px);
+    padding-right: clamp(20px, 4.44vw, 64px);
+  }
+
+  /* Vertical section rhythm */
+  .py-section-gap,
+  .section-gap {
+    padding-top: clamp(64px, 8.33vh, 120px) !important;
+    padding-bottom: clamp(64px, 8.33vh, 120px) !important;
+  }
+
+  /* Display typography scales with the viewport */
+  .text-display-hero {
+    font-size: clamp(48px, 5.56vw, 80px);
+    line-height: clamp(56px, 6.67vw, 96px);
+  }
+
+  .text-headline-lg {
+    font-size: clamp(32px, 3.33vw, 48px);
+    line-height: clamp(38px, 3.89vw, 56px);
+  }
+
+  .text-headline-md {
+    font-size: clamp(24px, 2.22vw, 32px);
+    line-height: clamp(30px, 2.78vw, 40px);
+  }
+
+  .auth-404 .error-code {
+    font-size: clamp(64px, 8.33vw, 120px);
+  }
+
+  /* Fixed-height cards keep viewport proportion */
+  .explore-card {
+    height: min(380px, 42vh);
+  }
+
+  @media (min-width: 768px) {
+    .explore-card {
+      height: min(520px, 58vh);
+    }
+  }
+
+  .mt-hero {
+    min-height: min(500px, 72vh);
+  }
+}
