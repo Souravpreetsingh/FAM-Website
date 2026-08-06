@@ -4,6 +4,7 @@
   var video = null;
   var hero = null;
   var interactionRetryBound = null;
+  var lastUserScroll = 0;
   var PLAYBACK_RATE = 1;
 
   function applyRate() {
@@ -43,13 +44,20 @@
     obs.observe(video);
   }
 
+  function markUserScroll() {
+    lastUserScroll = Date.now();
+  }
+
   function initWatchdog() {
     if (!video) return;
+    window.addEventListener('scroll', markUserScroll, { passive: true });
+    window.addEventListener('touchmove', markUserScroll, { passive: true });
     window.setInterval(function () {
       if (document.hidden || !video) return;
       var r = video.getBoundingClientRect();
       var inView = r.bottom > 0 && r.top < window.innerHeight;
-      if (inView && video.paused && !video.ended && !video.error) playVideo();
+      var userScrolling = Date.now() - lastUserScroll < 600;
+      if (inView && video.paused && !video.ended && !video.error && !userScrolling) playVideo();
     }, 4000);
   }
 
