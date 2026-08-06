@@ -201,7 +201,7 @@
       if (!isInternalLink(href)) return;
       if (isDownloadable(href)) return;
 
-      var fullUrl = new URL(href, window.location.origin).href;
+      var fullUrl = new URL(link.href, link.baseURI).href;
       if (prefetched[fullUrl]) return;
       prefetched[fullUrl] = true;
 
