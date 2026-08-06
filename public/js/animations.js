@@ -113,8 +113,6 @@
   FAM.Animations.initLenis = function() {
     if (typeof Lenis === 'undefined') return;
     if (FAM.lenis) return;
-    if (window.matchMedia('(pointer: coarse)').matches) return;
-    if ('ontouchstart' in window) return;
     var lenis = new Lenis({
       duration: 1.2,
       easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },

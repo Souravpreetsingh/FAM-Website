@@ -28,8 +28,6 @@
   function initLenis() {
     if (typeof Lenis === 'undefined') return;
     if (typeof FAM !== 'undefined' && FAM.lenis) { lenis = FAM.lenis; return; }
-    if (window.matchMedia('(pointer: coarse)').matches) return;
-    if ('ontouchstart' in window) return;
     lenis = new Lenis({
       lerp: 0.07,
       wheelMultiplier: 1.0,
