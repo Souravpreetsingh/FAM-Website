@@ -251,8 +251,30 @@
     if (!btn || !panel) return;
     if (btn._mInit) return;
     btn._mInit = true;
-    function open() { panel.classList.add('open'); if (overlay) overlay.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); panel.setAttribute('aria-hidden', 'false'); document.body.classList.add('mobile-menu-open'); }
-    function close() { panel.classList.remove('open'); if (overlay) overlay.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); panel.setAttribute('aria-hidden', 'true'); document.body.classList.remove('mobile-menu-open'); }
+    var lastFocused = null;
+    function open() {
+      lastFocused = document.activeElement;
+      panel.classList.add('open');
+      if (overlay) overlay.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+      panel.setAttribute('aria-hidden', 'false');
+      panel.inert = false;
+      document.body.classList.add('mobile-menu-open');
+    }
+    function close() {
+      panel.classList.remove('open');
+      if (overlay) overlay.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      panel.setAttribute('aria-hidden', 'true');
+      panel.inert = true;
+      document.body.classList.remove('mobile-menu-open');
+      if (lastFocused && document.contains(lastFocused)) {
+        lastFocused.focus();
+      } else if (document.contains(btn) && btn.getClientRects().length > 0) {
+        btn.focus();
+      }
+      lastFocused = null;
+    }
     btn.addEventListener('click', function() { if (panel.classList.contains('open')) close(); else open(); });
     if (closeBtn) closeBtn.addEventListener('click', close);
     if (overlay) overlay.addEventListener('click', close);
@@ -514,8 +536,6 @@
   });
   </script>
   <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script src="../js/supabase.js"></script>
   <script src="../js/page-transitions.js"></script>
   <script src="/js/service-worker.js"></script>
   <script type="module" src="//instant.page/5.2.0"></script>

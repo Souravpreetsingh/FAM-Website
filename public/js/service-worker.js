@@ -1,7 +1,7 @@
 (function() {
   if (!('serviceWorker' in navigator)) return;
 
-          var SW_VERSION = '24072805';
+          var SW_VERSION = '24072806';
 
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('/sw.js?v=' + SW_VERSION).catch(function(e) {

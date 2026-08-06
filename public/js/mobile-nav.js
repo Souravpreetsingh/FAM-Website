@@ -17,6 +17,7 @@
 
     var focusableSel = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
     var lastFocused = null;
+    var focusTimer = null;
 
     function open() {
       lastFocused = document.activeElement;
@@ -27,14 +28,18 @@
       btn.setAttribute('aria-expanded', 'true');
       overlay.setAttribute('aria-hidden', 'false');
       panel.setAttribute('aria-hidden', 'false');
+      panel.inert = false;
       if (navBar) navBar.classList.add('menu-open');
-      setTimeout(function () {
+      clearTimeout(focusTimer);
+      focusTimer = setTimeout(function () {
+        if (!panel.classList.contains('open')) return;
         var first = panel.querySelector(focusableSel);
         if (first) first.focus();
       }, 150);
     }
 
     function close() {
+      clearTimeout(focusTimer);
       panel.classList.remove('open');
       overlay.classList.remove('open');
       document.body.classList.remove('mobile-menu-open');
@@ -42,15 +47,19 @@
       btn.setAttribute('aria-expanded', 'false');
       overlay.setAttribute('aria-hidden', 'true');
       panel.setAttribute('aria-hidden', 'true');
+      panel.inert = true;
       if (navBar) {
         navBar.classList.remove('menu-open');
         navBar.classList.remove('hidden');
         navBar.classList.remove('scrolled');
       }
       lastScrollY = window.scrollY;
-      if (lastFocused) {
+      if (lastFocused && document.contains(lastFocused)) {
         lastFocused.focus();
         lastFocused = null;
+      } else {
+        lastFocused = null;
+        if (document.contains(btn) && btn.getClientRects().length > 0) btn.focus();
       }
     }
 
