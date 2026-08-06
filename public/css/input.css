@@ -901,7 +901,6 @@ body {
   position: relative;
   width: 100%;
   height: 100vh;
-  height: 100svh;
   overflow: hidden;
   margin: 0;
   padding: 0;
@@ -911,7 +910,6 @@ body {
 .hero-root .hero-canvas,
 .hero-root .hero-gradient-overlay {
   height: 100vh;
-  height: 100svh;
 }
 
 .hero-canvas {
@@ -1588,7 +1586,8 @@ html.time-night .mt-bonfire {
   body { transition: none !important; }
   .mt-hero, .mt-hero::before,
   .mt-badge, .mt-headline, .mt-sub,
-  .mt-icon, .mt-bonfire, .mt-fog { transition: none !important; }
+  .mt-icon,
+  .mt-bonfire, .mt-fog { transition: none !important; }
   .mt-bird, .mt-cloud, .mt-star, .mt-firefly,
   .mt-bonfire, .mt-icon {
     animation: none !important;
