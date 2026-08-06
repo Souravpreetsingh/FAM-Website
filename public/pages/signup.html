@@ -600,9 +600,7 @@ document.addEventListener('DOMContentLoaded', function() {
         country: ''
       });
 
-      await FAM.Auth.login(emailInput.value.trim(), passwordInput.value);
-
-      window.location.href = '../index.html';
+      window.location.href = 'login.html?email=' + encodeURIComponent(emailInput.value.trim()) + '&justRegistered=1';
     } catch (err) {
       if (err.status === 409) {
         FAM.Auth.showError(emailInput, err.message || 'This email is already registered');
