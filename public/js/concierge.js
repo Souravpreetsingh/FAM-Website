@@ -403,10 +403,10 @@
   function buildRecommendRoomHTML() {
     return '<div class="cq-rec-title">Recommendations by traveller type:</div>' +
       '<div class="cq-rec-grid">' +
-        '<div class="cq-rec-card"><div class="cq-rec-label">Couple</div><div class="cq-rec-room">Maina 1</div><div class="cq-rec-type">Private · 2 Guests</div><div class="cq-rec-price">₹2,500 / night</div><a href="/pages/booking?room=maina-1" class="cq-rec-btn">Book →</a></div>' +
-        '<div class="cq-rec-card"><div class="cq-rec-label">Family</div><div class="cq-rec-room">Flamingo 3</div><div class="cq-rec-type">Duplex · 4 Guests</div><div class="cq-rec-price">₹6,000 / night</div><a href="/pages/booking?room=flamingo-3" class="cq-rec-btn">Book →</a></div>' +
-        '<div class="cq-rec-card"><div class="cq-rec-label">Friends</div><div class="cq-rec-room">Flamingo 1</div><div class="cq-rec-type">Duplex · 4 Guests</div><div class="cq-rec-price">₹6,000 / night</div><a href="/pages/booking?room=flamingo-1" class="cq-rec-btn">Book →</a></div>' +
-        '<div class="cq-rec-card"><div class="cq-rec-label">Solo</div><div class="cq-rec-room">Maina 2</div><div class="cq-rec-type">Private · 2 Guests</div><div class="cq-rec-price">₹2,000 / night</div><a href="/pages/booking?room=maina-2" class="cq-rec-btn">Book →</a></div>' +
+        '<div class="cq-rec-card"><div class="cq-rec-label">Couple</div><div class="cq-rec-room">Maina 1</div><div class="cq-rec-type">Private · 2 Guests</div><div class="cq-rec-price">₹2,500 / night</div><a href="/pages/booking.html?room=maina-1" class="cq-rec-btn">Book →</a></div>' +
+        '<div class="cq-rec-card"><div class="cq-rec-label">Family</div><div class="cq-rec-room">Flamingo 3</div><div class="cq-rec-type">Duplex · 4 Guests</div><div class="cq-rec-price">₹6,000 / night</div><a href="/pages/booking.html?room=flamingo-3" class="cq-rec-btn">Book →</a></div>' +
+        '<div class="cq-rec-card"><div class="cq-rec-label">Friends</div><div class="cq-rec-room">Flamingo 1</div><div class="cq-rec-type">Duplex · 4 Guests</div><div class="cq-rec-price">₹6,000 / night</div><a href="/pages/booking.html?room=flamingo-1" class="cq-rec-btn">Book →</a></div>' +
+        '<div class="cq-rec-card"><div class="cq-rec-label">Solo</div><div class="cq-rec-room">Maina 2</div><div class="cq-rec-type">Private · 2 Guests</div><div class="cq-rec-price">₹2,000 / night</div><a href="/pages/booking.html?room=maina-2" class="cq-rec-btn">Book →</a></div>' +
       '</div>';
   }
 
@@ -573,7 +573,7 @@
         if (guests) params.push('guests=' + encodeURIComponent(guests.textContent));
         var qs = params.length ? '?' + params.join('&') : '';
         closeBookingModal();
-        var url = '/pages/booking' + qs;
+        var url = '/pages/booking.html' + qs;
         if (typeof window.navigateTo === 'function') {
           setTimeout(function () { window.navigateTo(url); }, 350);
         } else {
@@ -585,9 +585,9 @@
 
   function openBookingModal() {
     if (typeof window.navigateTo === 'function') {
-      window.navigateTo('/pages/booking');
+      window.navigateTo('/pages/booking.html');
     } else {
-      window.location.href = '/pages/booking';
+      window.location.href = '/pages/booking.html';
     }
   }
 

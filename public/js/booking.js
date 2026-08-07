@@ -221,9 +221,9 @@
     initMagnetic(t);
     t.addEventListener('click', function () {
       if (typeof window.navigateTo === 'function') {
-        window.navigateTo('/pages/booking');
+        window.navigateTo('/pages/booking.html');
       } else {
-        window.location.href = '/pages/booking';
+        window.location.href = '/pages/booking.html';
       }
     });
   }
