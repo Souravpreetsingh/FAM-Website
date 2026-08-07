@@ -3880,8 +3880,6 @@ img { max-width: 100%; height: auto; }
   .tp-illustration { display: none; }
   .tp-card { padding: 20px 14px; }
   .tp-options.col2, .tp-options.col4 { grid-template-columns: 1fr; }
-  .tp-step-indicators { gap: 4px; }
-  .tp-step { min-width: 32px; height: 32px; font-size: 12px; }
 }
 
 /* Amenities grid */
