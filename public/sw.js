@@ -1,4 +1,4 @@
-var CACHE_NAME = 'fam-v9';
+var CACHE_NAME = 'fam-v10';
 
 function offlineFallback() {
   return new Response(
@@ -42,7 +42,12 @@ self.addEventListener('fetch', function(event) {
 
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request).catch(function() {
+      fetch(event.request).then(function(networkRes) {
+        if (networkRes.status >= 500) {
+          return fromCache(event.request);
+        }
+        return networkRes;
+      }).catch(function() {
         return fromCache(event.request);
       })
     );

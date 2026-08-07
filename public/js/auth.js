@@ -46,32 +46,51 @@ FAM.Auth = (() => {
 
     if (body) config.body = JSON.stringify(body);
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 20000);
-    config.signal = controller.signal;
+    const maxAttempts = options.maxAttempts || 3;
+    let lastError = null;
 
-    let response;
-    try {
-      response = await fetch(`${API_BASE}${endpoint}`, config);
-    } catch (err) {
-      clearTimeout(timeoutId);
-      if (err.name === 'AbortError') {
-        throw new Error('Request timed out. Please check your connection and try again.');
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      if (attempt > 1) {
+        await new Promise((r) => setTimeout(r, 1500 * (attempt - 1)));
       }
-      throw err;
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
+      config.signal = controller.signal;
+
+      let response;
+      try {
+        response = await fetch(`${API_BASE}${endpoint}`, config);
+      } catch (err) {
+        clearTimeout(timeoutId);
+        if (err.name === 'AbortError') {
+          throw new Error('The server is taking too long to respond. Please try again in a moment.');
+        }
+        lastError = err;
+        if (attempt < maxAttempts) continue;
+        throw new Error('Unable to reach the server. Please check your connection and try again.');
+      }
+      clearTimeout(timeoutId);
+
+      if (response.status >= 500 && attempt < maxAttempts) {
+        lastError = new Error('Server not ready (HTTP ' + response.status + ')');
+        try { await response.text(); } catch (e) { /* drain */ }
+        continue;
+      }
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const err = new Error(data.message || 'Request failed');
+        err.status = response.status;
+        err.errors = data.errors || [];
+        throw err;
+      }
+
+      return data;
     }
-    clearTimeout(timeoutId);
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      const err = new Error(data.message || 'Request failed');
-      err.status = response.status;
-      err.errors = data.errors || [];
-      throw err;
-    }
-
-    return data;
+    throw lastError || new Error('Request failed. Please try again.');
   }
 
   // ── Auth API Functions (ready for backend) ──
