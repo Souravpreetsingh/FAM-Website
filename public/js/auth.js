@@ -4,8 +4,8 @@ FAM.Auth = (() => {
 
   // ── API Base Resolution ──
   // Same-origin /api/v1/auth only works when the page is served by the backend
-  // (combined Render instance) or by a front whose /api/* is proxied to it
-  // (Netlify). Any other host must call the production API explicitly.
+  // (combined Render instance). Any other host must call the production API
+  // explicitly.
   function resolveApiBase() {
     if (window.FAM_API_BASE) return window.FAM_API_BASE;
     const host = window.location.hostname;
@@ -13,7 +13,6 @@ FAM.Auth = (() => {
       'localhost',
       '127.0.0.1',
       'fam-website-wq2e.onrender.com',
-      'flamingoaurmaina.netlify.app',
     ];
     if (sameOriginApiHosts.includes(host)) return '/api/v1/auth';
     return 'https://fam-website-wq2e.onrender.com/api/v1/auth';

@@ -45,7 +45,6 @@ const corsOptions = {
     const allowedOrigins = [
       'https://fam-website-wq2e.onrender.com',
       'https://famorg-website.onrender.com',
-      'https://flamingoaurmaina.netlify.app',
       'http://localhost:5173',
       'http://localhost:5000',
       'http://localhost:8765',

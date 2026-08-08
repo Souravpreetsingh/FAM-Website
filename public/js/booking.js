@@ -140,43 +140,11 @@
   }
 
   var serverPrice = null;
-  var priceFetchPending = false;
 
   function fetchServerPrice(callback) {
-    if (priceFetchPending) return;
-    if (!state.checkIn || !state.checkOut || !state.tripType) {
-      if (callback) callback(null);
-      return;
-    }
-    priceFetchPending = true;
-    var payload = {
-      roomId: state.tripType,
-      checkIn: state.checkIn.toISOString().slice(0, 10),
-      checkOut: state.checkOut.toISOString().slice(0, 10),
-      addons: state.addons,
-      rooms: state.rooms
-    };
-    fetch('/.netlify/functions/calculate-price', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).then(function(r) {
-      return r.json();
-    }).then(function(data) {
-      priceFetchPending = false;
-      if (data.error) {
-        console.error('Server price error:', data.error);
-        if (callback) callback(null);
-        return;
-      }
-      serverPrice = data;
-      updatePrice();
-      if (callback) callback(data);
-    }).catch(function(err) {
-      priceFetchPending = false;
-      console.error('Server price fetch failed:', err);
-      if (callback) callback(null);
-    });
+    var data = calcPrice();
+    serverPrice = data;
+    if (callback) callback(data);
   }
 
   function smoothScroll(el) {
