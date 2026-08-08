@@ -2,7 +2,24 @@ const FAM = window.FAM || {};
 FAM.Auth = (() => {
   'use strict';
 
-  const API_BASE = '/api/v1/auth';
+  // ── API Base Resolution ──
+  // Same-origin /api/v1/auth only works when the page is served by the backend
+  // (combined Render instance) or by a front whose /api/* is proxied to it
+  // (Netlify). Any other host must call the production API explicitly.
+  function resolveApiBase() {
+    if (window.FAM_API_BASE) return window.FAM_API_BASE;
+    const host = window.location.hostname;
+    const sameOriginApiHosts = [
+      'localhost',
+      '127.0.0.1',
+      'fam-website-wq2e.onrender.com',
+      'flamingoaurmaina.netlify.app',
+    ];
+    if (sameOriginApiHosts.includes(host)) return '/api/v1/auth';
+    return 'https://fam-website-wq2e.onrender.com/api/v1/auth';
+  }
+
+  const API_BASE = resolveApiBase();
   const STORAGE_KEY = 'fam_auth';
 
   // ── Token Management ──
@@ -31,7 +48,7 @@ FAM.Auth = (() => {
   // ── API Helpers ──
 
   async function apiRequest(endpoint, options = {}) {
-    const { method = 'POST', body, useAuth = true } = options;
+    const { method = 'POST', body, useAuth = true, errorMessage = 'Request failed. Please try again.' } = options;
     const headers = { 'Content-Type': 'application/json' };
 
     if (useAuth) {
@@ -78,16 +95,24 @@ FAM.Auth = (() => {
         continue;
       }
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        const err = new Error(data.message || 'Request failed');
-        err.status = response.status;
-        err.errors = data.errors || [];
-        throw err;
+      const text = await response.text();
+      let data = {};
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          data = {};
+        }
       }
 
-      return data;
+      if (response.ok && data && data.success === true) {
+        return data;
+      }
+
+      const err = new Error((data && data.message) || errorMessage);
+      err.status = response.status;
+      err.errors = (data && data.errors) || [];
+      throw err;
     }
 
     throw lastError || new Error('Request failed. Please try again.');
@@ -110,6 +135,7 @@ FAM.Auth = (() => {
     const data = await apiRequest('/register', {
       body: userData,
       useAuth: false,
+      errorMessage: 'Unable to create your account right now. Please try again.',
     });
     return data;
   }
@@ -186,7 +212,7 @@ FAM.Auth = (() => {
       }
     } catch (e) { /* ignore */ }
 
-    const response = await fetch('/api/v1/auth/oauth/start', {
+    const response = await fetch(`${API_BASE}/oauth/start`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ provider, redirectTo }),

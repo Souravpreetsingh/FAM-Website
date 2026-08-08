@@ -27,6 +27,7 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "cdnjs.cloudflare.com", "unpkg.com", "instant.page", "fonts.googleapis.com"],
+      scriptSrcAttr: ["'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com", "fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https://*.googleusercontent.com", "https://*.supabase.co", "https://images.unsplash.com"],
       fontSrc: ["'self'", "fonts.gstatic.com", "https:", "data:"],
@@ -40,7 +41,24 @@ app.use(helmet({
 }));
 
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || '*',
+  origin(origin, callback) {
+    const allowedOrigins = [
+      'https://fam-website-wq2e.onrender.com',
+      'https://famorg-website.onrender.com',
+      'https://flamingoaurmaina.netlify.app',
+      'http://localhost:5173',
+      'http://localhost:5000',
+      'http://localhost:8765',
+      ...String(process.env.FRONTEND_URL || '')
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean),
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Origin not allowed by CORS'));
+  },
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
