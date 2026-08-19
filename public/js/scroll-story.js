@@ -31,11 +31,12 @@
     if (window.matchMedia('(pointer: coarse)').matches) return;
     if ('ontouchstart' in window) return;
     lenis = new Lenis({
-      lerp: 0.07,
-      wheelMultiplier: 1.0,
+      duration: 1.2,
+      easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+      orientation: 'vertical',
       smoothWheel: true,
-      syncTouch: true,
-      touchMultiplier: 1.5,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.5
     });
     if (typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined') {
       lenis.on('scroll', ScrollTrigger.update);

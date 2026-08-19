@@ -65,16 +65,7 @@
   }
 
   function spawnLeaves() {
-    if (prefersReducedMotion) return;
-    if (window.innerWidth < 1024) return;
-    var container = document.getElementById('seasonal-leaves');
-    if (container) container.remove();
-    container = document.createElement('div');
-    container.id = 'seasonal-leaves';
-    document.body.appendChild(container);
-    for (var i = 0; i < 6; i++) {
-      createLeaf(container);
-    }
+    return;
   }
 
   function destroyLeaves() {
