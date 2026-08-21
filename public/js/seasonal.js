@@ -190,32 +190,38 @@
     if (toggle._scrollInit) return;
     toggle._scrollInit = true;
 
-    var ticking = false;
+    var hero = document.querySelector('[data-scroll-hero], .hero-root');
+    if (!hero) return;
 
-    function onScroll() {
-      var hero = document.querySelector('[data-scroll-hero], .hero-root');
-      if (!hero) {
-        toggle.classList.remove('hidden');
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            toggle.classList.remove('hidden');
+          } else {
+            toggle.classList.add('hidden');
+          }
+        });
+      }, { threshold: 0 });
+      observer.observe(hero);
+    } else {
+      var ticking = false;
+      function onScroll() {
+        var rect = hero.getBoundingClientRect();
+        if (rect.bottom <= 0) {
+          toggle.classList.add('hidden');
+        } else {
+          toggle.classList.remove('hidden');
+        }
         ticking = false;
-        return;
       }
-      var rect = hero.getBoundingClientRect();
-      if (rect.bottom <= 0) {
-        toggle.classList.add('hidden');
-      } else {
-        toggle.classList.remove('hidden');
-      }
-      ticking = false;
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(onScroll);
+        }
+      }, { passive: true });
     }
-
-    window.addEventListener('scroll', function () {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(onScroll);
-      }
-    }, { passive: true });
-
-    onScroll();
   }
 
   /* --- Init --- */

@@ -1,4 +1,4 @@
-var CACHE_NAME = 'fam-v10';
+var CACHE_NAME = 'fam-v24072808';
 
 function offlineFallback() {
   return new Response(

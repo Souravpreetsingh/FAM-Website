@@ -110,29 +110,6 @@
     });
   };
 
-  FAM.Animations.initLenis = function() {
-    if (typeof Lenis === 'undefined') return;
-    if (FAM.lenis) return;
-    if (window.matchMedia('(pointer: coarse)').matches) return;
-    if ('ontouchstart' in window) return;
-    var lenis = new Lenis({
-      duration: 1.2,
-      easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
-      orientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.5
-    });
-    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-      lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
-    } else {
-      function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-      requestAnimationFrame(raf);
-    }
-    FAM.lenis = lenis;
-  };
-
   FAM.Animations.init = function(opts) {
     opts = opts || {};
     var mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -150,7 +127,6 @@
     if (opts.parallax !== false) FAM.Animations.initParallax();
     if (opts.cardParallax !== false) FAM.Animations.initCardParallax();
     if (opts.gsap !== false) FAM.Animations.initGSAPReveal();
-    if (opts.lenis !== false) FAM.Animations.initLenis();
   };
 
   global.FAM = FAM;

@@ -784,9 +784,8 @@ main {
   padding: 0;
 }
 
-/* ------ Smooth Scroll ------ */
+/* ------ Smooth Scroll (handled by Lenis) ------ */
 html {
-  scroll-behavior: smooth;
 }
 
 /* ------ Base ------ */
@@ -796,6 +795,29 @@ body {
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+}
+
+/* ------ Prevent Layout Shift for Images ------ */
+img[loading="lazy"] {
+  content-visibility: auto;
+  contain-intrinsic-size: 100px 100px;
+}
+
+/* Fallback for containers with fixed height */
+.img-container,
+[class*="h-\\["] img,
+[style*="height:"] img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Ensure images in aspect-ratio containers maintain layout */
+.aspect-ratio-bg,
+[style*="aspect-ratio"] img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* ------ Typography utilities ------ */

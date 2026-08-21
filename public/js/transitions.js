@@ -220,47 +220,6 @@ document.querySelectorAll('.nav-book-btn, .nav-signin-btn, .btn-primary, .btn-se
   }
 });
 
-if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-  
-  gsap.utils.toArray('section:not(.hero-root), .mt-hero, .ex-hero, .editorial-card, .experience-card, .explore-card, .trip-planner-wrap, .tp-card, .fam-map-wrap, .planner-wrap, .cta-section, .map-section, .booking-bar, footer').forEach(function(el){
-    var isCard = el.classList.contains('editorial-card') || el.classList.contains('experience-card') || el.classList.contains('explore-card');
-    if (isCard) {
-      gsap.fromTo(el, { y: 40, opacity: 0, scale: 0.97 }, {
-        y: 0, opacity: 1, scale: 1, duration: 1, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 85%', once: true }
-      });
-    } else {
-      gsap.fromTo(el, { y: 40, opacity: 0 }, {
-        y: 0, opacity: 1, duration: 1.2, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 85%', once: true }
-      });
-    }
-  });
-  
-  gsap.utils.toArray('h1, h2, h3, h4:not(nav *)').forEach(function(h){
-    gsap.fromTo(h, { y: 24, opacity: 0 }, {
-      y: 0, opacity: 1, duration: 0.8, ease: 'power2.out',
-      scrollTrigger: { trigger: h, start: 'top 80%', once: true }
-    });
-  });
-  
-  gsap.utils.toArray('img:not(nav img):not(footer img):not(.hero-bg-img):not(.ex-hero-bg):not([class*="marker"])').forEach(function(img){
-    if (img.closest('.map-svg-wrap')) return;
-    gsap.fromTo(img, { scale: 1.05, opacity: 0 }, {
-      scale: 1, opacity: 1, duration: 1.2, ease: 'power3.out',
-      scrollTrigger: { trigger: img, start: 'top 85%', once: true }
-    });
-  });
-  
-  gsap.utils.toArray('.card-btn, .btn-primary, .btn-secondary, .hero-btn-primary, .hero-btn-secondary, .explore-btn, .tp-btn, .bb-cta').forEach(function(btn){
-    gsap.fromTo(btn, { y: 16, opacity: 0 }, {
-      y: 0, opacity: 1, duration: 0.6, ease: 'power2.out',
-      scrollTrigger: { trigger: btn, start: 'top 90%', once: true }
-    });
-  });
-}
-
 var loading = document.querySelector('.pt-loading');
 if (!loading && document.readyState !== 'complete') {
   if (!window.matchMedia('(prefers-reduced-motion:reduce)').matches) {

@@ -608,59 +608,71 @@
   /* === Overlap Prevention === */
   function initOverlapPrevention() {
     if (window.innerWidth > 767) return;
-    var ticking = false;
 
-    function getCriticalSections() {
-      var sectionIds = ['ai-trip-planner', 'tp-section'];
-      var result = [];
-      sectionIds.forEach(function (id) {
-        var el = document.getElementById(id);
-        if (el) result.push(el);
+    var btn = document.getElementById('concierge-btn');
+    if (!btn) return;
+
+    var sectionIds = ['ai-trip-planner', 'tp-section'];
+    var criticalSections = [];
+    sectionIds.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) criticalSections.push(el);
+    });
+
+    document.querySelectorAll('section, div').forEach(function(el) {
+      var text = el.textContent || '';
+      if (text.indexOf('Find Your Perfect Stay') !== -1 && el.children.length > 2) {
+        var section = el.closest('section') || el;
+        if (criticalSections.indexOf(section) === -1) criticalSections.push(section);
+      }
+    });
+
+    if (!criticalSections.length) return;
+
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function(entries) {
+        var hide = false;
+        entries.forEach(function(entry) {
+          var rect = entry.boundingClientRect;
+          var zone = window.innerWidth < 480 ? 150 : 130;
+          if (rect.bottom > window.innerHeight - zone && rect.top < window.innerHeight) {
+            hide = true;
+          }
+        });
+        if (hide) { btn.classList.add('hide-overlap'); }
+        else { btn.classList.remove('hide-overlap'); }
+      }, {
+        rootMargin: '0px',
+        threshold: [0, 0.1, 0.5, 1.0]
       });
-      document.querySelectorAll('section, div').forEach(function (el) {
-        var text = el.textContent || '';
-        if (text.indexOf('Find Your Perfect Stay') !== -1 && el.children.length > 2) {
-          var section = el.closest('section') || el;
-          if (result.indexOf(section) === -1) result.push(section);
-        }
+      criticalSections.forEach(function(section) {
+        observer.observe(section);
       });
-      return result;
-    }
-
-    function onScroll() {
-      var btn = document.getElementById('concierge-btn');
-      if (!btn) { ticking = false; return; }
-
+    } else {
+      var ticking = false;
       var zone = window.innerWidth < 480 ? 150 : 130;
-      var sections = getCriticalSections();
-      var hide = false;
-
-      for (var i = 0; i < sections.length; i++) {
-        var rect = sections[i].getBoundingClientRect();
-        if (rect.bottom > window.innerHeight - zone && rect.top < window.innerHeight) {
-          hide = true;
-          break;
+      function onScroll() {
+        var hide = false;
+        for (var i = 0; i < criticalSections.length; i++) {
+          var rect = criticalSections[i].getBoundingClientRect();
+          if (rect.bottom > window.innerHeight - zone && rect.top < window.innerHeight) {
+            hide = true;
+            break;
+          }
         }
+        if (hide) { btn.classList.add('hide-overlap'); }
+        else { btn.classList.remove('hide-overlap'); }
+        ticking = false;
       }
-
-      if (hide) { btn.classList.add('hide-overlap'); }
-      else { btn.classList.remove('hide-overlap'); }
-
-      ticking = false;
-    }
-
-    window.addEventListener('scroll', function () {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(onScroll);
-      }
-    }, { passive: true });
-
-    onScroll();
-
-    window.addEventListener('resize', function () {
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(onScroll);
+        }
+      }, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
       onScroll();
-    }, { passive: true });
+    }
   }
 
   function init() {
