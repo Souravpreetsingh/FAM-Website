@@ -63,7 +63,8 @@ var FAMExploreSlideshow = (function() {
     photos.forEach(function(p, i) {
       var loading = (i === 0) ? 'eager' : 'lazy';
       var decoding = (i === 0) ? 'sync' : 'async';
-      html += '<div class="fam-explore-slide' + (i === 0 ? ' active' : '') + '" data-index="' + i + '">' +
+      var kenClass = (i % 2 === 1) ? ' ken-alt' : '';
+      html += '<div class="fam-explore-slide' + (i === 0 ? ' active' : '') + kenClass + '" data-index="' + i + '">' +
         '<img src="' + p.src + '" alt="' + p.alt + '" loading="' + loading + '" decoding="' + decoding + '" /></div>';
     });
 
@@ -95,7 +96,14 @@ var FAMExploreSlideshow = (function() {
     inst.current = index;
 
     slides.forEach(function(s, i) {
-      s.classList.toggle('active', i === index);
+      if (i === index) {
+        // Force Ken Burns animation restart by reflowing
+        s.classList.remove('active');
+        s.offsetHeight; // trigger reflow
+        s.classList.add('active');
+      } else {
+        s.classList.remove('active');
+      }
     });
   }
 

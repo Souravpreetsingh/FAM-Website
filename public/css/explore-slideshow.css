@@ -1,5 +1,6 @@
 /* ========================================
    FAM Explore Slideshow — Fully Automatic
+   Ken Burns + Premium Crossfade
    ======================================== */
 
 /* --- Card image container override ---
@@ -18,8 +19,8 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: opacity;
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
   pointer-events: none;
 }
 .explore-card .fam-explore-slide.active {
@@ -33,13 +34,28 @@
   display: block;
 }
 
-/* --- Hover zoom on active slide --- */
+/* --- Ken Burns: slow cinematic zoom while each slide is active --- */
+.explore-card .fam-explore-slide.active img {
+  animation: famKenBurns 4.5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+.explore-card .fam-explore-slide.ken-alt.active img {
+  animation-name: famKenBurnsAlt;
+}
+
+/* --- Hover zoom stacks on top of Ken Burns --- */
 .explore-card:hover .fam-explore-slide.active img {
   transform: scale(1.08);
+  animation: none;
 }
-.explore-card .fam-explore-slide.active img {
-  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-  will-change: transform;
+
+/* --- Ken Burns keyframes --- */
+@keyframes famKenBurns {
+  0%   { transform: scale(1.0); }
+  100% { transform: scale(1.07); }
+}
+@keyframes famKenBurnsAlt {
+  0%   { transform: scale(1.04) translateX(-1.5%); }
+  100% { transform: scale(1.07) translateX(1.5%); }
 }
 
 /* --- Placeholder (destinations without photos) --- */
@@ -69,6 +85,15 @@
   .explore-card .fam-explore-slide img {
     object-position: center;
   }
+  /* Gentler Ken Burns on mobile */
+  @keyframes famKenBurns {
+    0%   { transform: scale(1.0); }
+    100% { transform: scale(1.04); }
+  }
+  @keyframes famKenBurnsAlt {
+    0%   { transform: scale(1.02) translateX(-1%); }
+    100% { transform: scale(1.04) translateX(1%); }
+  }
 }
 
 /* --- Reduced Motion --- */
@@ -76,10 +101,10 @@
   .explore-card .fam-explore-slide {
     transition: none;
   }
+  .explore-card .fam-explore-slide.active img {
+    animation: none;
+  }
   .explore-card:hover .fam-explore-slide.active img {
     transform: none;
-  }
-  .explore-card .fam-explore-slide.active img {
-    transition: none;
   }
 }
