@@ -39,6 +39,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 <link rel="stylesheet" href="../css/style.css?v=24" />
+<link rel="stylesheet" href="../css/explore-slideshow.css" />
 <style>
     body { margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f4ec; color: #1a1c1a; }
     img { max-width: 100%; height: auto; }
@@ -141,8 +142,8 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
       <!-- Jibhi Waterfall -->
-      <div class="explore-card reveal" style="transition-delay:0ms">
-        <img src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=800&q=80" alt="Jibhi Waterfall" loading="lazy" />
+      <div class="explore-card reveal" data-explore-destination="jibhi-waterfall" style="transition-delay:0ms">
+        <img src="../images/explore/jibhi-waterfall/01.jpeg" alt="Jibhi Waterfall" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -158,8 +159,8 @@
       </div>
 
       <!-- Jalori Pass -->
-      <div class="explore-card reveal" style="transition-delay:80ms">
-        <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80" alt="Jalori Pass" loading="lazy" />
+      <div class="explore-card reveal" data-explore-destination="jalori-pass" style="transition-delay:80ms">
+        <img src="../images/explore/jalori-pass/01.jpeg" alt="Jalori Pass" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -175,8 +176,8 @@
       </div>
 
       <!-- Serolsar Lake -->
-      <div class="explore-card reveal" style="transition-delay:160ms">
-        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=80" alt="Serolsar Lake" loading="lazy" />
+      <div class="explore-card reveal" data-explore-destination="serolsar-lake" style="transition-delay:160ms">
+        <img src="../images/explore/serolsar-lake/01.jpg" alt="Serolsar Lake" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -192,8 +193,8 @@
       </div>
 
       <!-- Chehni Kothi -->
-      <div class="explore-card reveal" style="transition-delay:240ms">
-        <img src="https://images.unsplash.com/photo-1517021897933-0e0319cfbc28?w=800&q=80" alt="Chehni Kothi" loading="lazy" />
+      <div class="explore-card reveal" data-explore-destination="chehni-kothi" style="transition-delay:240ms">
+        <img src="../images/explore/chehni-kothi/01.jpeg" alt="Chehni Kothi" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -209,8 +210,8 @@
       </div>
 
       <!-- Mini Thailand -->
-      <div class="explore-card reveal" style="transition-delay:320ms">
-        <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80" alt="Mini Thailand" loading="lazy" />
+      <div class="explore-card reveal" data-explore-destination="mini-thailand" style="transition-delay:320ms">
+        <img src="../images/explore/mini-thailand/01.jpeg" alt="Mini Thailand" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -226,8 +227,8 @@
       </div>
 
       <!-- Tirthan Valley -->
-      <div class="explore-card reveal" style="transition-delay:400ms">
-        <img src="https://images.unsplash.com/photo-1511497584788-876760111969?w=800&q=80" alt="Tirthan Valley" loading="lazy" />
+      <div class="explore-card reveal" data-explore-destination="tirthan-valley" style="transition-delay:400ms">
+        <img src="../images/explore/tirthan-valley/01.jpg" alt="Tirthan Valley" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -243,8 +244,8 @@
       </div>
 
       <!-- Great Himalayan National Park -->
-      <div class="explore-card reveal" style="transition-delay:480ms">
-        <img src="https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800&q=80" alt="Great Himalayan National Park" loading="lazy" />
+      <div class="explore-card reveal" data-explore-destination="great-himalayan-national-park" style="transition-delay:480ms">
+        <img src="../images/explore/great-himalayan-national-park/01.jpeg" alt="Great Himalayan National Park" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -260,8 +261,8 @@
       </div>
 
       <!-- Forest Trails -->
-      <div class="explore-card reveal" style="transition-delay:560ms">
-        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80" alt="Forest Trails" loading="lazy" />
+      <div class="explore-card reveal" data-explore-destination="forest-trails" style="transition-delay:560ms">
+        <img src="../images/explore/forest-trails/01.jpg" alt="Forest Trails" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -605,6 +606,8 @@
   <script src="../js/concierge.js?v=3"></script>
   <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
   <script src="../js/page-transitions.js"></script>
+  <script src="../js/explore-data.js"></script>
+  <script src="../js/explore-slideshow.js"></script>
   <script src="/js/service-worker.js"></script>
 </body>
 </html>
