@@ -68,6 +68,20 @@ const roomSchema = new mongoose.Schema(
       type: String,
       default: 'King',
     },
+    type: {
+      type: String,
+      default: '',
+    },
+    weekendPrice: {
+      type: Number,
+      min: [0, 'Weekend price must be a positive number'],
+      default: null,
+    },
+    seasonalPrice: {
+      type: Number,
+      min: [0, 'Seasonal price must be a positive number'],
+      default: null,
+    },
     amenities: [
       {
         type: String,

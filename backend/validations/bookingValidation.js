@@ -9,6 +9,9 @@ const createBookingSchema = z.object({
       adults: z.number().int().positive().min(1),
       children: z.number().int().min(0).optional().default(0),
     }),
+    guestName: z.string().trim().min(2).max(150).optional(),
+    guestEmail: z.string().trim().email().optional().nullable().default(null),
+    guestPhone: z.string().trim().max(20).optional().default('').refine((v) => v === '' || v.length >= 7, 'Guest phone must be at least 7 characters if provided'),
     specialRequests: z.string().max(500).optional().default(''),
   }),
 });

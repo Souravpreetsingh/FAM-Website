@@ -3,10 +3,35 @@ const Room = require('../models/Room');
 const User = require('../models/User');
 const Review = require('../models/Review');
 const Contact = require('../models/Contact');
+const AuditLog = require('../models/AuditLog');
+const AvailabilityBlock = require('../models/AvailabilityBlock');
 const ApiResponse = require('../utils/ApiResponse');
 const ApiError = require('../utils/ApiError');
 const asyncHandler = require('../utils/asyncHandler');
+const authService = require('../services/authService');
+const availabilityService = require('../services/availabilityService');
+const auditService = require('../services/auditService');
 const { paginate, paginationResponse } = require('../utils/pagination');
+
+const adminLogin = asyncHandler(async (req, res) => {
+  const { email, password } = req.validated?.body || req.body || {};
+  const result = await authService.login(email, password);
+  if (!result.user || result.user.role !== 'admin') {
+    throw ApiError.forbidden('Admin access required');
+  }
+
+  await auditService.log(req, {
+    action: 'admin_login',
+    entity: 'auth',
+    entityId: String(result.user._id),
+  });
+
+  ApiResponse.success({
+    user: result.user,
+    accessToken: result.accessToken,
+    refreshToken: result.refreshToken,
+  }, 'Admin login successful').send(res);
+});
 
 const getDashboard = asyncHandler(async (req, res) => {
   const [
@@ -67,6 +92,50 @@ const getDashboard = asyncHandler(async (req, res) => {
     .sort({ createdAt: -1 })
     .limit(5);
 
+  const today = availabilityService.toDay(new Date());
+  const tomorrow = new Date(today);
+  tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+
+  const [todayCheckIns, todayCheckOuts, upcomingStays, roomsStatus] = await Promise.all([
+    Booking.countDocuments({
+      checkIn: { $gte: today, $lt: tomorrow },
+      status: { $in: ['pending', 'confirmed', 'checked_in', 'checked_out'] },
+    }),
+    Booking.countDocuments({
+      checkOut: { $gte: today, $lt: tomorrow },
+      status: { $in: ['checked_in', 'checked_out', 'confirmed'] },
+    }),
+    Booking.countDocuments({
+      checkIn: { $gte: tomorrow },
+      checkOut: { $gte: tomorrow },
+      status: { $in: ['pending', 'confirmed'] },
+    }),
+    Room.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }]),
+  ]);
+
+  const roomsList = await Room.find({}, 'name slug status isAvailable');
+  const availabilitySnapshot = await Promise.all(
+    roomsList.map(async (room) => {
+      const day = await availabilityService.getBlocksForRange(room._id, today, tomorrow);
+      const activeBooking = await Booking.findOne({
+        room: room._id,
+        checkIn: { $lt: tomorrow },
+        checkOut: { $gt: today },
+        status: { $in: ['pending', 'confirmed', 'checked_in', 'checked_out'] },
+      });
+      return {
+        roomId: room._id,
+        name: room.name,
+        slug: room.slug,
+        status: room.status,
+        isAvailable: room.isAvailable,
+        blockedToday: day.length > 0,
+        blockKind: day.length ? day[0].kind : null,
+        currentGuest: activeBooking ? (activeBooking.guestName || null) : null,
+      };
+    })
+  );
+
   ApiResponse.success({
     stats: {
       totalBookings,
@@ -79,6 +148,14 @@ const getDashboard = asyncHandler(async (req, res) => {
       pendingReviews,
       unreadMessages,
       totalRevenue,
+    },
+    availability: {
+      today: availabilityService.formatDay(today),
+      todayCheckIns,
+      todayCheckOuts,
+      upcomingStays,
+      roomsByStatus: roomsStatus.map((s) => ({ status: s._id, count: s.count })),
+      rooms: availabilitySnapshot,
     },
     recentBookings,
     revenueByMonth: revenueByMonth.map((r) => ({
@@ -346,7 +423,72 @@ const getBookingTrends = asyncHandler(async (req, res) => {
   }).send(res);
 });
 
+const getAdminRooms = asyncHandler(async (req, res) => {
+  const { page, limit, skip } = paginate(req.query.page, req.query.limit);
+  const filter = {};
+  if (req.query.search) {
+    filter.$or = [
+      { name: { $regex: req.query.search, $options: 'i' } },
+      { slug: { $regex: req.query.search, $options: 'i' } },
+    ];
+  }
+  if (req.query.status) {
+    filter.status = req.query.status === 'available' ? { $in: ['available'] } : req.query.status;
+  }
+
+  const [rooms, total] = await Promise.all([
+    Room.find(filter).sort({ createdAt: 1 }).skip(skip).limit(limit),
+    Room.countDocuments(filter),
+  ]);
+
+  const today = availabilityService.toDay(new Date());
+  const tomorrow = new Date(today);
+  tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+
+  const bookedRoomIds = await Booking.find({
+    checkIn: { $lt: tomorrow },
+    checkOut: { $gt: today },
+    status: { $in: ['pending', 'confirmed', 'checked_in', 'checked_out'] },
+  }).distinct('room');
+
+  const blockedRoomIds = await AvailabilityBlock.distinct('room', {
+    date: { $gte: today, $lt: tomorrow },
+  });
+
+  ApiResponse.success({
+    rooms: rooms.map((room) => {
+      const r = room.toObject();
+      r.currentlyOccupied = bookedRoomIds.some((id) => String(id) === String(room._id));
+      r.blockedToday = blockedRoomIds.some((id) => String(id) === String(room._id));
+      return r;
+    }),
+    pagination: paginationResponse(total, page, limit),
+  }).send(res);
+});
+
+const getAuditLogs = asyncHandler(async (req, res) => {
+  const { page, limit, skip } = paginate(req.query.page, req.query.limit);
+  const filter = {};
+  if (req.query.adminEmail) filter.adminEmail = { $regex: req.query.adminEmail, $options: 'i' };
+  if (req.query.action) filter.action = { $regex: req.query.action, $options: 'i' };
+
+  const [logs, total] = await Promise.all([
+    AuditLog.find(filter)
+      .populate('admin', 'name email')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit),
+    AuditLog.countDocuments(filter),
+  ]);
+
+  ApiResponse.success({
+    logs,
+    pagination: paginationResponse(total, page, limit),
+  }).send(res);
+});
+
 module.exports = {
+  adminLogin,
   getDashboard,
   getUsers,
   getUserDetails,
@@ -357,4 +499,6 @@ module.exports = {
   getOccupancyReport,
   getPopularRooms,
   getBookingTrends,
+  getAdminRooms,
+  getAuditLogs,
 };

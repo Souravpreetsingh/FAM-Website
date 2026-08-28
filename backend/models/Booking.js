@@ -5,7 +5,39 @@ const bookingSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: [true, 'User is required'],
+      default: null,
+    },
+    guestName: {
+      type: String,
+      trim: true,
+      maxlength: [50, 'Guest name cannot exceed 50 characters'],
+      default: '',
+    },
+    guestEmail: {
+      type: String,
+      lowercase: true,
+      trim: true,
+      default: '',
+    },
+    guestPhone: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    source: {
+      type: String,
+      enum: ['ONLINE', 'OFFLINE', 'PHONE', 'WALK-IN', 'ADMIN'],
+      default: 'ONLINE',
+    },
+    notes: {
+      type: String,
+      maxlength: [1000, 'Notes cannot exceed 1000 characters'],
+      default: '',
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
     },
     room: {
       type: mongoose.Schema.Types.ObjectId,
@@ -132,6 +164,9 @@ bookingSchema.index({ user: 1, status: 1 });
 bookingSchema.index({ room: 1, checkIn: 1, checkOut: 1 });
 bookingSchema.index({ status: 1, createdAt: -1 });
 bookingSchema.index({ checkIn: 1, checkOut: 1 });
+bookingSchema.index({ source: 1 });
+bookingSchema.index({ guestName: 1 });
+bookingSchema.index({ guestPhone: 1 });
 
 bookingSchema.pre('save', function (next) {
   if (this.isModified('status')) {
@@ -179,7 +214,7 @@ bookingSchema.methods.canCancel = function () {
 
 bookingSchema.statics.statusFlow = {
   draft: ['pending', 'cancelled'],
-  pending: ['confirmed', 'cancelled', 'expired'],
+  pending: ['confirmed', 'cancelled', 'expired', 'no_show'],
   confirmed: ['checked_in', 'cancelled', 'no_show', 'expired'],
   checked_in: ['checked_out', 'cancelled'],
   checked_out: ['completed'],

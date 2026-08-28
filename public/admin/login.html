@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAM Admin — Login</title>
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body class="login-body">
+  <main class="login-card">
+    <div class="login-brand">FAM · Admin</div>
+    <p class="login-sub">Flamingo aur Maina — front desk &amp; operations</p>
+    <form id="loginForm" novalidate>
+      <label class="field">
+        <span>Email</span>
+        <input type="email" id="email" name="email" autocomplete="username" required />
+      </label>
+      <label class="field">
+        <span>Password</span>
+        <input type="password" id="password" name="password" autocomplete="current-password" required />
+      </label>
+      <p class="form-error" id="loginError" hidden></p>
+      <button type="submit" id="loginBtn" class="btn btn-primary btn-block">Sign in</button>
+    </form>
+    <p class="login-foot"><a href="/">← Back to website</a></p>
+  </main>
+  <script src="js/auth.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

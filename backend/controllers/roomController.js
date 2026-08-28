@@ -1,9 +1,11 @@
 const Room = require('../models/Room');
 const Booking = require('../models/Booking');
+const AvailabilityBlock = require('../models/AvailabilityBlock');
 const ApiResponse = require('../utils/ApiResponse');
 const ApiError = require('../utils/ApiError');
 const asyncHandler = require('../utils/asyncHandler');
 const cloudinaryService = require('../services/cloudinaryService');
+const availabilityService = require('../services/availabilityService');
 const { paginate, paginationResponse } = require('../utils/pagination');
 
 const getRooms = asyncHandler(async (req, res) => {
@@ -44,9 +46,9 @@ const getRooms = asyncHandler(async (req, res) => {
   }
 
   if (req.query.checkIn && req.query.checkOut) {
-    const checkInDate = new Date(req.query.checkIn);
-    const checkOutDate = new Date(req.query.checkOut);
-    const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+    const checkInDate = availabilityService.toDay(req.query.checkIn);
+    const checkOutDate = availabilityService.toDay(req.query.checkOut);
+    const nights = availabilityService.nightsBetween(checkInDate, checkOutDate);
 
     const bookedRoomIds = await Booking.find({
       checkIn: { $lt: checkOutDate },
@@ -54,7 +56,12 @@ const getRooms = asyncHandler(async (req, res) => {
       status: { $in: ['pending', 'confirmed', 'checked_in', 'checked_out'] },
     }).distinct('room');
 
-    filter._id = { $nin: bookedRoomIds };
+    const blockedRoomIds = await AvailabilityBlock.distinct('room', {
+      date: { $gte: checkInDate, $lt: checkOutDate },
+    });
+
+    const excluded = new Set([...bookedRoomIds.map(String), ...blockedRoomIds.map(String)]);
+    if (excluded.size) filter._id = { $nin: Array.from(excluded) };
     filter.isAvailable = true;
     filter.status = { $nin: ['maintenance', 'out_of_service'] };
   }
@@ -78,9 +85,9 @@ const getRooms = asyncHandler(async (req, res) => {
   };
 
   if (req.query.checkIn && req.query.checkOut) {
-    const checkInDate = new Date(req.query.checkIn);
-    const checkOutDate = new Date(req.query.checkOut);
-    const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+    const checkInDate = availabilityService.toDay(req.query.checkIn);
+    const checkOutDate = availabilityService.toDay(req.query.checkOut);
+    const nights = availabilityService.nightsBetween(checkInDate, checkOutDate);
     responseData.rooms = rooms.map((room) => {
       const obj = room.toObject();
       obj.totalPrice = (room.discountPrice || room.pricePerNight) * nights;
@@ -159,8 +166,8 @@ const deleteRoomImage = asyncHandler(async (req, res) => {
 
 const checkAvailability = asyncHandler(async (req, res) => {
   const { checkIn, checkOut, roomId } = req.validated?.query || req.query;
-  const checkInDate = new Date(checkIn);
-  const checkOutDate = new Date(checkOut);
+  const checkInDate = availabilityService.toDay(checkIn);
+  const checkOutDate = availabilityService.toDay(checkOut);
 
   if (checkInDate >= checkOutDate) throw ApiError.badRequest('Check-out must be after check-in');
 
@@ -168,39 +175,36 @@ const checkAvailability = asyncHandler(async (req, res) => {
   if (roomId) filter._id = roomId;
 
   const rooms = await Room.find(filter);
-  const availability = rooms.map((room) => {
-    const isBooked = room.bookedDates.some((bd) => {
-      const bdDate = new Date(bd.date);
-      return bdDate >= checkInDate && bdDate < checkOutDate && bd.count >= room.totalRooms;
-    });
+  const nights = availabilityService.nightsBetween(checkInDate, checkOutDate);
 
-    const isMaintenance = room.isDateBlockedForMaintenance(checkInDate) ||
-      room.isDateBlockedForMaintenance(new Date(checkOutDate.getTime() - 86400000));
+  const availability = await Promise.all(
+    rooms.map(async (room) => {
+      const stay = await availabilityService.checkStay(room, checkInDate, checkOutDate);
+      const totalPrice = (room.discountPrice || room.pricePerNight) * nights;
 
-    const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
-    const totalPrice = (room.discountPrice || room.pricePerNight) * nights;
-
-    return {
-      room: {
-        _id: room._id,
-        name: room.name,
-        slug: room.slug,
-        pricePerNight: room.pricePerNight,
-        discountPrice: room.discountPrice,
-        capacity: room.capacity,
-        thumbnail: room.thumbnail,
-        amenities: room.amenities,
-        bedType: room.bedType,
-        status: room.status,
-        minStay: room.minStay,
-        maxStay: room.maxStay,
-      },
-      available: !isBooked && !isMaintenance && room.status !== 'maintenance' && room.status !== 'out_of_service',
-      nights,
-      totalPrice,
-      reason: isBooked ? 'fully_booked' : isMaintenance ? 'maintenance' : room.status === 'maintenance' ? 'maintenance' : room.status === 'out_of_service' ? 'out_of_service' : null,
-    };
-  });
+      return {
+        room: {
+          _id: room._id,
+          name: room.name,
+          slug: room.slug,
+          pricePerNight: room.pricePerNight,
+          discountPrice: room.discountPrice,
+          capacity: room.capacity,
+          thumbnail: room.thumbnail,
+          amenities: room.amenities,
+          bedType: room.bedType,
+          status: room.status,
+          minStay: room.minStay,
+          maxStay: room.maxStay,
+        },
+        available: stay.available,
+        nights,
+        totalPrice,
+        reason: stay.available ? null : stay.reason,
+        conflictingDates: stay.available ? [] : (stay.conflictingDates || []),
+      };
+    })
+  );
 
   ApiResponse.success({ availability, checkIn, checkOut }).send(res);
 });
@@ -226,6 +230,10 @@ const updateRoomStatus = asyncHandler(async (req, res) => {
 
   if (status === 'available') {
     room.isAvailable = true;
+    if (room.maintenanceBlocks.length > 0) {
+      await availabilityService.releaseManualBlocks(room._id, 'MAINTENANCE', null, null).catch(() => {});
+      room.maintenanceBlocks = [];
+    }
     await room.save();
   } else if (status === 'maintenance' || status === 'out_of_service') {
     room.isAvailable = false;
@@ -242,8 +250,8 @@ const blockForMaintenance = asyncHandler(async (req, res) => {
   const room = await Room.findById(req.params.id);
   if (!room) throw ApiError.notFound('Room not found');
 
-  const start = new Date(startDate);
-  const end = new Date(endDate);
+  const start = availabilityService.toDay(startDate);
+  const end = availabilityService.toDay(endDate);
   if (start >= end) throw ApiError.badRequest('End date must be after start date');
 
   const overlapping = await Booking.findOne({
@@ -254,6 +262,19 @@ const blockForMaintenance = asyncHandler(async (req, res) => {
   });
   if (overlapping) {
     throw ApiError.conflict('Cannot block dates: there are existing bookings in this period');
+  }
+
+  // Claim the ledger first — if the exact dates are already occupied, we abort
+  // without mutating anything.
+  const nights = availabilityService.generateNights(start, end);
+  try {
+    await availabilityService.acquireDates(room, nights, {
+      kind: 'MAINTENANCE',
+      createdBy: req.user ? req.user._id : null,
+      reason: reason || 'Scheduled maintenance',
+    });
+  } catch {
+    throw ApiError.conflict('Cannot block dates: some dates are already occupied');
   }
 
   room.maintenanceBlocks.push({
@@ -272,6 +293,8 @@ const removeMaintenanceBlock = asyncHandler(async (req, res) => {
   const room = await Room.findById(req.params.id);
   if (!room) throw ApiError.notFound('Room not found');
 
+  const block = room.maintenanceBlocks.find((b) => b._id.toString() === req.params.blockId);
+
   room.maintenanceBlocks = room.maintenanceBlocks.filter(
     (block) => block._id.toString() !== req.params.blockId
   );
@@ -281,6 +304,15 @@ const removeMaintenanceBlock = asyncHandler(async (req, res) => {
     room.isAvailable = true;
   }
   await room.save();
+
+  if (block) {
+    await availabilityService.releaseManualBlocks(
+      room._id,
+      'MAINTENANCE',
+      block.startDate,
+      block.endDate
+    ).catch(() => {});
+  }
 
   ApiResponse.success({ room }, 'Maintenance block removed').send(res);
 });
@@ -295,6 +327,16 @@ const getRoomCalendar = asyncHandler(async (req, res) => {
 
   const rooms = await Room.find({});
 
+  const blocksInMonth = await AvailabilityBlock.find({
+    date: { $gte: new Date(startDate), $lt: endDate },
+  }).lean();
+  const blocksByRoom = new Map();
+  blocksInMonth.forEach((b) => {
+    const key = b.room.toString();
+    if (!blocksByRoom.has(key)) blocksByRoom.set(key, []);
+    blocksByRoom.get(key).push(b);
+  });
+
   const allRoomsStats = await Promise.all(
     rooms.map(async (room) => {
       const bookings = await Booking.find({
@@ -303,6 +345,8 @@ const getRoomCalendar = asyncHandler(async (req, res) => {
         checkOut: { $gte: startDate },
         status: { $in: ['confirmed', 'checked_in', 'checked_out', 'pending'] },
       });
+
+      const roomBlocks = blocksByRoom.get(room._id.toString()) || [];
 
       const days = [];
       for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
@@ -313,14 +357,17 @@ const getRoomCalendar = asyncHandler(async (req, res) => {
           return dateStr >= ci && dateStr < co;
         });
         const isMaintenance = room.isDateBlockedForMaintenance(d);
+        const blockHere = roomBlocks.find((b) => availabilityService.formatDay(b.date) === dateStr);
         days.push({
           date: dateStr,
-          available: room.isDateAvailable(d) && !isMaintenance,
+          available: room.isDateAvailable(d) && !isMaintenance && !blockHere,
           booked: dayBookings.length > 0,
           bookingCount: dayBookings.length,
           maintenance: isMaintenance,
-          checkIns: dayBookings.filter((b) => new Date(b.checkIn).toISOString().split('T')[0] === dateStr).map((b) => ({ bookingId: b._id, guest: b.user?.toString() })),
-          checkOuts: dayBookings.filter((b) => new Date(b.checkOut).toISOString().split('T')[0] === dateStr).map((b) => ({ bookingId: b._id, guest: b.user?.toString() })),
+          blocked: !!blockHere,
+          blockKind: blockHere ? blockHere.kind : null,
+          checkIns: dayBookings.filter((b) => new Date(b.checkIn).toISOString().split('T')[0] === dateStr).map((b) => ({ bookingId: b._id, guest: b.guestName || (b.user ? b.user.toString() : '') })),
+          checkOuts: dayBookings.filter((b) => new Date(b.checkOut).toISOString().split('T')[0] === dateStr).map((b) => ({ bookingId: b._id, guest: b.guestName || (b.user ? b.user.toString() : '') })),
         });
       }
 

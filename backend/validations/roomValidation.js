@@ -24,6 +24,12 @@ const createRoomSchema = z.object({
     size: z.number().positive().optional().default(0),
     unit: z.string().optional().default('sq ft'),
     bedType: z.string().optional().default('King'),
+    type: z
+      .enum(['Standard', 'Deluxe', 'Suite', 'Luxury', 'Villa', 'Other'])
+      .optional()
+      .default('Standard'),
+    weekendPrice: z.number().positive().nullable().optional().default(null),
+    seasonalPrice: z.number().positive().nullable().optional().default(null),
     amenities: z.array(z.string()).optional().default([]),
     isAvailable: z.boolean().optional().default(true),
     isFeatured: z.boolean().optional().default(false),
@@ -57,6 +63,9 @@ const updateRoomSchema = z.object({
     size: z.number().positive().optional(),
     unit: z.string().optional(),
     bedType: z.string().optional(),
+    type: z.enum(['Standard', 'Deluxe', 'Suite', 'Luxury', 'Villa', 'Other']).optional(),
+    weekendPrice: z.number().positive().nullable().optional(),
+    seasonalPrice: z.number().positive().nullable().optional(),
     amenities: z.array(z.string()).optional(),
     isAvailable: z.boolean().optional(),
     isFeatured: z.boolean().optional(),

@@ -1028,6 +1028,31 @@
     renderCal('checkin');
     renderCal('checkout');
     updateGuestTotal();
+
+    // Prefill dates/guests from the Rooms page availability modal
+    // (?checkin=&checkout=&guests=)
+    try {
+      var qp = new URLSearchParams(window.location.search);
+      var pci = qp.get('checkin');
+      var pco = qp.get('checkout');
+      var pg = qp.get('guests');
+      if (pci) booking.checkIn = new Date(pci + 'T00:00:00');
+      if (pco) booking.checkOut = new Date(pco + 'T00:00:00');
+      if (pg) {
+        var g = parseInt(pg, 10) || 2;
+        booking.adults = Math.min(g, booking.room ? booking.room.capacity : 4);
+        booking.children = Math.max(0, g - booking.adults);
+        document.getElementById('adults-count').textContent = booking.adults;
+        document.getElementById('children-count').textContent = booking.children;
+        updateGuestTotal();
+      }
+      if (pci && pco) {
+        renderCal('checkin');
+        renderCal('checkout');
+        updateDateDisplay();
+      }
+    } catch (e) { /* ignore */ }
+
     goToStep(preselectedRoom ? 1 : 0);
     if (preselectedRoom) {
       focusBookingSection('step-dates');
@@ -1154,6 +1179,7 @@
   <script src="/js/mobile-nav.js"></script>
   <script src="/js/seasonal.js"></script>
   <script src="/js/concierge.js?v=3"></script>
+  <script src="/js/booking-data.js"></script>
   <script src="/js/animations.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -9,10 +9,41 @@ const { startJobs } = require('./jobs/index');
 
 const PORT = process.env.PORT || 5000;
 
+const ensureAdmin = async () => {
+  const User = require('./models/User');
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASSWORD;
+  if (!email || !password) {
+    console.warn('ADMIN_EMAIL / ADMIN_PASSWORD not set — skipping admin bootstrap');
+    return;
+  }
+  const normalized = String(email).trim().toLowerCase();
+  const existing = await User.findOne({ email: normalized });
+  if (existing) {
+    if (existing.role !== 'admin') {
+      existing.role = 'admin';
+      existing.isVerified = true;
+      await existing.save();
+      console.log('Promoted existing user to admin');
+    }
+    return;
+  }
+  await User.create({
+    name: 'Administrator',
+    email: normalized,
+    password,
+    role: 'admin',
+    isVerified: true,
+    phone: '',
+  });
+  console.log('Admin user auto-created');
+};
+
 const startServer = async () => {
   try {
     await connectDB();
     configureCloudinary();
+    await ensureAdmin();
 
     const http = require('http');
     const server = http.createServer(app);
