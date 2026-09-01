@@ -83,7 +83,7 @@
         var match = bySlug[room.id] || bySlug[(room.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')];
         if (match) {
           room._id = match._id;
-          if (match.status === 'maintenance' || match.status === 'out_of_service') room._down = true;
+          if (match.isAvailable === false || match.status === 'maintenance' || match.status === 'out_of_service') room._down = true;
           if (match.discountPrice || match.pricePerNight) room.price = match.discountPrice || match.pricePerNight;
         }
       });

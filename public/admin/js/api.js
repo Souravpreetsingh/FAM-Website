@@ -1,5 +1,6 @@
 const AdminAPI = (function () {
   const BASE = '/api/v1/admin';
+  const V1 = '/api/v1';
 
   function attemptRefresh() {
     return fetch(BASE + '/refresh', {
@@ -14,12 +15,13 @@ const AdminAPI = (function () {
     }).catch(function () { return false; });
   }
 
-  function request(path, opts, allowRefresh) {
+  function request(path, opts, allowRefresh, base) {
     opts = opts || {};
+    const root = base || BASE;
     const headers = Object.assign({}, opts.headers || {});
     if (opts.body !== undefined) headers['Content-Type'] = 'application/json';
 
-    return fetch(BASE + path, Object.assign({}, opts, {
+    return fetch(root + path, Object.assign({}, opts, {
       credentials: 'include',
       headers: headers,
     })).then(function (res) {
@@ -29,7 +31,7 @@ const AdminAPI = (function () {
         if (res.status === 401) {
           if (allowRefresh !== false) {
             return attemptRefresh().then(function (refreshed) {
-              if (refreshed) return request(path, opts, false);
+              if (refreshed) return request(path, opts, false, root);
               window.AdminAuth.logout();
               throw new Error('Session expired. Please log in again.');
             });
@@ -60,6 +62,21 @@ const AdminAPI = (function () {
     },
     del: function (path) {
       return request(path, { method: 'DELETE' });
+    },
+    // Public (DB-owned) room resources — full CRUD used by the Rooms view.
+    room: {
+      get: function (id) {
+        return request('/rooms/' + id, null, true, V1);
+      },
+      create: function (data) {
+        return request('/rooms', { method: 'POST', body: JSON.stringify(data || {}) }, true, V1);
+      },
+      update: function (id, data) {
+        return request('/rooms/' + id, { method: 'PUT', body: JSON.stringify(data || {}) }, true, V1);
+      },
+      remove: function (id) {
+        return request('/rooms/' + id, { method: 'DELETE' }, true, V1);
+      },
     },
   };
 })();

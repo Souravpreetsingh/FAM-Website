@@ -147,10 +147,10 @@
     </div>
 
     <!-- Room Listings -->
-    <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-section-gap flex flex-col gap-32">
+    <section id="rooms-section" class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-section-gap flex flex-col gap-32">
 
       <!-- Flamingo 1 -->
-      <article id="flamingo-1" class="flex flex-col lg:flex-row items-center gap-16 reveal">
+      <article id="flamingo-1" data-room-slug="flamingo-1" class="flex flex-col lg:flex-row items-center gap-16 reveal">
         <div class="w-full lg:w-3/5 h-[500px] relative rounded-3xl overflow-hidden shadow-2xl">
           <div data-fam-slideshow="flamingo-1" class="absolute inset-0"></div>
           <div class="absolute bottom-6 left-6 right-6 z-10 flex gap-4 overflow-x-auto scrollbar-hide">
@@ -479,8 +479,9 @@
   <script src="../js/concierge.js?v=3"></script>
   <script src="../js/mobile-nav.js"></script>
   <script src="../js/room-data.js?v=1"></script>
-  <script src="../js/room-slideshow.js?v=2"></script>
-  <script src="../js/room-availability.js?v=1"></script>
+  <script src="../js/room-slideshow.js?v=3"></script>
+  <script src="../js/room-availability.js?v=2"></script>
+  <script src="../js/rooms-live.js?v=1"></script>
   <script>
     function initRoomsPage() {
       if (typeof FAM !== 'undefined' && FAM.Animations) {

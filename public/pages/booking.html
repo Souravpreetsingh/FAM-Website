@@ -678,14 +678,19 @@
     var delay = index * 80;
     var amens = room.amenities.slice(0, 5);
     var more = room.amenities.length - 5;
+    var down = !!room._down;
     var sel = booking.room && booking.room.id === room.id;
     var selectedBadge = sel ? '<div class="absolute top-4 right-4 z-10 check-wrap">' +
           '<div class="px-3 py-1.5 rounded-full bg-accent-gold text-surface font-body text-[10px] font-bold tracking-[0.15em] uppercase">Selected</div>' +
         '</div>' : '';
-    return '<div class="room-card page-fade-in bg-surface-container-low rounded-[20px] overflow-hidden border border-outline-variant/20' + (sel ? ' selected' : '') + '" data-id="' + room.id + '" style="animation-delay:' + delay + 'ms">' +
+    var downBadge = down ? '<div class="absolute top-4 z-10" style="left:16px">' +
+          '<div style="background:rgba(74,18,18,.88);color:#fff;padding:6px 12px;border-radius:999px;font-weight:700;font-size:10px;letter-spacing:.15em;text-transform:uppercase">Unavailable</div>' +
+        '</div>' : '';
+    return '<div class="room-card page-fade-in bg-surface-container-low rounded-[20px] overflow-hidden border border-outline-variant/20' + (sel ? ' selected' : '') + (down ? ' room-card-down' : '') + '" data-id="' + room.id + '" style="animation-delay:' + delay + 'ms">' +
       '<div class="relative h-56 md:h-64 overflow-hidden">' +
         '<img src="' + room.image + '" alt="' + room.name + '" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />' +
         '<div class="absolute inset-0 bg-gradient-to-t from-surface/80 via-surface/20 to-transparent"></div>' +
+        downBadge +
         selectedBadge +
         '<div class="absolute bottom-4 left-5 right-5 flex items-center gap-2 text-on-surface-variant/70 font-body text-[12px]">' +
           '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="5.5" cy="5" r="2.5"/><path d="M1 12.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5" stroke-linecap="round"/></svg>' +
@@ -707,7 +712,7 @@
           }).join('') +
           (more > 0 ? '<div class="flex items-center gap-2.5"><div class="w-[14px]"></div><span class="text-on-surface-variant/30 font-body text-[12px]">+' + more + ' more</span></div>' : '') +
         '</div>' +
-        '<button class="select-btn w-full py-3.5 rounded-full font-body text-[12px] font-medium tracking-[0.15em] uppercase transition-all duration-400 ' + (sel ? 'bg-[#1f7a45] text-white border-[#1f7a45]' : 'bg-primary text-on-primary hover:bg-primary-container border border-transparent') + '">' + (sel ? 'Selected' : 'Select Room') + '</button>' +
+        '<button class="select-btn w-full py-3.5 rounded-full font-body text-[12px] font-medium tracking-[0.15em] uppercase transition-all duration-400 ' + (sel ? 'bg-[#1f7a45] text-white border-[#1f7a45]' : down ? 'bg-outline-variant/30 text-on-surface-variant/50 border border-transparent cursor-not-allowed' : 'bg-primary text-on-primary hover:bg-primary-container border border-transparent') + '"' + (down ? ' disabled' : '') + '>' + (sel ? 'Selected' : down ? 'Unavailable' : 'Select Room') + '</button>' +
       '</div>' +
     '</div>';
   }
@@ -715,6 +720,7 @@
   // ====== MOBILE ROOM CARD BUILDER ======
   function buildMobileRoomCard(room, index) {
     var delay = index * 80;
+    var down = !!room._down;
     var sel = booking.room && booking.room.id === room.id;
     var amenityIcons = room.amenities.map(function(a) {
       var icon = AMENITY_ICONS[a] || 'check_circle';
@@ -722,9 +728,11 @@
     }).join('');
     var rulesHtml = 'Check-in: ' + HOTEL_INFO.checkIn + '<br>Check-out: ' + HOTEL_INFO.checkOut + '<br>No smoking · No parties · Quiet hours after 10 PM';
     var selectedBadge = sel ? '<div class="m-selected-badge">Selected</div>' : '';
-    return '<div class="room-card' + (sel ? ' selected' : '') + '" data-id="' + room.id + '" style="animation-delay:' + delay + 'ms">' +
+    var downBadge = down ? '<div class="m-selected-badge" style="background:rgba(74,18,18,.88);width:auto;padding:5px 12px">Unavailable</div>' : '';
+    return '<div class="room-card' + (sel ? ' selected' : '') + (down ? ' room-card-down' : '') + '" data-id="' + room.id + '" style="animation-delay:' + delay + 'ms">' +
       '<div class="m-card-image">' +
         '<img src="' + room.image + '" alt="' + room.name + '" loading="lazy" />' +
+        downBadge +
         selectedBadge +
         '<div class="m-price-badge">₹' + room.price.toLocaleString('en-IN') + '<span>/night</span></div>' +
       '</div>' +
@@ -745,7 +753,7 @@
           '<div class="m-section-label">Maximum Occupancy</div>' +
           '<p class="m-rules-text">' + room.capacity + ' guests maximum including adults and children. Infants under 2 stay free.</p>' +
         '</div>' +
-        '<button class="m-select-btn py-3.5 rounded-full font-body text-[12px] font-medium tracking-[0.15em] uppercase transition-all duration-400 ' + (sel ? 'bg-[#1f7a45] text-white' : 'bg-primary text-on-primary hover:bg-primary-container') + '">' + (sel ? 'Selected' : 'Select Room') + '</button>' +
+        '<button class="m-select-btn py-3.5 rounded-full font-body text-[12px] font-medium tracking-[0.15em] uppercase transition-all duration-400 ' + (sel ? 'bg-[#1f7a45] text-white' : down ? 'bg-outline-variant/30 text-on-surface-variant/50 cursor-not-allowed' : 'bg-primary text-on-primary hover:bg-primary-container') + '"' + (down ? ' disabled' : '') + '>' + (sel ? 'Selected' : down ? 'Unavailable' : 'Select Room') + '</button>' +
       '</div>' +
     '</div>';
   }
@@ -807,6 +815,7 @@
 
   function selectRoom(id) {
     var room = ROOMS.find(function(r) { return r.id === id; });
+    if (!room || room._down) return;
     booking.room = room;
     document.getElementById('max-guests-count').textContent = room.capacity;
     if (booking.adults + booking.children > room.capacity) {

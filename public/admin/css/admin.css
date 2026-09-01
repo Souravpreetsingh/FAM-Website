@@ -106,6 +106,7 @@ body {
 .btn-ghost:hover { color: var(--text); }
 .btn-block { display: block; width: 100%; margin-top: 10px; }
 .btn-xs { padding: 3px 8px; font-size: 12px; margin-right: 4px; margin-bottom: 4px; }
+.btn-sm { padding: 5px 12px; font-size: 13px; }
 
 .input, input[type="date"], input[type="number"], input[type="email"], select, textarea {
   width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background: #fff; color: var(--text);
@@ -116,6 +117,9 @@ body {
 .field { display: block; margin-bottom: 10px; }
 .field span { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field.checkbox > span { margin-bottom: 6px; }
+.field.checkbox label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); padding: 4px 0; cursor: pointer; }
+.field.checkbox input { width: auto; }
 .muted { color: var(--muted); }
 
 .pager { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; gap: 10px; }

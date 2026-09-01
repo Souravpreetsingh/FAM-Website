@@ -62,24 +62,42 @@
   }
 
   var cards = [];
-  var seen = {};
-  document.querySelectorAll('[data-fam-slideshow]').forEach(function (el) {
-    var slug = el.getAttribute('data-fam-slideshow') || '';
-    if (!slug || seen[slug]) return;
-    var card = findCard(el);
-    if (!card) return;
-    var anchor = null;
-    var links = card.querySelectorAll('a[href*="booking.html?room="]');
-    for (var i = 0; i < links.length; i++) {
-      if (links[i].getAttribute('href').indexOf('room=' + slug) !== -1) { anchor = links[i]; break; }
-    }
-    if (!anchor) return;
-    seen[slug] = true;
-    cards.push({ slug: slug, card: card, anchor: anchor });
-  });
 
+  function buildCards() {
+    cards = [];
+    var seen = {};
+    document.querySelectorAll('[data-fam-slideshow]').forEach(function (el) {
+      var slug = el.getAttribute('data-fam-slideshow') || '';
+      if (!slug || seen[slug]) return;
+      var card = findCard(el);
+      if (!card) return;
+      var anchor = null;
+      var links = card.querySelectorAll('a[href*="booking.html?room="]');
+      var any = [];
+      for (var i = 0; i < links.length; i++) {
+        if (links[i].getAttribute('href').indexOf('room=' + slug) !== -1) { anchor = links[i]; break; }
+        any.push(links[i]);
+      }
+      if (!anchor && any.length) anchor = any[0];
+      if (!anchor) return;
+      seen[slug] = true;
+      cards.push({ slug: slug, card: card, anchor: anchor });
+    });
+  }
+
+  function showBar() {
+    bar.style.display = cards.length ? '' : 'none';
+  }
+
+  buildCards();
+  showBar();
   if (!cards.length) {
-    bar.style.display = 'none';
+    window.FAMAvailBar = {
+      reinit: function () {
+        buildCards();
+        showBar();
+      },
+    };
     return;
   }
 
@@ -186,4 +204,12 @@
   btn.addEventListener('click', runCheck);
   checkInEl.addEventListener('input', runCheck);
   checkOutEl.addEventListener('input', runCheck);
+
+  window.FAMAvailBar = {
+    reinit: function () {
+      buildCards();
+      showBar();
+    },
+    runCheck: runCheck,
+  };
 })();
