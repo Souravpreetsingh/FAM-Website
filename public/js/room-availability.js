@@ -18,24 +18,25 @@
     return d.getFullYear() + '-' + m + '-' + day;
   }
 
-  function addDays(dateStr, n) {
-    var d = new Date(dateStr + 'T00:00:00');
-    d.setDate(d.getDate() + n);
-    return ymd(d);
-  }
+  function today() { var d = new Date(); d.setHours(0, 0, 0, 0); return d; }
+  function tomorrow() { var d = today(); d.setDate(d.getDate() + 1); return d; }
+  function sameDay(a, b) { return a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
+  function fmtShort(d) { return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }); }
+  function getDaysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
+  function getFirstDay(y, m) { return new Date(y, m, 1).getDay(); }
 
   var style = document.createElement('style');
   style.textContent =
     '#fam-avail-bar{margin:0 auto 56px;max-width:1200px;padding:0 16px}' +
     '@media(min-width:768px){#fam-avail-bar{padding:0 32px}}' +
-    '.fam-avail-bar-inner{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px;padding:22px 24px;background:#0b3b2c;border-radius:18px;box-shadow:0 14px 34px rgba(11,59,44,.18)}' +
-    '.fam-avail-bar-inner .booking-field{flex:1 1 180px;min-width:160px}' +
-    '.fam-avail-bar-inner .booking-label{color:#f5efe2}' +
-    '.fam-avail-bar-inner .booking-input{border-color:#3c5f4e;background:#faf9f6;border-radius:12px}' +
+    '.fam-avail-bar-inner{display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px;padding:22px 24px;background:#0b3b2c;border-radius:18px;box-shadow:0 14px 34px rgba(11,59,44,.18)}' +
+    '.fam-avail-bar-inner .booking-field{flex:1 1 280px;min-width:280px}' +
+    '@media(max-width:560px){.fam-avail-bar-inner .booking-field{flex-basis:100%;min-width:0}}' +
+    '.fam-avail-bar-inner .booking-label{color:#f5efe2;display:block;margin-bottom:6px;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}' +
     '.fam-avail-btn{flex:0 0 auto;border:none;border-radius:12px;padding:15px 26px;background:#c9a86a;color:#0b3b2c;font-weight:700;font-size:15px;letter-spacing:.02em;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:inherit}' +
     '.fam-avail-btn:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(0,0,0,.25)}' +
-    '.fam-avail-btn:disabled{opacity:.6;cursor:wait;transform:none}' +
-    '.fam-avail-note{flex-basis:100%;color:#f5efe2;font-size:13px;margin-top:2px}' +
+    '.fam-avail-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}' +
+    '.fam-avail-note{flex-basis:100%;color:#f5efe2;font-size:13px;margin-top:4px}' +
     '.fam-avail-note.err{color:#ffd6d6}' +
     '.fam-avail-status{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:6px 12px;border-radius:999px;margin-bottom:14px;width:max-content}' +
     '.fam-avail-status .fam-avail-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}' +
@@ -43,7 +44,22 @@
     '.fam-avail-ok .fam-avail-dot{background:#1f7a45}' +
     '.fam-avail-no{background:rgba(186,26,26,.11);color:#b91c1c}' +
     '.fam-avail-no .fam-avail-dot{background:#b91c1c}' +
-    'a.fam-avail-disabled{pointer-events:none;opacity:.5;filter:grayscale(.5)}';
+    'a.fam-avail-disabled{pointer-events:none;opacity:.5;filter:grayscale(.5)}' +
+    // Same booking-wizard calendar used on the booking page
+    '.fam-cal-card{background:#fff;border-radius:12px;padding:10px 12px;box-shadow:0 2px 8px rgba(0,0,0,.10)}' +
+    '.fam-cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}' +
+    '.fam-cal-nav{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid #e2e3df;background:transparent;cursor:pointer;color:#414942;font-size:14px;line-height:1}' +
+    '.fam-cal-nav:hover{border-color:#c9a86a;color:#c9a86a}' +
+    '.fam-cal-month{font-size:13px;font-weight:600;color:#1a1c1a;font-family:"Playfair Display",Georgia,serif}' +
+    '.fam-cal-week{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}' +
+    '.fam-cal-week span{text-align:center;font-size:10px;color:#727972;font-weight:500;padding:2px 0}' +
+    '.fam-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}' +
+    '.fam-cal-day{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;border:none;background:transparent;color:#1a1c1a;font-weight:400;cursor:pointer;padding:0}' +
+    '.fam-cal-day:hover:not(.disabled):not(.selected){background:#f2ede0}' +
+    '.fam-cal-day.selected{background:#c9a86a;color:#fff;font-weight:600}' +
+    '.fam-cal-day.disabled{color:#d9dad6;cursor:not-allowed}' +
+    '.fam-cal-display{margin-top:8px;font-size:12px;color:#f5efe2}' +
+    '.fam-cal-display b{color:#fff;font-weight:600}';
   document.head.appendChild(style);
 
   var bar = document.getElementById('fam-avail-bar');
@@ -53,6 +69,7 @@
   var checkOutEl = document.getElementById('fam-avail-checkout');
   var btn = document.getElementById('fam-avail-check');
   var note = document.getElementById('fam-avail-note');
+  if (!checkInEl || !checkOutEl) return;
 
   function findCard(el) {
     var c = el.closest('article');
@@ -101,20 +118,111 @@
     return;
   }
 
-  checkInEl.min = ymd(new Date());
-  checkOutEl.min = addDays(ymd(new Date()), 1);
+  // ── Replace native date inputs with the booking-wizard style calendars ──
+  var dates = { checkIn: null, checkOut: null };
+  var calState = { year: today().getFullYear(), month: today().getMonth() };
 
-  checkInEl.addEventListener('change', function () {
-    if (checkInEl.value) {
-      var min = addDays(checkInEl.value, 1);
-      if (checkOutEl.min < min) { checkOutEl.min = min; checkOutEl.value = ''; }
-    }
-  });
-
-  function setNote(msg, isErr) {
-    note.textContent = msg || '';
-    note.className = 'fam-avail-note' + (isErr ? ' err' : '');
+  function upgradeField(prefix) {
+    var input = document.getElementById('fam-avail-' + prefix);
+    if (!input) return;
+    var field = input.closest('.booking-field') || input.parentElement;
+    var card = document.createElement('div');
+    card.className = 'fam-cal-card';
+    card.setAttribute('data-cal', prefix);
+    var display = document.createElement('div');
+    display.className = 'fam-cal-display';
+    display.setAttribute('data-cal-display', prefix);
+    display.textContent = 'No date selected';
+    field.insertBefore(display, input);
+    field.insertBefore(card, display);
+    input.remove();
   }
+
+  function minDateFor(prefix) {
+    if (prefix === 'checkout' && dates.checkIn) {
+      var d = new Date(dates.checkIn.getTime());
+      d.setDate(d.getDate() + 1);
+      return d;
+    }
+    return tomorrow();
+  }
+
+  function renderCal(prefix) {
+    var card = document.querySelector('[data-cal="' + prefix + '"]');
+    if (!card) return;
+    var y = calState.year, m = calState.month;
+    var days = getDaysInMonth(y, m);
+    var first = getFirstDay(y, m);
+    var minDate = minDateFor(prefix);
+    var value = prefix === 'checkout' ? dates.checkOut : dates.checkIn;
+    var monthLabel = new Date(y, m).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+
+    var html = '<div class="fam-cal-head">' +
+      '<button type="button" class="fam-cal-nav" data-cal-dir="-1" data-prefix="' + prefix + '" aria-label="Previous month">‹</button>' +
+      '<span class="fam-cal-month">' + monthLabel + '</span>' +
+      '<button type="button" class="fam-cal-nav" data-cal-dir="1" data-prefix="' + prefix + '" aria-label="Next month">›</button>' +
+      '</div>' +
+      '<div class="fam-cal-week">' + ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(function (d) { return '<span>' + d + '</span>'; }).join('') + '</div>' +
+      '<div class="fam-cal-grid">';
+
+    for (var i = 0; i < first; i++) html += '<div></div>';
+
+    for (var d = 1; d <= days; d++) {
+      var date = new Date(y, m, d); date.setHours(0, 0, 0, 0);
+      var disabled = date < minDate;
+      var selected = sameDay(date, value);
+      html += '<button type="button" class="fam-cal-day' + (disabled ? ' disabled' : '') + (selected ? ' selected' : '') + '" data-prefix="' + prefix + '" data-year="' + y + '" data-month="' + m + '" data-day="' + d + '"' + (disabled ? ' disabled' : '') + '>' + d + '</button>';
+    }
+
+    html += '</div>';
+    card.innerHTML = html;
+
+    card.querySelectorAll('.fam-cal-nav').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var dir = parseInt(b.getAttribute('data-cal-dir'), 10);
+        calState.month += dir;
+        if (calState.month < 0) { calState.month = 11; calState.year--; }
+        if (calState.month > 11) { calState.month = 0; calState.year++; }
+        renderCal('checkin');
+        renderCal('checkout');
+      });
+    });
+
+    card.querySelectorAll('.fam-cal-day:not(.disabled)').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var year = parseInt(b.getAttribute('data-year'), 10);
+        var month = parseInt(b.getAttribute('data-month'), 10);
+        var day = parseInt(b.getAttribute('data-day'), 10);
+        var date = new Date(year, month, day); date.setHours(0, 0, 0, 0);
+        if (b.getAttribute('data-prefix') === 'checkout') {
+          dates.checkOut = date;
+        } else {
+          dates.checkIn = date;
+          if (dates.checkOut && dates.checkOut <= date) dates.checkOut = null;
+        }
+        renderCal('checkin');
+        renderCal('checkout');
+        updateDisplays();
+        if (dates.checkIn && dates.checkOut) runCheck();
+      });
+    });
+  }
+
+  function updateDisplays() {
+    ['checkin', 'checkout'].forEach(function (prefix) {
+      var el = document.querySelector('[data-cal-display="' + prefix + '"]');
+      if (!el) return;
+      var v = prefix === 'checkin' ? dates.checkIn : dates.checkOut;
+      el.innerHTML = v ? (prefix === 'checkin' ? 'Check-in: ' : 'Check-out: ') + '<b>' + fmtShort(v) + '</b>' : 'No date selected';
+    });
+    if (btn) btn.disabled = !(dates.checkIn && dates.checkOut);
+  }
+
+  upgradeField('checkin');
+  upgradeField('checkout');
+  renderCal('checkin');
+  renderCal('checkout');
+  updateDisplays();
 
   function anchorFor(card) {
     var links = card.querySelectorAll('a[href*="booking.html?room="]');
@@ -152,8 +260,8 @@
   }
 
   function runCheck() {
-    var ci = checkInEl.value;
-    var co = checkOutEl.value;
+    var ci = ymd(dates.checkIn);
+    var co = ymd(dates.checkOut);
     if (!ci) { setNote('Please select your check-in date.', true); return; }
     if (!co) { setNote('Please select your check-out date.', true); return; }
     if (co <= ci) { setNote('Check-out must be after check-in.', true); return; }
@@ -201,9 +309,12 @@
       });
   }
 
+  function setNote(msg, isErr) {
+    note.textContent = msg || '';
+    note.className = 'fam-avail-note' + (isErr ? ' err' : '');
+  }
+
   btn.addEventListener('click', runCheck);
-  checkInEl.addEventListener('input', runCheck);
-  checkOutEl.addEventListener('input', runCheck);
 
   window.FAMAvailBar = {
     reinit: function () {
@@ -211,5 +322,16 @@
       showBar();
     },
     runCheck: runCheck,
+    setDates: function (checkIn, checkOut) {
+      dates.checkIn = checkIn || null;
+      dates.checkOut = checkOut || null;
+      if (dates.checkIn) {
+        calState.year = dates.checkIn.getFullYear();
+        calState.month = dates.checkIn.getMonth();
+      }
+      renderCal('checkin');
+      renderCal('checkout');
+      updateDisplays();
+    },
   };
 })();
