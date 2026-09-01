@@ -1,18 +1,39 @@
 const AdminAPI = (function () {
   const BASE = '/api/v1/admin';
 
-  function request(path, opts) {
+  function attemptRefresh() {
+    return fetch(BASE + '/refresh', {
+      method: 'POST',
+      credentials: 'include',
+    }).then(function (res) {
+      if (!res.ok) return false;
+      return res.json().catch(function () { return false; }).then(function (body) {
+        if (body && body.data && body.data.user) window.AdminAuth.setUser(body.data.user);
+        return true;
+      });
+    }).catch(function () { return false; });
+  }
+
+  function request(path, opts, allowRefresh) {
     opts = opts || {};
     const headers = Object.assign({}, opts.headers || {});
     if (opts.body !== undefined) headers['Content-Type'] = 'application/json';
-    const t = window.AdminAuth.token();
-    if (t) headers['Authorization'] = 'Bearer ' + t;
 
-    return fetch(BASE + path, Object.assign({}, opts, { headers })).then(function (res) {
+    return fetch(BASE + path, Object.assign({}, opts, {
+      credentials: 'include',
+      headers: headers,
+    })).then(function (res) {
       return res.json().catch(function () {
         return null;
       }).then(function (body) {
         if (res.status === 401) {
+          if (allowRefresh !== false) {
+            return attemptRefresh().then(function (refreshed) {
+              if (refreshed) return request(path, opts, false);
+              window.AdminAuth.logout();
+              throw new Error('Session expired. Please log in again.');
+            });
+          }
           window.AdminAuth.logout();
           throw new Error('Session expired. Please log in again.');
         }

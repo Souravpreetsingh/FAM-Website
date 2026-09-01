@@ -7,6 +7,7 @@ const ApiError = require('../utils/ApiError');
 const asyncHandler = require('../utils/asyncHandler');
 const { createNotification } = require('./notificationController');
 const { paginate, paginationResponse } = require('../utils/pagination');
+const auditService = require('../services/auditService');
 const availabilityService = require('../services/availabilityService');
 
 const { generateNights, checkStay, acquireDates, releaseBookingDates } = availabilityService;
@@ -183,6 +184,12 @@ const createOfflineBooking = asyncHandler(async (req, res) => {
   });
 
   const booking = await Booking.findById(result.bookingId).populate('room').populate('user', 'name email phone');
+  await auditService.log(req, {
+    action: 'offline_booking_create',
+    entity: 'booking',
+    entityId: String(result.bookingId),
+    changes: { room: roomId, checkIn, checkOut, guests, totalAmount: result.totalAmount, source: source || 'OFFLINE', status: status || 'pending' },
+  });
   ApiResponse.created({ booking }, 'Reservation created successfully').send(res);
 });
 
@@ -336,6 +343,13 @@ const cancelBooking = asyncHandler(async (req, res) => {
     ).catch(() => {});
   }
 
+  await auditService.log(req, {
+    action: 'booking_cancel',
+    entity: 'booking',
+    entityId: String(booking._id),
+    changes: { room: String(booking.room), reason: booking.cancellationReason || '', wasAdmin: !!(req.user && req.user.role === 'admin') },
+  });
+
   ApiResponse.success({ booking }, 'Booking cancelled successfully').send(res);
 });
 
@@ -385,6 +399,13 @@ const confirmBooking = asyncHandler(async (req, res) => {
   if (historyEntry) historyEntry.changedBy = req.user?.email || 'admin';
   await booking.save();
 
+  await auditService.log(req, {
+    action: 'booking_confirm',
+    entity: 'booking',
+    entityId: String(booking._id),
+    changes: { room: String(booking.room), checkIn: booking.checkIn.toISOString(), checkOut: booking.checkOut.toISOString() },
+  });
+
   if (booking.user) {
     await createNotification(
       booking.user._id,
@@ -411,6 +432,13 @@ const checkInBooking = asyncHandler(async (req, res) => {
   if (historyEntry) historyEntry.changedBy = req.user?.email || 'admin';
   await booking.save();
 
+  await auditService.log(req, {
+    action: 'booking_check_in',
+    entity: 'booking',
+    entityId: String(booking._id),
+    changes: { room: String(booking.room), guest: booking.guestName || '' },
+  });
+
   await Room.findByIdAndUpdate(booking.room, { status: 'occupied' });
 
   ApiResponse.success({ booking }, 'Guest checked in successfully').send(res);
@@ -428,6 +456,13 @@ const checkOutBooking = asyncHandler(async (req, res) => {
   if (historyEntry) historyEntry.changedBy = req.user?.email || 'admin';
   await booking.save();
 
+  await auditService.log(req, {
+    action: 'booking_check_out',
+    entity: 'booking',
+    entityId: String(booking._id),
+    changes: { room: String(booking.room), guest: booking.guestName || '' },
+  });
+
   await Room.findByIdAndUpdate(booking.room, { status: 'cleaning' });
 
   ApiResponse.success({ booking }, 'Guest checked out successfully').send(res);
@@ -444,6 +479,13 @@ const markNoShow = asyncHandler(async (req, res) => {
   const historyEntry = booking.statusHistory.find((e) => e.status === 'no_show');
   if (historyEntry) historyEntry.changedBy = req.user?.email || 'admin';
   await booking.save();
+
+  await auditService.log(req, {
+    action: 'booking_no_show',
+    entity: 'booking',
+    entityId: String(booking._id),
+    changes: { room: String(booking.room), guest: booking.guestName || '' },
+  });
 
   ApiResponse.success({ booking }, 'Marked as no-show').send(res);
 });
@@ -481,6 +523,12 @@ const moveBookingRoom = asyncHandler(async (req, res) => {
   await booking.save();
 
   const populated = await Booking.findById(booking._id).populate('room');
+  await auditService.log(req, {
+    action: 'booking_move',
+    entity: 'booking',
+    entityId: String(booking._id),
+    changes: { fromRoom: String(oldRoom), toRoom: String(newRoomId), checkIn: booking.checkIn.toISOString(), checkOut: booking.checkOut.toISOString() },
+  });
   ApiResponse.success({ booking: populated }, 'Booking moved to new room').send(res);
 });
 
@@ -577,6 +625,21 @@ const updateReservation = asyncHandler(async (req, res) => {
   }
 
   await booking.save();
+
+  await auditService.log(req, {
+    action: 'reservation_update',
+    entity: 'booking',
+    entityId: String(booking._id),
+    changes: {
+      status: status || booking.status,
+      paymentStatus: paymentStatus || booking.paymentStatus,
+      room: targetRoomId ? String(targetRoomId) : undefined,
+      checkIn: newCheckIn ? newCheckIn.toISOString() : undefined,
+      checkOut: newCheckOut ? newCheckOut.toISOString() : undefined,
+      guests,
+      amountPaid,
+    },
+  });
 
   const populated = await Booking.findById(booking._id).populate('room').populate('user', 'name email phone');
   ApiResponse.success({ booking: populated }, 'Reservation updated successfully').send(res);

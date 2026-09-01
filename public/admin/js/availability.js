@@ -97,11 +97,11 @@
     const status = cell.dataset.status;
 
     let inner =
-      '<h3>Block ' + U.esc(roomName) + '</h3>' +
+      '<h3>' + U.esc(roomName) + '</h3>' +
       '<p class="muted">' + U.fmtDate(date) + ' · currently ' + (STATUS_META[status] ? STATUS_META[status].label : status) + '</p>' +
       (blockId
-        ? '<div class="modal-row"><button class="btn btn-danger" id="delBlockBtn">Remove block</button></div>'
-        : '<label class="field"><span>Kind</span><select id="blkKind"><option value="BLOCKED">Blocked</option><option value="RESERVED">Reserved (hold)</option></select></label>' +
+        ? '<div class="modal-row"><button class="btn btn-danger" id="delBlockBtn">Mark available (remove block)</button></div>'
+        : '<label class="field"><span>Kind</span><select id="blkKind"><option value="BLOCKED">Blocked</option><option value="RESERVED">Reserved (hold)</option><option value="MAINTENANCE">Maintenance</option></select></label>' +
           '<label class="field"><span>Reason</span><input id="blkReason" maxlength="500" placeholder="Optional" /></label>' +
           '<button class="btn btn-primary btn-block" id="saveBlockBtn">Apply</button>');
 
@@ -111,7 +111,7 @@
       document.getElementById('delBlockBtn').addEventListener('click', function () {
         window.AdminAPI.del('/availability/block/' + blockId).then(function () {
           window.AdminUI.closeModal();
-          window.AdminUI.toast('Block removed');
+          window.AdminUI.toast('Marked available');
           load();
         }).catch(function (e) { window.AdminUI.toast(e.message, true); });
       });
@@ -134,13 +134,13 @@
 
   function openRangeBlock() {
     const inner =
-      '<h3>Block date range</h3>' +
+      '<h3>Set availability for date range</h3>' +
       '<label class="field"><span>Room</span><select id="rbRoom"></select></label>' +
       '<label class="field"><span>Start</span><input type="date" id="rbStart" /></label>' +
       '<label class="field"><span>End (check-out)</span><input type="date" id="rbEnd" /></label>' +
-      '<label class="field"><span>Kind</span><select id="rbKind"><option value="BLOCKED">Blocked</option><option value="RESERVED">Reserved (hold)</option></select></label>' +
+      '<label class="field"><span>Status</span><select id="rbKind"><option value="BLOCKED">Unavailable (blocked)</option><option value="AVAILABLE">Available</option><option value="RESERVED">Reserved (hold)</option><option value="MAINTENANCE">Maintenance</option></select></label>' +
       '<label class="field"><span>Reason</span><input id="rbReason" maxlength="500" /></label>' +
-      '<button class="btn btn-primary btn-block" id="rbSave">Block</button>';
+      '<button class="btn btn-primary btn-block" id="rbSave">Apply</button>';
 
     window.AdminUI.openModal(inner);
 
@@ -158,15 +158,22 @@
     });
 
     document.getElementById('rbSave').addEventListener('click', function () {
-      window.AdminAPI.post('/availability/block', {
-        roomId: document.getElementById('rbRoom').value,
-        startDate: document.getElementById('rbStart').value,
-        endDate: document.getElementById('rbEnd').value,
-        reason: document.getElementById('rbReason').value,
-        kind: document.getElementById('rbKind').value,
-      }).then(function () {
+      const kind = document.getElementById('rbKind').value;
+      const roomId = document.getElementById('rbRoom').value;
+      const startDate = document.getElementById('rbStart').value;
+      const endDate = document.getElementById('rbEnd').value;
+      const apply = kind === 'AVAILABLE'
+        ? window.AdminAPI.post('/availability/clear', { roomId: roomId, startDate: startDate, endDate: endDate })
+        : window.AdminAPI.post('/availability/block', {
+            roomId: roomId,
+            startDate: startDate,
+            endDate: endDate,
+            reason: document.getElementById('rbReason').value,
+            kind: kind,
+          });
+      apply.then(function () {
         window.AdminUI.closeModal();
-        window.AdminUI.toast('Block created');
+        window.AdminUI.toast((kind === 'AVAILABLE' ? 'Marked available' : 'Blocked') + ' for selected dates');
         load();
       }).catch(function (e) { window.AdminUI.toast(e.message, true); });
     });

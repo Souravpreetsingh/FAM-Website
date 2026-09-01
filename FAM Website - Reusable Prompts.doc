@@ -1,0 +1,313 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<title>FAM Website - Reusable Prompt Library</title>
+<!--[if gte mso 9]>
+<xml>
+<w:WordDocument>
+<w:View>Print</w:View>
+<w:Zoom>100</w:Zoom>
+</w:WordDocument>
+</xml>
+<![endif]-->
+<style>
+@page Section1 { size: 595.3pt 841.9pt; margin: 56.7pt 56.7pt 56.7pt 56.7pt; }
+div.Section1 { page: Section1; }
+body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; color: #2b2b2b; line-height: 150%; }
+h1 { font-family: Georgia, 'Playfair Display', serif; font-size: 26pt; color: #0a341d; margin-bottom: 6pt; }
+h2 { font-family: Georgia, serif; font-size: 16pt; color: #0a341d; border-bottom: 2px solid #C9A86A; padding-bottom: 4pt; margin-top: 28pt; }
+h3 { font-family: Georgia, serif; font-size: 13pt; color: #234b32; margin-top: 18pt; }
+p { margin: 6pt 0; }
+.prompt { background-color: #f8f4ec; border: 1pt solid #C9A86A; border-left: 4pt solid #C9A86A; padding: 10pt 12pt; font-family: Consolas, 'Courier New', monospace; font-size: 10pt; line-height: 145%; }
+.tip { background-color: #eef4ee; border-left: 4pt solid #234b32; padding: 8pt 12pt; font-size: 10pt; }
+.tag { color: #C9A86A; font-weight: bold; }
+.small { font-size: 9pt; color: #666666; }
+ul, ol { margin-top: 4pt; }
+li { margin-bottom: 3pt; }
+table { border-collapse: collapse; font-size: 10pt; }
+td, th { border: 1pt solid #cccccc; padding: 5pt 8pt; vertical-align: top; }
+th { background-color: #0a341d; color: #ffffff; text-align: left; }
+.cover { text-align: center; margin-top: 140pt; }
+</style>
+</head>
+<body>
+<div class="Section1">
+
+<div class="cover">
+<h1>Flamingo aur Maina<br>Prompt Library</h1>
+<p style="font-size:13pt;color:#C9A86A;font-weight:bold;">Reusable AI prompts to rebuild this website from scratch</p>
+<p class="small">Version 1.0 &middot; Covers frontend, backend, animations, booking, concierge, deployment &amp; QA</p>
+</div>
+
+<br style="page-break-before:always">
+
+<h2>How To Use This Document</h2>
+<p>This library contains every prompt used (or equivalent) to build the FAM boutique retreat website. To build a similar website for another property or brand:</p>
+<ol>
+<li><b>Start with Prompt 0</b> - fill in your new brand details first.</li>
+<li><b>Run prompts in order</b> (1 through 21). Each one builds on the previous.</li>
+<li>Paste one prompt at a time into your AI coding assistant (Claude Code, Cursor, etc.) inside an empty project folder.</li>
+<li>Replace any <span class="tag">[BRAND]</span>, <span class="tag">[LOCATION]</span> placeholders with your values from Prompt 0.</li>
+<li>Test after every 2&ndash;3 prompts before continuing.</li>
+</ol>
+
+<div class="tip"><b>Golden rule:</b> Never let two systems control the same thing (two smooth-scroll libraries, two animation engines animating the same element, two scroll listeners doing layout reads). Almost every bug on this site came from duplication - the prompts below already encode the "single owner" rule.</div>
+
+<h2>Prompt 0 - Brand Details (fill this in once)</h2>
+<p>Answer these questions first, then reuse the answers everywhere:</p>
+<div class="prompt">
+Build a website for my property using these details:<br><br>
+- Brand name: [BRAND NAME]<br>
+- Tagline: [e.g., "Where the Tirthan sings you home"]<br>
+- Property type: [boutique cafe + mountain retreat / beach villa / etc.]<br>
+- Location: [village, district, state - e.g., Jibhi, Banjar Valley, Himachal Pradesh]<br>
+- Elevation/scenery detail: [e.g., 5,500 ft beside a river, deodar forest]<br>
+- Rooms (name, capacity, price incl. tax): [list 6 rooms with slugs]<br>
+- Amenities: [list ~12: riverside cafe, bonfire, stargazing deck, etc.]<br>
+- Contact phone / email / Instagram<br>
+- Brand colors: deep green #0a341d, cream #f8f4ec, gold #C9A86A<br>
+- Fonts: Playfair Display (headings), Inter (body)<br>
+- Currency and payment gateway: INR + Razorpay (or Stripe)<br>
+- Domain name: [domain]
+</div>
+
+<h2>Prompt 1 - Master Website Brief</h2>
+<p>The single most important prompt. Creates the whole skeleton.</p>
+<div class="prompt">
+Build a complete premium static website for a luxury boutique mountain retreat called [BRAND] located in [LOCATION].<br><br>
+TECH STACK: plain HTML/CSS/vanilla JavaScript only on the frontend (no React/Vue). Tailwind CSS utility classes compiled into a single style.css via CLI. GSAP + ScrollTrigger and Lenis loaded from CDN with defer. A separate Node.js/Express backend folder for APIs.<br><br>
+PAGES (all in public/, shared navbar/footer markup repeated per page): index.html (home), rooms.html, life.html (life at property), explore.html (nearby places), gallery.html, amenities.html, booking.html, login.html, signup.html, forgot-password.html, reset-password.html, verify-email.html, email-verified.html.<br><br>
+HOME PAGE SECTIONS, in order:<br>
+1. Fixed glassmorphic pill navbar at top (rounded-full, backdrop-blur, floats 16px below viewport edge).<br>
+2. Full-screen cinematic hero: looping muted autoplay video background, dark gradient overlay, staggered entrance animation of lines ("WELCOME HOME" eyebrow / huge Playfair headline / tagline paragraph / two CTA buttons) plus an animated mouse-scroll indicator.<br>
+3. "Mountain Time" greeting section that changes icon, badge, headline and accent colors based on visitor's local time (morning/afternoon/sunset/night).<br>
+4. "Welcome Home" split section: large editorial image (left, 7 cols) + story text (right, 5 cols).<br>
+5. Two alternating story-chapter sections with big images and parallax drift.<br>
+6. Centered vision statement section with decorative quote marks.<br>
+7. Full-width parallax image divider with chapter number/heading.<br>
+8. Gallery preview grid (3 tall editorial images) linking to gallery page.<br>
+9. Full-width quote divider over image.<br>
+10. Rooms preview grid: 6 cards (image, guest-capacity badge icons, room name, price incl GST, Book Now button that opens booking page with ?room=slug preselected).<br>
+11. AI Trip Planner teaser section (multi-step wizard, see later prompt).<br>
+12. Dark green footer: brand blurb, quick links, contact, copyright.<br><br>
+FLOATING ELEMENTS on every page: seasonal mode toggle button (fixed right side), glassmorphic floating booking bar overlapping hero bottom (date pickers, guest stepper, price summary, CTA), AI concierge chat bubble bottom-right.<br><br>
+REQUIREMENTS: mobile-first responsive; prefers-reduced-motion respected everywhere; no-JS fallback = content fully visible; semantic HTML5; every image lazy-loaded except hero.
+</div>
+
+<h2>Prompt 2 - Design System (CSS)</h2>
+<div class="prompt">
+Create public/css/input.css as a Tailwind entry (@tailwind base/components/utilities) containing a full design system:<br><br>
+1. THEMEABLE COLOR TOKENS as CSS custom properties so a seasonal/mode switch can re-skin the whole site by toggling one attribute on html: --mode-primary:#0a341d; --mode-primary-container:#234b32; --mode-accent:#C9A86A; --mode-bg:#f8f4ec; --mode-card:rgba(255,255,255,.72); --mode-text:#1a1c1a; plus rgba derivatives. Provide a winter override block (html[data-season="winter"]) swapping greens to icy blue-greys and cream to snow white.<br><br>
+2. TYPOGRAPHY UTILITIES: .text-display-hero (clamp 48-80px Playfair 700), .font-headline-lg (40-48px Playfair 600), .font-headline-md (28-32px Playfair 500), .text-body-lg (18px Inter, relaxed leading), .font-label-sm (13-14px Inter 600 uppercase letter-spacing .12em).<br><br>
+3. BUTTONS: .btn-primary (pill radius, green bg, cream text, hover lift -2px + soft shadow), .btn-secondary (pill, 1.5px gold border, transparent, hover gold tint bg). Both need focus-visible rings and active scale .98.<br><br>
+4. COMPONENTS: .glass-card (backdrop-blur 16px, translucent card bg, 24px radius, subtle border); .img-editorial (aspect-ratio 4/5, rounded-lg, overflow hidden, inner img object-cover with slow scale-on-hover); .img-container (overflow hidden wrapper whose img scales 1.05 on hover, transition 700ms ease-out).<br><br>
+5. KEYFRAMES: fadeInUp (opacity+translateY 24px), floatUp (embers rising), twinkle (stars opacity pulse), steam (cafe cup), panFog, leafDrift, birdFly, drawLine (SVG stroke).<br><br>
+6. REVEAL PATTERN (no-JS safe): default state of .reveal/.reveal-hidden/.reveal-mobile is FULLY VISIBLE. JavaScript adds a *-pending hidden class only when JS loads and IntersectionObserver exists, then swaps to .active/.visible when intersecting. Transition: opacity .8s, transform .8s cubic-bezier(.22,1,.36,1).<br><br>
+7. SCROLL SAFETY RULES (critical - do not violate): never set scroll-behavior:smooth globally when Lenis is used; html/body must not have competing overflow rules beyond overflow-x:hidden on body; lazy images get width/height 100% + object-fit:cover inside fixed-height containers and img[loading=lazy]{content-visibility:auto} so nothing shifts layout; fixed elements (nav, bars, chat bubble) must not be animated with top/bottom on scroll - use transform or class toggles driven by IntersectionObserver.<br><br>
+8. PREFERS-REDUCED-MOTION media query: disable all decorative keyframes, parallax transforms and smooth scrolling site-wide.
+</div>
+
+<h2>Prompt 3 - Tailwind Build Pipeline</h2>
+<div class="prompt">
+Set up the Tailwind toolchain for this vanilla project:<br><br>
+1. npm init and install tailwindcss v3 as devDependency.<br>
+2. Create tailwind.config.js scanning ./public/**/*.{html,js} for classes, extending theme with brand colors (forest: shades built around #0a341d; cream: #f8f4ec; gold: #C9A86A), font families display:'Playfair Display', body:'Inter', and a container with center:true, padding 1.5rem.<br>
+3. package.json scripts: "dev": "tailwindcss -i ./public/css/input.css -o ./public/css/style.css --watch", "build": same with --minify.<br>
+4. All HTML pages link ONE stylesheet /css/style.css. Never hand-edit style.css (it's generated).<br>
+5. Load Google Fonts (Playfair Display 400..800 ital wghts + Inter 300..700) with preconnect and display=swap.<br>
+6. Material Symbols Rounded icon font loaded once, icons used via ligature spans.
+</div>
+
+<h2>Prompt 4 - Navbar (Glassmorphic Pill)</h2>
+<div class="prompt">
+Build the shared navbar used on every page:<br><br>
+DESKTOP: a floating rounded-full bar, max-w-6xl, mx-auto, mt-4, position:fixed left/right 0, z-50. Inside: logo mark + wordmark left; center links (Home, Stay, Explore, Life, Gallery); right side: "Book Your Stay" pill button (gold). Backdrop-filter blur(14px) with translucent cream background; add class "scrolled" after window.scrollY > 100 to deepen background and shrink padding slightly - listen with passive listener reading only window.scrollY (never getBoundingClientRect per frame).<br><br>
+MOBILE (&lt;1024px): bar shows logo + hamburger. Hamburger morphs to X (two spans rotating). Full-screen overlay panel slides down (clip-path or transform, NOT height animation) with big staggered link entrance, contact info and social row at bottom. Lock body scroll while open (add class setting overflow:hidden on body AND tell Lenis to stop()/start() if present). Close on link click, on Escape, on overlay click. One global init guard prevents duplicate listeners if init runs twice (window._navInit flag). Re-apply scroll state on pageshow event for bfcache restores.<br><br>
+Active page link gets gold underline. All links are real .html files so transitions feel instant.
+</div>
+
+<h2>Prompt 5 - Cinematic Hero</h2>
+<div class="prompt">
+Create js/hero-video.js + hero section markup:<br><br>
+MARKUP: full-viewport section with a &lt;video&gt; (muted, loop, playsinline, preload=metadata, poster jpg fallback) absolutely covering it behind a gradient overlay (black 55% bottom fading to 25% top). Content column centered: eyebrow label with letter-spacing animation, h1 in Playfair 700 clamp(48px,8vw,96px), subheadline paragraph max-w-xl, two buttons. Below center: animated scroll indicator (mouse outline with dot dropping in loop + "Scroll to explore").<br><br>
+ENTRANCE: lines animate in staggered 120ms apart (fade up 30px, 900ms cubic-bezier(.22,1,.36,1)) triggered after video 'canplay' OR 600ms timeout whichever first - content must never be invisible if JS/video fail (start visible pattern: JS adds hidden state then reveals).<br><br>
+VIDEO WATCHDOG: Safari sometimes stalls videos. Every 4 seconds check video.paused &amp;&amp; !document.hidden &amp;&amp; element near viewport (getBoundingClientRect here is OK - it's 4s interval, not per-frame) then call play().catch. On visibilitychange resume/pause appropriately. If reduced-motion: skip entrance animation, show static poster, no autoplay attempt loop restart.<br><br>
+PARALLAX: hero content translateY at 25% of scroll rate and fades out by 80% viewport scroll - implement via rAF reading window.scrollY only, or ScrollTrigger if present. Never read layout in the scroll handler itself.
+</div>
+
+<h2>Prompt 6 - Mountain Time Greeting</h2>
+<div class="prompt">
+Create js/mountain-time.js: a section that greets visitors according to THEIR local time, themed to the mountains:<br><br>
+Four dayparts: Morning 5-12 (sunrise icon, badge "GOOD MORNING", headline "The valley is waking up", warm amber accents), Afternoon 12-17 (sun icon, "The forests hum with light"), Sunset 17-20 (sunset icon, "The peaks turn to gold", orange-pink accents), Night 20-5 (moon/stars icon, "The mountains dream under stars", deep indigo + fireflies).<br><br>
+Implementation: compute hour once + setInterval every minute; swap icon glyph (Material Symbols), badge text, headline, description sentence, and set data-daypart attribute that CSS uses to recolor the section's accent variables (transition colors 600ms). Also show live clock "Local time HH:MM". Respect reduced motion by skipping any pulsing animations. Keep everything in one small module with zero dependencies; run immediately (not waiting for fonts/images).
+</div>
+
+<h2>Prompt 7 - Scroll Storytelling Engine (GSAP + Lenis)</h2>
+<p>This is the heart of the site's feel. One file owns ALL scroll animation.</p>
+<div class="prompt">
+Create js/scroll-story.js - the SINGLE OWNER of smooth scrolling and scroll-driven storytelling on the homepage. Loaded with defer ONLY on index.html.<br><br>
+GUARDS (first lines): if innerWidth <= 767 return; if prefers-reduced-motion return; if pointer coarse or ontouchstart return (mobile keeps native scrolling).<br><br>
+LENIS SETUP (single instance): if window.FAM.lenis already exists reuse it, else create new Lenis({duration:1.2, easing expo-out variant, smoothWheel true}) and drive it from gsap.ticker (lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(t => lenis.raf(t*1000))). No other file may ever construct a Lenis.<br><br>
+STORY CHAPTERS with ScrollTrigger scrub: each chapter section pins briefly / parallaxes its image (y ±60px) while its heading words reveal with stagger. Chapter numbers count up as they enter. Use scrub:0.5 so motion feels buttery, never snap.<br><br>
+ATMOSPHERE LAYER: one fixed full-screen pointer-events-none canvas-less DOM layer above bg below content, spawning: falling deodar leaves (4, drifting sine paths), distant birds (~ glyphs crossing sky), night fireflies + twinkling stars + moon that fade in only during evening hours, mist wisps, god rays. ALL animated inside ONE requestAnimationFrame loop with delta-time, paused on document.hidden, cancelled when layer empty. Cap element counts; pure transform/opacity updates only.<br><br>
+PROGRESS BAR: 3px gold bar fixed top scaleX driven by lenis scroll progress (fallback: passive scroll listener computing scrollTop/(scrollHeight-clientHeight)).<br><br>
+PARALLAX IMAGES: elements with [data-parallax] get ScrollTrigger yPercent drift proportional to speed attr.<br><br>
+CLEANUP: expose destroy(); kill all triggers and cancel RAF. Register ScrollTrigger exactly once (module-level flag).
+</div>
+
+<div class="tip"><b>Why this matters:</b> On the original build this logic was accidentally duplicated across three files (animations.js, transitions.js, scroll-story.js) causing Mac/Safari scroll jumps. The fix was making scroll-story.js the only Lenis creator and deleting duplicate ScrollTrigger registrations. Keep it that way.</div>
+
+<h2>Prompt 8 - Seasonal Mode Toggle</h2>
+<div class="prompt">
+Create js/seasonal.js + a floating round toggle button (fixed right edge, vertically centered, z-40) that switches the entire site between GREEN (summer) and WINTER themes:<br><br>
+Clicking toggles html[data-season] between "green"/"winter"; CSS custom properties defined in the design system do the re-skin instantly (colors, glass tints, image duotone overlays). Persist choice in localStorage key fam_season; on load apply saved value before paint to avoid flash.<br><br>
+Button icon swaps (ac_unit vs eco leaf) with rotate transition; aria-pressed reflects state; tooltip title explains.<br><br>
+VISIBILITY LOGIC: hide the toggle while the user is scrolled deep inside immersive story sections (it distracts there). Implement with IntersectionObserver watching the hero ([data-scroll-hero]) - visible only when hero intersects. NO scroll-event listeners reading getBoundingClientRect per frame. Fallback for ancient browsers: RAF-throttled check. Reduced-motion: instant swap, no transitions.
+</div>
+
+<h2>Prompt 9 - Rooms Preview + Rooms Page</h2>
+<div class="prompt">
+ROOMS DATA: central js list of 6 rooms: slug, name, tagline, guests, beds, size, pricePerNight (INR incl GST), image path, 4 feature chips, full description paragraphs, amenities list. Example rooms: Riverstone Suite, Deodar Family Loft, Cedar Duplex, Pinewood Nest, Riverside Cottage, Forest View Room.<br><br>
+HOME PREVIEW GRID: 6 editorial cards - image with hover zoom, guests badge (person icon xN), name (Playfair), "₹X,XXX / night incl. taxes", Book Now button -> booking.html?room=slug. Cards reveal on scroll with stagger (reveal pattern).<br><br>
+ROOMS PAGE (rooms.html): hero band with page title; alternating full-width rows per room (image 7 cols / sticky details 5 cols) with CTA; comparison table at end (room x guests/price/size); FAQ accordion (details/summary styled).<br><br>
+BOOKING LINK CONTRACT: booking page reads ?room=slug and preselects that room in its picker. Keep slugs stable kebab-case.
+</div>
+
+<h2>Prompt 10 - AI Trip Planner Wizard</h2>
+<div class="prompt">
+Create an embedded 5-step "Plan My Trip" wizard (js/trip-planner.js) rendered inside a homepage section and also openable standalone:<br><br>
+STEP 1 Dates (min=today validation, nights counter), STEP 2 Guests (+room preference select), STEP 3 Experience checkboxes (Riverside Cafe, Bonfire Night, Stargazing, Village Walk, Fishing, Yoga Deck...), STEP 4 Budget slider (per night range), STEP 5 Review + "Generate My Itinerary".<br><br>
+UX: one step visible at a time inside a glass-card with progress dots; back/next with slide-fade transition (transform+opacity only); Enter key advances; state kept in a plain object; final screen builds a personalized itinerary summary (nights, chosen experiences mapped to daily plan text, price estimate range) with typewriter reveal, plus buttons: "Send to my email" (POST /api/bookings/inquiry or mailto fallback) and "Book these dates" (deep-link booking.html with query params).<br><br>
+Tech: no framework; validate inline with red hints; fully keyboard accessible; works offline (pure client-side generation from a local JSON knowledge file); respects reduced motion (no typewriter).
+</div>
+
+<h2>Prompt 11 - AI Concierge Chatbot</h2>
+<div class="prompt">
+Create js/concierge.js - a floating chat assistant ("FAM Concierge") bottom-right on every page:<br><br>
+LAUNCHER: round gold-gradient button with sparkle icon, gentle attention pulse (disabled under reduced-motion). Overlap prevention: when page sections containing critical CTAs (trip planner, booking form) approach the bottom 130px of viewport (150px on narrow phones), slide button up/hide via class - implemented with IntersectionObserver on those sections, NOT per-frame scroll math. Guard against double-init (button id check).<br><br>
+PANEL: 380px glass-card, header with avatar + online dot, messages area, quick-reply chips (Room prices? How to reach? Food? Pet policy?), input + send. Mobile: full-width sheet from bottom with safe-area padding.<br><br>
+BRAIN: load js/famKnowledgeBase.json (topics -> patterns[], reply, chips[]) at startup; match user text via keyword scoring; typing indicator 700ms then reply; unknown questions fall back to polite deflection + WhatsApp/call CTA. Cache KB in localStorage with TTL. All client-side - zero API cost.<br><br>
+A11Y: role=dialog, aria-live=polite log, Escape closes, focus returns to launcher.
+</div>
+
+<h2>Prompt 12 - Booking Flow (Bar + Modal + Payment)</h2>
+<div class="prompt">
+Two pieces:<br><br>
+A) FLOATING BOOKING BAR over hero (desktop): glassmorphic horizontal bar with Check-in date, Check-out date, Guests stepper (- n +), computed summary ("2 adults . 3 nights"), dynamic price estimate (base room rate x nights + 12% GST shown as included), gold CTA "Check Availability" -> booking.html carrying params. On mobile collapse to stacked mini-card. Validation: checkout &gt; checkin, dates not in past.<br><br>
+B) BOOKING PAGE MODAL FLOW (js/booking.js + booking-data.js): multi-step modal - 1 Dates/guests/room select (preselect from ?room=), 2 Trip type chips (Solo/Couple/Family/Workation/Friends) + occasion, 3 Add-ons (bonfire kit, guided walk, airport pickup with prices), 4 Live itinerary builder (day cards auto-filled from nights + add-ons), 5 Guest details form (name/phone/email with inline validation), 6 Payment: show fare breakdown (nights x rate, add-ons, GST note) then POST /api/bookings to create order, open Razorpay Checkout with returned order id; on success POST verification then success screen with booking ref + WhatsApp confirm link. Failure states retry gracefully; pending order stored in sessionStorage to survive refresh.<br><br>
+RULES: every step keyboard-navigable; price recompute is pure function; no layout shift when steps change (reserve heights); reduced-motion disables slide transitions.
+</div>
+
+<h2>Prompt 13 - Gallery Page (Lightbox + Reels)</h2>
+<div class="prompt">
+Build gallery.html + js/gallery.js:<br><br>
+GRID: filter chips (All / Rooms / Caf&eacute; / Nature / Winter / Reels). Masonry-style CSS columns grid of lazy images each with caption overlay on hover and aspect-ratio reserved (prevent CLS).<br><br>
+LIGHTBOX: click opens fullscreen viewer - dark scrim, centered image, prev/next arrows, close X, caption bar, thumbnail strip, keyboard (Esc/arrows), swipe gestures on touch, focus trapped, history pushState so browser Back closes it (popstate handler). Preload neighbors. Zoom toggle on double-click/tap.<br><br>
+REELS: vertical short-video cards (muted loop autoplay on intersect via IntersectionObserver, tap to unmute) displayed in a horizontal snap-scroll rail.<br><br>
+PERF: IntersectionObserver-driven loading, decode() before showing, blur-up tiny placeholders, counts capped; reduced-motion kills zoom/kens-burnt effects.
+</div>
+
+<h2>Prompt 14 - Page Transitions</h2>
+<div class="prompt">
+Create js/page-transitions.js + css/transitions.css for cinematic navigation between pages:<br><br>
+EXIT: intercept internal link clicks (same-origin, .html, not modified keys/target=_blank); play a branded overlay wipe - full-screen fixed panel in brand green slides up (transform, 450ms expo-in) with centered logo mark fading in; mid-way navigate via location.href. Store timestamp so destination skips its entrance replay if within 1.2s.<br><br>
+ENTER: on load overlay starts covering and slides away revealing page; then elements marked .pt-reveal stagger in (IntersectionObserver adds .active).<br><br>
+SAFETY: never trap navigation - hard timeout 1200ms forces navigation even if animation events lost; respect bfcache (pageshow persisted => remove overlays immediately); reduced-motion => instant navigation, no overlay; external/hash/mailto/tel/download links excluded; middle-click/cmd-click untouched.<br><br>
+This file must NOT register ScrollTrigger or touch Lenis - transitions only.
+</div>
+
+<h2>Prompt 15 - Mobile Navigation + Mobile Reveals</h2>
+<div class="prompt">
+js/mobile-nav.js responsibilities (loaded last, plain script):<br><br>
+1. Hamburger + fullscreen menu described in navbar prompt - single init guard, Escape handling, focus restore, body scroll lock coordinating with Lenis stop/start when present.<br>
+2. Desktop nav scrolled-state listener (passive, scrollY-only compare >100).<br>
+3. Mobile reveal system: .reveal-mobile elements start visible-by-default; if IO available add pending-hidden then observe threshold .15 and swap to .visible once; unobserve after reveal; if IO missing leave everything visible.<br>
+4. pageshow(e.persisted) re-runs listeners setup safely (guards prevent duplicates).<br>
+All scroll work throttled via rAF; zero getBoundingClientRect calls.
+</div>
+
+<h2>Prompt 16 - Smooth Scroll Rules + Scroll-Jump Audit</h2>
+<p>The exact QA prompt that fixed the Mac/Safari jerkiness. Run it after building.</p>
+<div class="prompt">
+Audit this website's ENTIRE scroll system for root causes of scroll jump/jerk reported on macOS (Safari, also Chrome). Static HTML/CSS/vanilla JS with GSAP+ScrollTrigger+Lenis. Do NOT redesign anything, do NOT remove features/animations unless they are proven causal, no Mac-specific hacks, respect prefers-reduced-motion, standards-based fixes only.<br><br>
+AUDIT CHECKLIST:<br>
+1. Find EVERY place creating or configuring Lenis / native smooth scrolling: html.scroll-smooth class, CSS scroll-behavior:smooth, multiple `new Lenis(...)` constructions. Exactly ONE Lenis instance may exist (homepage owner: scroll-story.js). Remove duplicates.<br>
+2. List EVERY gsap.registerPlugin(ScrollTrigger) and every ScrollTrigger.create batch. Duplicated registration across files causes double pinning/jitter - consolidate so each file owns distinct triggers only.<br>
+3. Find every window scroll/resize listener that calls getBoundingClientRect, offsetTop, or writes styles synchronously - replace with IntersectionObserver where behavior allows, else RAF-throttle reading scrollY only.<br>
+4. Check service-worker cache version vs registration query (?v=) mismatch causing stale JS half-updated bundles - align them.<br>
+5. Layout shift audit: images without reserved space (missing dimensions/fixed containers), late-loading fonts, dynamically injected bars - fix with aspect ratios/content-visibility, not min-height hacks.<br>
+6. Confirm reduced-motion and mobile paths early-return BEFORE constructing observers/RAF loops.<br><br>
+DELIVERABLES: numbered root-cause list with file:line evidence, minimal diffs applied, syntax-check every edited JS file (node --check), confirm zero remaining duplicates via grep, and a test matrix (macOS Safari/Chrome, Windows Chrome/Edge, iPhone Safari, Android Chrome) with what to verify manually.
+</div>
+
+<h2>Prompt 17 - Service Worker / PWA</h2>
+<div class="prompt">
+Create sw.js + js/service-worker.js registration shim:<br><br>
+sw.js: version constant SW_VERSION like YYYYMMDDHH; precache app shell (css/style.css, core js, logo); runtime cache-first for fonts/images with LRU cap 60 entries; network-first for HTML with cache fallback (offline page). CACHE_NAME MUST embed SW_VERSION - and the SAME version string must appear in the registration URL /sw.js?v=VERSION (this alignment prevented stale-bundle bugs). activate(): delete old caches, clients.claim(). skipWaiting on message.<br><br>
+service-worker.js shim: register('/sw.js?v='+VERSION, scope '/'); on updatefound show subtle toast "New version ready - Refresh" instead of auto-reload; controllerchange reload-guard (once per session flag) for bfcache safety; expose navigator.serviceWorker.controller check before posting messages.<br><br>
+Never cache POST/API responses; exclude /api/ and payment routes entirely.
+</div>
+
+<h2>Prompt 18 - Backend API (Node/Express)</h2>
+<div class="prompt">
+Build a /backend Node.js + Express API (CommonJS, MVC folders: config controllers emails jobs middleware models routes services sockets utils validations) with swagger docs:<br><br>
+DB: MongoDB via Mongoose. Models: User (name,email unique lowercase,phone,passwordHash select:false,role enum user/admin,emailVerified,oauth provider ids,refreshTokens[]), Booking (user,code like FAM-XXXXXX,dates,roomId,guests breakdown,amounts {base,addons,gst,total,currency},status enum pending/confirmed/cancelled/completed,payment{provider razorpay,orderId,paymentId,signature,status},contact snapshot,source web), Inquiry (trip-planner leads), RefreshToken docs optional.<br><br>
+AUTH: /api/auth - register (email verification token emailed), login (rate-limited 5/15min/IP, bcrypt compare, access JWT 15m + refresh 30d httpOnly cookie), refresh, logout (revoke), forgot/reset password (hashed one-time tokens, 1h expiry), verify-email, Google OAuth 2.0 code flow ending by redirecting to /pages/oauth-redirect.html#token=... which hands off to frontend auth.js storing session and closing window.<br><br>
+MIDDLEWARE: protect (bearer JWT), requireAdmin, validate (zod or express-validator schemas), errorHandler (JSON, hides stacks in prod), helmet+cors(whitelist domains)+compression+express.json limits.<br><br>
+BOOKINGS/PAYMENTS: POST /api/bookings (auth optional guest) creates Razorpay order amount=paise, returns orderId+keyId; POST /api/bookings/verify (HMAC sha256 signature check) marks confirmed, emails voucher; GET /api/bookings/mine; admin list/update-status endpoints. Webhook route verifying razorpay signature for reliability.<br><br>
+EMAILS: nodemailer SMTP service templates (verification, reset, booking confirmation with details table, admin notify). Jobs: cron marking past bookings completed, cleaning expired tokens.<br><br>
+SOCKETS: socket.io namespace /support used by concierge handoff-to-human.<br><br>
+ENV (.env.example documented): PORT MONGODB_URI JWT_ACCESS_SECRET JWT_REFRESH_SECRET SMTP_HOST/PORT/USER/PASS MAIL_FROM RAZORPAY_KEY_ID RAZORPAY_KEY_SECRET GOOGLE_CLIENT_ID/SECRET CLIENT_URL FRONTEND_URL ALLOWED_ORIGINS.<br><br>
+server.js: connect DB then listen; graceful shutdown; /health endpoint returning uptime+db ping.
+</div>
+
+<h2>Prompt 19 - Frontend Auth Integration</h2>
+<div class="prompt">
+Create js/auth.js used by login/signup/forgot/reset/verify pages:<br><br>
+API helper with baseURL from window.FAM_API_BASE (set per environment), JSON fetch wrapper attaching bearer from memory + refresh-once-on-401 queue pattern.<br><br>
+Forms: client validation (email regex, password >= 8 with strength meter on signup), submit states (spinner in button, disable), map server field errors inline; success redirects: login -> intended ?next= or booking page; signup -> verify-email notice screen; forgot -> sent confirmation; reset (reads ?token=) -> login with toast.<br><br>
+Session bootstrap on every page: silent refresh if cookie present, navbar swaps Login button to account chip with initials dropdown (My Bookings, Logout). oauth-redirect.html parses hash token safely (URLSearchParams on location.hash), stores, notifies opener, closes itself.<br><br>
+Security: never store access token in localStorage if avoidable (memory + refresh cookie); clear tokens on logout; CSRF-safe (no cookies for API besides refresh httpOnly SameSite=Lax).
+</div>
+
+<h2>Prompt 20 - SEO, Meta &amp; Deployment</h2>
+<div class="prompt">
+1. SEO per page: unique title (<=60 chars), meta description (<=155), canonical, Open Graph + Twitter cards with 1200x630 og-image.jpg, JSON-LD LodgingBusiness (name, address Jibhi Himachal, geo, priceRange, amenityFeature list) + BreadcrumbList on inner pages. sitemap.xml listing all pages with priorities; robots.txt allowing all + sitemap pointer; favicon set incl. apple-touch; theme-color #0a341d.<br><br>
+2. Deployment target Render (render.yaml): static site serving public/ with clean URLs rewrite to .html, plus web service for backend (node server.js, health check /health, env vars synced from dashboard NOT committed). Root package.json scripts build tailwind. GitHub repo connected for auto-deploy on push to main; document manual deploy fallback (git push origin main).<br><br>
+3. Performance budget: total JS < 90KB gzipped excluding CDN libs; images WebP with jpg fallback, widths responsive via srcset; Lighthouse targets 90+ perf / 95+ a11y / 100 SEO on mobile.
+</div>
+
+<h2>Prompt 21 - Final QA Checklist</h2>
+<div class="prompt">
+Run this acceptance pass before launch and paste results:<br><br>
+FUNCTIONAL: booking end-to-end (guest + logged-in) incl. Razorpay test mode success & failure paths; auth flows all 6 screens; concierge answers top 10 FAQs correctly; trip planner generates itinerary offline; gallery lightbox keyboard + swipe; filters work.<br><br>
+ANIMATION/SCROLL MATRIX: macOS Safari 17 + Chrome - wheel scroll 60s continuous: no jumps, no pinned-section stutter, progress bar smooth. Windows Chrome/Edge identical. iPhone 14 Safari + Android Chrome: native momentum preserved (NO smooth-scroll hijack), reveals fire, menus lock scroll properly. Verify with DevTools Performance: zero long tasks >50ms attributable to scroll handlers; zero layout shifts in CLS report &gt; 0.02.<br><br>
+RESILIENCE: JS disabled => all content readable; slow 3G => hero poster shows, skeletons ok; offline => cached shell + concierge still works; bfcache back/forward => nav state correct, no duplicate listeners (test by navigating 5x and counting scroll listeners via getEventListeners in console).<br><br>
+A11Y: axe DevTools zero critical violations; contrast AA on gold-on-cream combos; focus visible everywhere; reduced-motion emulation strips all movement.<br><br>
+SEO: validate JSON-LD rich-results test; sitemap 200s; og-image renders in LinkedIn inspector.<br><br>
+Deliver: pass/fail table per matrix cell + any fixes applied with node --check proof on touched files.
+</div>
+
+<h2>Appendix - Reference File Map</h2>
+<table>
+<tr><th>Path</th><th>Purpose</th></tr>
+<tr><td>public/index.html</td><td>Homepage - loads Lenis 1.1.13 + GSAP/ScrollTrigger CDN (defer), scroll-story.js, page-transitions.js, init calls FAM.Animations.init({gsap:false,lenis:false})</td></tr>
+<tr><td>public/pages/*.html</td><td>13 inner pages sharing navbar/footer markup</td></tr>
+<tr><td>public/css/input.css</td><td>Design system source (compiled by Tailwind to style.css)</td></tr>
+<tr><td>public/js/scroll-story.js</td><td>Sole Lenis owner + chapters/atmosphere/progress (desktop non-reduced-motion only)</td></tr>
+<tr><td>public/js/animations.js</td><td>Reveals/parallax utilities (must NOT own Lenis)</td></tr>
+<tr><td>public/js/transitions.js</td><td>Page overlay transitions + magnetic buttons (must NOT own ScrollTrigger)</td></tr>
+<tr><td>public/js/concierge.js + famKnowledgeBase.json</td><td>Client-side chatbot brain</td></tr>
+<tr><td>public/js/booking.js + booking-data.js</td><td>Multi-step booking modal + fare engine</td></tr>
+<tr><td>public/js/sw shim + /sw.js</td><td>PWA caching, versions locked together</td></tr>
+<tr><td>backend/*</td><td>Express MVC API: auth, bookings+Razorpay, mail, sockets, swagger</td></tr>
+<tr><td>render.yaml</td><td>Static site + backend service deploy config</td></tr>
+</table>
+
+<p class="small" style="margin-top:30pt;">Generated for the Flamingo aur Maina rebuild workflow - keep this document next to your new project and feed prompts sequentially.</p>
+
+</div>
+</body>
+</html>

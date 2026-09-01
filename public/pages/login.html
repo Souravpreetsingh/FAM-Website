@@ -423,14 +423,19 @@
       storeUser(displayName);
       updateGreeting(heading, subtitle);
 
+      var isAdmin = role === 'admin';
+
       setTimeout(function() {
         successName.innerHTML = displayName ? 'Welcome back, ' + displayName + '.' : 'Welcome back.';
+        if (isAdmin) {
+          successName.innerHTML = 'Welcome back, ' + displayName + '.<br />Taking you to the admin console…';
+        }
         successOverlay.classList.add('active');
         setTimeout(function() {
           var params = new URLSearchParams(window.location.search);
           var redirect = params.get('redirect') || '';
           if (!redirect) {
-            redirect = '/';
+            redirect = isAdmin ? '/admin/index.html' : '/';
           }
           window.location.href = redirect;
         }, 2200);

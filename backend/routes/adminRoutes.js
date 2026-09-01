@@ -11,13 +11,21 @@ const adminValidation = require('../validations/adminValidation');
 
 router.post('/login', validate(adminValidation.adminLoginSchema), adminController.adminLogin);
 
+// Session management endpoints. These sit outside the admin authorisation gate
+// because refresh and logout must be reachable even when the (short-lived)
+// access token has expired.
+router.post('/refresh', adminController.adminRefresh);
+router.post('/logout', authenticate, adminController.adminLogout);
+
 router.use(authenticate, authorizeAdmin);
+
+router.get('/session', adminController.adminSession);
 
 router.get('/dashboard', adminController.getDashboard);
 
 router.get('/users', adminController.getUsers);
 router.get('/users/:id', adminController.getUserDetails);
-router.put('/users/:id/role', adminController.updateUserRole);
+router.put('/users/:id/role', validate(adminValidation.updateUserRoleSchema), adminController.updateUserRole);
 router.delete('/users/:id', adminController.deleteUser);
 
 router.get('/rooms', adminController.getAdminRooms);
@@ -40,6 +48,11 @@ router.delete(
   validate(adminValidation.removeBlockParamsSchema),
   availabilityController.removeBlock
 );
+router.post(
+  '/availability/clear',
+  validate(adminValidation.clearAvailabilitySchema),
+  availabilityController.clearRange
+);
 
 router.get('/bookings', bookingController.getAllBookings);
 router.post(
@@ -56,7 +69,7 @@ router.put('/bookings/:id/confirm', bookingController.confirmBooking);
 router.put('/bookings/:id/check-in', bookingController.checkInBooking);
 router.put('/bookings/:id/check-out', bookingController.checkOutBooking);
 router.put('/bookings/:id/no-show', bookingController.markNoShow);
-router.put('/bookings/:id/move-room', bookingController.moveBookingRoom);
+router.put('/bookings/:id/move-room', validate(adminValidation.moveRoomSchema), bookingController.moveBookingRoom);
 router.post('/bookings/:id/cancel', bookingController.cancelBooking);
 router.get('/bookings/calendar', bookingController.getBookingCalendar);
 

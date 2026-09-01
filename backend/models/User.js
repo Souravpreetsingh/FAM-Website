@@ -42,6 +42,10 @@ const userSchema = new mongoose.Schema(
       enum: ['guest', 'admin'],
       default: 'guest',
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
     isVerified: {
       type: Boolean,
       default: false,

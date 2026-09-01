@@ -1,4 +1,5 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -21,6 +22,8 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
 
 const app = express();
+
+app.use(cookieParser());
 
 app.use(helmet({
   contentSecurityPolicy: {
@@ -75,7 +78,7 @@ if (process.env.NODE_ENV === 'development') {
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 1000,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -95,10 +98,25 @@ const authLimiter = rateLimit({
     message: 'Too many login attempts, please try again later.',
   },
 });
+
+// Dedicated limiter for admin credentials. Allows a short burst for front-desk
+// login while still capping brute-force attempts. Returns 429 when exceeded and
+// uses the same generic message so it does not reveal whether an email exists.
+const adminAuthLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  skipFailedRequests: false,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many login attempts, please try again later.',
+  },
+});
 app.use('/api/v1/auth/login', authLimiter);
 app.use('/api/v1/auth/register', authLimiter);
 app.use('/api/v1/auth/oauth/start', authLimiter);
-app.use('/api/v1/admin/login', authLimiter);
+app.use('/api/v1/admin/login', adminAuthLimiter);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

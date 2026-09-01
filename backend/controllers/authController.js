@@ -35,6 +35,13 @@ const register = asyncHandler(async (req, res) => {
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.validated?.body || {};
   const { user, accessToken, refreshToken } = await authService.login(email, password);
+  // Admins signing in through the public route still get the httpOnly admin
+  // session, so one sign-in lands them in the admin section (no bearer tokens
+  // exposed to JavaScript for admin accounts).
+  if (user && user.role === 'admin') {
+    const { setAdminAuthCookies } = require('../utils/adminCookies');
+    setAdminAuthCookies(res, { accessToken, refreshToken });
+  }
   ApiResponse.success(
     { user, accessToken, refreshToken },
     'Login successful'

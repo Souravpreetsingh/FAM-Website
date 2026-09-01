@@ -24,7 +24,7 @@ const createOfflineBookingSchema = z.object({
     guestPhone: z.string().trim().max(20).optional().default('').refine((v) => v === '' || v.length >= 7, 'Guest phone must be at least 7 characters if provided'),
     source: z.enum(['OFFLINE', 'PHONE', 'WALK-IN', 'ADMIN']).optional().default('OFFLINE'),
     notes: z.string().trim().max(2000).optional().default(''),
-    amountPaid: z.number().min(0).optional().default(0),
+    amountPaid: z.number().finite().min(0).optional().default(0),
   }),
 });
 
@@ -45,12 +45,26 @@ const updateReservationSchema = z.object({
       guestEmail: z.string().trim().email().nullable().optional(),
       guestPhone: z.string().trim().max(20).optional().refine((v) => v === undefined || v === '' || v.length >= 7, 'Guest phone must be at least 7 characters if provided'),
       status: z.enum(['pending', 'confirmed', 'checked_in', 'checked_out', 'cancelled', 'no_show']).optional(),
-      paymentStatus: z.enum(['pending', 'paid', 'partial', 'refunded']).optional(),
-      amountPaid: z.number().min(0).optional(),
+      paymentStatus: z.enum(['pending', 'paid', 'partial', 'refunded', 'failed']).optional(),
+      amountPaid: z.number().finite().min(0).optional(),
       notes: z.string().trim().max(2000).optional(),
       specialRequests: z.string().trim().max(500).optional(),
     })
     .refine((b) => Object.keys(b).length > 0, 'At least one field to update is required'),
+});
+
+const updateUserRoleSchema = z.object({
+  params: z.object({ id: objectId }),
+  body: z.object({
+    role: z.enum(['guest', 'admin'], 'Role must be guest or admin'),
+  }),
+});
+
+const moveRoomSchema = z.object({
+  params: z.object({ id: objectId }),
+  body: z.object({
+    newRoomId: objectId,
+  }),
 });
 
 const createAvailabilityBlockSchema = z.object({
@@ -59,7 +73,15 @@ const createAvailabilityBlockSchema = z.object({
     startDate: dateString,
     endDate: dateString,
     reason: z.string().trim().max(500).optional().default(''),
-    kind: z.enum(['BLOCKED', 'RESERVED']).optional().default('BLOCKED'),
+    kind: z.enum(['BLOCKED', 'RESERVED', 'MAINTENANCE']).optional().default('BLOCKED'),
+  }),
+});
+
+const clearAvailabilitySchema = z.object({
+  body: z.object({
+    roomId: objectId,
+    startDate: dateString,
+    endDate: dateString,
   }),
 });
 
@@ -79,7 +101,10 @@ module.exports = {
   adminLoginSchema,
   createOfflineBookingSchema,
   updateReservationSchema,
+  updateUserRoleSchema,
+  moveRoomSchema,
   createAvailabilityBlockSchema,
   blockParamsSchema,
   removeBlockParamsSchema,
+  clearAvailabilitySchema,
 };

@@ -40,6 +40,10 @@ class AuthService {
       throw ApiError.unauthorized('Invalid email or password');
     }
 
+    if (user.isDeleted === true) {
+      throw ApiError.unauthorized('Invalid email or password');
+    }
+
     if (!user.password) {
       const provider = user.oauthProvider === 'apple' ? 'Apple' : 'Google';
       throw ApiError.unauthorized(`This account uses ${provider} sign-in. Please sign in with ${provider}.`);
@@ -70,6 +74,9 @@ class AuthService {
     let user = await User.findOne({ email }).select('+password');
 
     if (user) {
+      if (user.isDeleted === true) {
+        throw ApiError.unauthorized('Account no longer active');
+      }
       if (!user.oauthProviderId) {
         user.oauthProvider = provider;
         user.oauthProviderId = providerId;
@@ -115,7 +122,7 @@ class AuthService {
     }
 
     const user = await User.findById(decoded.id);
-    if (!user) {
+    if (!user || user.isDeleted === true) {
       throw ApiError.unauthorized('User not found');
     }
 

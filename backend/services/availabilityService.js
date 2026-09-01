@@ -61,9 +61,15 @@ async function checkStay(room, checkIn, checkOut, excludeBookingId = null) {
     checkOut: { $gt: start },
     status: { $in: ACTIVE_BOOKING_STATUSES },
     ...exclude,
-  }).select('_id');
+  }).select('checkIn checkOut');
   if (activeOverlap) {
-    return { available: false, reason: 'fully_booked' };
+    const overlapStart = activeOverlap.checkIn > start ? activeOverlap.checkIn : start;
+    const overlapEnd = activeOverlap.checkOut < end ? activeOverlap.checkOut : end;
+    return {
+      available: false,
+      reason: 'fully_booked',
+      conflictingDates: generateNights(overlapStart, overlapEnd).map(formatDay),
+    };
   }
 
   if (room.status === 'maintenance' || room.status === 'out_of_service') {

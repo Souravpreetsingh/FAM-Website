@@ -6,6 +6,7 @@ const ApiError = require('../utils/ApiError');
 const asyncHandler = require('../utils/asyncHandler');
 const cloudinaryService = require('../services/cloudinaryService');
 const availabilityService = require('../services/availabilityService');
+const auditService = require('../services/auditService');
 const { paginate, paginationResponse } = require('../utils/pagination');
 
 const getRooms = asyncHandler(async (req, res) => {
@@ -114,6 +115,12 @@ const getRoomBySlug = asyncHandler(async (req, res) => {
 const createRoom = asyncHandler(async (req, res) => {
   const roomData = req.validated?.body || {};
   const room = await Room.create(roomData);
+  await auditService.log(req, {
+    action: 'create_room',
+    entity: 'room',
+    entityId: String(room._id),
+    changes: { name: room.name, slug: room.slug, pricePerNight: room.pricePerNight, status: room.status },
+  });
   ApiResponse.created({ room }, 'Room created successfully').send(res);
 });
 
@@ -123,6 +130,12 @@ const updateRoom = asyncHandler(async (req, res) => {
     runValidators: true,
   });
   if (!room) throw ApiError.notFound('Room not found');
+  await auditService.log(req, {
+    action: 'update_room',
+    entity: 'room',
+    entityId: String(req.params.id),
+    changes: req.validated?.body || {},
+  });
   ApiResponse.success({ room }, 'Room updated successfully').send(res);
 });
 
@@ -136,6 +149,12 @@ const deleteRoom = asyncHandler(async (req, res) => {
     await cloudinaryService.deleteImage(room.thumbnail.public_id);
   }
   await Room.findByIdAndDelete(req.params.id);
+  await auditService.log(req, {
+    action: 'delete_room',
+    entity: 'room',
+    entityId: String(req.params.id),
+    changes: { name: room.name, slug: room.slug },
+  });
   ApiResponse.success(null, 'Room deleted successfully').send(res);
 });
 
@@ -221,6 +240,10 @@ const updateRoomStatus = asyncHandler(async (req, res) => {
     throw ApiError.badRequest(`Invalid status. Must be one of: ${validStatuses.join(', ')}`);
   }
 
+  const prevRoom = await Room.findById(req.params.id);
+  if (!prevRoom) throw ApiError.notFound('Room not found');
+  const previousStatus = prevRoom.status;
+
   const room = await Room.findByIdAndUpdate(
     req.params.id,
     { status },
@@ -239,6 +262,13 @@ const updateRoomStatus = asyncHandler(async (req, res) => {
     room.isAvailable = false;
     await room.save();
   }
+
+  await auditService.log(req, {
+    action: 'update_room_status',
+    entity: 'room',
+    entityId: String(req.params.id),
+    changes: { status, previousStatus },
+  });
 
   ApiResponse.success({ room }, `Room status updated to ${status}`).send(res);
 });
@@ -286,6 +316,13 @@ const blockForMaintenance = asyncHandler(async (req, res) => {
   room.isAvailable = false;
   await room.save();
 
+  await auditService.log(req, {
+    action: 'maintenance_block_create',
+    entity: 'room',
+    entityId: String(room._id),
+    changes: { startDate: start.toISOString(), endDate: end.toISOString(), reason: reason || 'Scheduled maintenance' },
+  });
+
   ApiResponse.success({ room }, 'Room blocked for maintenance').send(res);
 });
 
@@ -313,6 +350,13 @@ const removeMaintenanceBlock = asyncHandler(async (req, res) => {
       block.endDate
     ).catch(() => {});
   }
+
+  await auditService.log(req, {
+    action: 'maintenance_block_remove',
+    entity: 'room',
+    entityId: String(req.params.id),
+    changes: block ? { startDate: block.startDate.toISOString(), endDate: block.endDate.toISOString(), reason: block.reason } : { blockId: req.params.blockId },
+  });
 
   ApiResponse.success({ room }, 'Maintenance block removed').send(res);
 });

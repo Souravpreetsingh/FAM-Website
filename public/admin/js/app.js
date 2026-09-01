@@ -1,5 +1,18 @@
-(function () {
-  if (!window.AdminAuth.requireAdmin()) return;
+(async function () {
+  const hadStored = !!window.AdminAuth.user();
+  let authed = hadStored;
+  if (!authed) {
+    authed = await window.AdminAuth.validateSession();
+  } else {
+    // Re-validate in the background so revoked/expired sessions are caught.
+    window.AdminAuth.validateSession().then(function (ok) {
+      if (!ok) window.AdminAuth.logout();
+    });
+  }
+  if (!authed) {
+    window.location.href = '/admin/login.html';
+    return;
+  }
 
   const viewsContainer = document.getElementById('views');
   const pageTitle = document.getElementById('pageTitle');
@@ -10,6 +23,9 @@
     availability: { title: 'Availability', render: function (el) { return AdminViews.availability(el); } },
     reservations: { title: 'Reservations', render: function (el) { return AdminViews.reservations(el); } },
     rooms: { title: 'Rooms', render: function (el) { return AdminViews.rooms(el); } },
+    customers: { title: 'Customers', render: function (el) { return AdminViews.customers(el); } },
+    reports: { title: 'Reports', render: function (el) { return AdminViews.reports(el); } },
+    settings: { title: 'Settings', render: function (el) { return AdminViews.settings(el); } },
   };
 
   function showView(name) {

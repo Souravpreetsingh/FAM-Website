@@ -21,12 +21,12 @@ const getAvailabilityCalendar = asyncHandler(async (req, res) => {
   ApiResponse.success({ calendar, month: m, year: y }).send(res);
 });
 
-/** Create a manual block (BLOCKED) or hold (RESERVED) for a date range. */
+/** Create a manual block (BLOCKED, MAINTENANCE) or hold (RESERVED) for a date range. */
 const createBlock = asyncHandler(async (req, res) => {
   const { roomId, startDate, endDate, reason, kind } = req.validated?.body || req.body || {};
   const blockKind = (kind || 'BLOCKED').toUpperCase();
-  if (!['BLOCKED', 'RESERVED'].includes(blockKind)) {
-    throw ApiError.badRequest('Kind must be BLOCKED or RESERVED');
+  if (!['BLOCKED', 'RESERVED', 'MAINTENANCE'].includes(blockKind)) {
+    throw ApiError.badRequest('Kind must be BLOCKED, RESERVED, or MAINTENANCE');
   }
 
   const Room = require('../models/Room');
@@ -39,7 +39,10 @@ const createBlock = asyncHandler(async (req, res) => {
 
   const stay = await availabilityService.checkStay(room, start, end);
   if (!stay.available) {
-    throw ApiError.conflict(`Cannot create block: dates conflict (${stay.reason})`);
+    const conflictDates = stay.conflictingDates && stay.conflictingDates.length
+      ? ' Conflicting dates: ' + stay.conflictingDates.map(function (d) { return availabilityService.formatDay(d); }).join(', ')
+      : '';
+    throw ApiError.conflict('This room has an existing reservation during the selected dates (' + stay.reason + ').' + conflictDates);
   }
 
   const nights = availabilityService.generateNights(start, end);
@@ -47,20 +50,20 @@ const createBlock = asyncHandler(async (req, res) => {
     await availabilityService.acquireDates(room, nights, {
       kind: blockKind,
       createdBy: req.user ? req.user._id : null,
-      reason: reason || (blockKind === 'RESERVED' ? 'Held reservation' : 'Blocked by staff'),
+      reason: reason || (blockKind === 'RESERVED' ? 'Held reservation' : blockKind === 'MAINTENANCE' ? 'Scheduled maintenance' : 'Blocked by staff'),
     });
   } catch {
     throw ApiError.conflict('Cannot create block: some dates are already occupied');
   }
 
   await auditService.log(req, {
-    action: `create_${blockKind.toLowerCase()}_block`,
+    action: 'create_availability_block',
     entity: 'availability',
     entityId: String(roomId),
-    changes: { roomId, startDate: start.toISOString(), endDate: end.toISOString(), reason },
+    changes: { room: room.name, roomId: String(roomId), startDate: availabilityService.formatDay(start), endDate: availabilityService.formatDay(end), kind: blockKind, reason: reason || '' },
   });
 
-  ApiResponse.success({ roomId, startDate: start, endDate: end, kind: blockKind, reason }, 'Block created').send(res);
+  ApiResponse.success({ roomId, startDate: start, endDate: end, kind: blockKind, reason: reason || '' }, 'Block created').send(res);
 });
 
 /** Remove a manual block/hold by its ledger row id. */
@@ -74,7 +77,7 @@ const removeBlock = asyncHandler(async (req, res) => {
   await AvailabilityBlock.findByIdAndDelete(block._id);
 
   await auditService.log(req, {
-    action: `remove_${(block.kind || 'block').toLowerCase()}_block`,
+    action: 'delete_availability_block',
     entity: 'availability',
     entityId: String(block.room),
     changes: { blockId: String(block._id), date: availabilityService.formatDay(block.date), kind: block.kind },
@@ -113,9 +116,37 @@ const checkAvailabilityPublic = asyncHandler(async (req, res) => {
   ApiResponse.success({ availability, checkIn: start, checkOut: end }).send(res);
 });
 
+/** Remove all manual/reserved blocks for a room within a date range (not bookings). */
+const clearRange = asyncHandler(async (req, res) => {
+  const { roomId, startDate, endDate } = req.validated?.body || req.body || {};
+  const Room = require('../models/Room');
+  const room = await Room.findById(roomId);
+  if (!room) throw ApiError.notFound('Room not found');
+
+  const start = availabilityService.toDay(startDate);
+  const end = availabilityService.toDay(endDate);
+  if (start >= end) throw ApiError.badRequest('End date must be after start date');
+
+  const removed = await AvailabilityBlock.deleteMany({
+    room: roomId,
+    date: { $gte: start, $lt: end },
+    kind: { $in: ['BLOCKED', 'RESERVED', 'MAINTENANCE'] },
+  });
+
+  await auditService.log(req, {
+    action: 'clear_availability_block',
+    entity: 'availability',
+    entityId: String(roomId),
+    changes: { room: room.name, roomId: String(roomId), startDate: availabilityService.formatDay(start), endDate: availabilityService.formatDay(end), removed: removed.deletedCount || 0 },
+  });
+
+  ApiResponse.success({ roomId, startDate: availabilityService.formatDay(start), endDate: availabilityService.formatDay(end), removed: removed.deletedCount || 0 }, 'Blocks cleared').send(res);
+});
+
 module.exports = {
   getAvailabilityCalendar,
   createBlock,
   removeBlock,
+  clearRange,
   checkAvailabilityPublic,
 };

@@ -9,8 +9,11 @@
     btn.disabled = true;
     btn.textContent = 'Signing in…';
 
+    // Tokens are set as httpOnly cookies by the server; nothing sensitive is
+    // stored in JavaScript.
     fetch('/api/v1/admin/login', {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: document.getElementById('email').value.trim(),
@@ -26,8 +29,7 @@
         });
       })
       .then(function (data) {
-        window.AdminAuth.set(data.accessToken);
-        window.AdminAuth.setUser(data.user);
+        if (data && data.user) window.AdminAuth.setUser(data.user);
         window.location.href = '/admin/index.html';
       })
       .catch(function (err) {

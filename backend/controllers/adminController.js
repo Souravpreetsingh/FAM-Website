@@ -13,6 +13,8 @@ const availabilityService = require('../services/availabilityService');
 const auditService = require('../services/auditService');
 const { paginate, paginationResponse } = require('../utils/pagination');
 
+const { setAdminAuthCookies, clearAdminAuthCookies } = require('../utils/adminCookies');
+
 const adminLogin = asyncHandler(async (req, res) => {
   const { email, password } = req.validated?.body || req.body || {};
   const result = await authService.login(email, password);
@@ -20,17 +22,52 @@ const adminLogin = asyncHandler(async (req, res) => {
     throw ApiError.forbidden('Admin access required');
   }
 
+  setAdminAuthCookies(res, {
+    accessToken: result.accessToken,
+    refreshToken: result.refreshToken,
+  });
+
   await auditService.log(req, {
     action: 'admin_login',
     entity: 'auth',
     entityId: String(result.user._id),
   });
 
+  // Access/refresh tokens are delivered via httpOnly cookies so they are not
+  // exposed to JavaScript. The user object is returned so the admin UI can
+  // render the current session without reading tokens.
   ApiResponse.success({
     user: result.user,
-    accessToken: result.accessToken,
-    refreshToken: result.refreshToken,
+    sessionInitialized: true,
   }, 'Admin login successful').send(res);
+});
+
+/** Rotate the admin refresh token and issue a fresh access token (httpOnly cookies). */
+const adminRefresh = asyncHandler(async (req, res) => {
+  const refreshToken = req.cookies && req.cookies.refresh_token;
+  if (!refreshToken) {
+    throw ApiError.unauthorized('Refresh token is required');
+  }
+  const tokens = await authService.refreshAccessToken(refreshToken);
+  setAdminAuthCookies(res, tokens);
+  const decoded = require('../utils/generateToken').verifyAccessToken(tokens.accessToken);
+  const sessionUser = await User.findById(decoded.id);
+  ApiResponse.success({ sessionInitialized: true, user: sessionUser }, 'Session refreshed successfully').send(res);
+});
+
+/** Admin logout — invalidates the refresh token and clears auth cookies. */
+const adminLogout = asyncHandler(async (req, res) => {
+  const refreshToken = req.cookies && req.cookies.refresh_token;
+  if (refreshToken && req.user) {
+    await authService.logout(req.user._id, refreshToken);
+  }
+  clearAdminAuthCookies(res);
+  ApiResponse.success(null, 'Logged out successfully').send(res);
+});
+
+/** Returns the authenticated admin's identity (used to validate page reloads). */
+const adminSession = asyncHandler(async (req, res) => {
+  ApiResponse.success({ user: req.user }, 'Authenticated').send(res);
 });
 
 const getDashboard = asyncHandler(async (req, res) => {
@@ -68,7 +105,7 @@ const getDashboard = asyncHandler(async (req, res) => {
   const totalRevenue = revenueResult.length > 0 ? revenueResult[0].total : 0;
 
   const now = new Date();
-  const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+  const sixMonthsAgo = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 5, 1));
   const revenueByMonth = await Booking.aggregate([
     {
       $match: {
@@ -169,7 +206,7 @@ const getDashboard = asyncHandler(async (req, res) => {
 
 const getUsers = asyncHandler(async (req, res) => {
   const { page, limit, skip } = paginate(req.query.page, req.query.limit);
-  const filter = {};
+  const filter = { isDeleted: { $ne: true } };
 
   if (req.query.role) filter.role = req.query.role;
   if (req.query.isVerified !== undefined) filter.isVerified = req.query.isVerified === 'true';
@@ -202,17 +239,61 @@ const getUserDetails = asyncHandler(async (req, res) => {
 const updateUserRole = asyncHandler(async (req, res) => {
   const { role } = req.body;
   if (!['guest', 'admin'].includes(role)) throw ApiError.badRequest('Invalid role');
+  const prev = await User.findById(req.params.id);
+  if (!prev) throw ApiError.notFound('User not found');
   const user = await User.findByIdAndUpdate(req.params.id, { role }, { new: true });
-  if (!user) throw ApiError.notFound('User not found');
+  await auditService.log(req, {
+    action: 'update_user_role',
+    entity: 'user',
+    entityId: String(req.params.id),
+    changes: { from: prev.role, to: role, email: prev.email },
+  });
   ApiResponse.success({ user }, 'User role updated').send(res);
 });
 
 const deleteUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
   if (!user) throw ApiError.notFound('User not found');
-  await Booking.deleteMany({ user: user._id });
-  await Review.deleteMany({ user: user._id });
-  await User.findByIdAndDelete(req.params.id);
+
+  // Safety: never allow soft-deleting an administrator via this flow.
+  if (user.role === 'admin') {
+    throw ApiError.badRequest('Administrator accounts cannot be deleted');
+  }
+
+  // Explicit confirmation is required at the business-logic level before a
+  // user with a booking history can be removed.
+  if (req.body && req.body.confirm !== true) {
+    throw ApiError.badRequest('Deletion requires explicit confirmation (confirm: true)');
+  }
+
+  // Release availability ledger rows only for the user's ACTIVE bookings.
+  // Cancelled / completed / historical bookings already released their dates
+  // and are intentionally left intact to preserve reporting history.
+  const activeBookings = await Booking.find({
+    user: user._id,
+    status: { $in: availabilityService.ACTIVE_BOOKING_STATUSES },
+  }).select('room');
+
+  for (const b of activeBookings) {
+    if (b.room) {
+      await availabilityService.releaseBookingDates(b.room, b._id).catch(() => {});
+      await availabilityService.unMirrorBookedDates(b.room, b.checkIn, b.checkOut, b._id).catch(() => {});
+    }
+  }
+
+  // Soft-delete: keep the historical record for reports/consistency while
+  // revoking all active sessions so the account can no longer sign in.
+  user.isDeleted = true;
+  user.refreshTokens = [];
+  await user.save();
+
+  await auditService.log(req, {
+    action: 'delete_user',
+    entity: 'user',
+    entityId: String(req.params.id),
+    changes: { email: user.email, name: user.name, releasedActiveBookings: activeBookings.length },
+  });
+
   ApiResponse.success(null, 'User deleted successfully').send(res);
 });
 
@@ -263,23 +344,27 @@ const getRevenueAnalytics = asyncHandler(async (req, res) => {
 const getBookingReports = asyncHandler(async (req, res) => {
   const { period, from, to } = req.query;
   const now = new Date();
+  const today = availabilityService.toDay(now);
 
+  // Period boundaries are normalised to UTC days so they match the same model
+  // used by the availability ledger (avoiding server-local timezone drift).
   let startDate;
   switch (period) {
     case 'daily':
-      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      startDate = today;
       break;
     case 'weekly':
-      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+      startDate = new Date(today);
+      startDate.setUTCDate(startDate.getUTCDate() - 7);
       break;
     case 'monthly':
-      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+      startDate = availabilityService.toDay(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)));
       break;
     case 'custom':
-      startDate = from ? new Date(from) : new Date(now.getFullYear(), now.getMonth(), 1);
+      startDate = from ? availabilityService.toDay(from) : availabilityService.toDay(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)));
       break;
     default:
-      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+      startDate = availabilityService.toDay(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)));
   }
   const endDate = to ? new Date(to) : now;
 
@@ -318,29 +403,31 @@ const getBookingReports = asyncHandler(async (req, res) => {
 
 const getOccupancyReport = asyncHandler(async (req, res) => {
   const { month, year } = req.query;
-  const m = parseInt(month) || new Date().getMonth();
-  const y = parseInt(year) || new Date().getFullYear();
+  const mRaw = parseInt(month);
+  const yRaw = parseInt(year);
+  const m = Number.isInteger(mRaw) && mRaw >= 0 && mRaw <= 11 ? mRaw : new Date().getUTCMonth();
+  const y = Number.isInteger(yRaw) && yRaw >= 2000 ? yRaw : new Date().getUTCFullYear();
 
-  const startDate = new Date(y, m, 1);
-  const endDate = new Date(y, m + 1, 0, 23, 59, 59);
-  const daysInMonth = new Date(y, m + 1, 0).getDate();
+  // Month range in UTC day space — aligned with the availability ledger.
+  const startDate = availabilityService.toDay(new Date(Date.UTC(y, m, 1)));
+  const endDate = availabilityService.toDay(new Date(Date.UTC(y, m + 1, 1)));
+  const daysInMonth = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
 
   const rooms = await Room.find({});
   const roomStats = await Promise.all(
     rooms.map(async (room) => {
       const bookings = await Booking.find({
         room: room._id,
-        checkIn: { $lte: endDate },
-        checkOut: { $gte: startDate },
+        checkIn: { $lt: endDate },
+        checkOut: { $gt: startDate },
         status: { $in: ['confirmed', 'checked_in', 'checked_out', 'completed'] },
       });
 
       let bookedNights = 0;
       for (const b of bookings) {
-        const ci = new Date(Math.max(b.checkIn.getTime(), startDate.getTime()));
-        const co = new Date(Math.min(b.checkOut.getTime(), endDate.getTime()));
-        const nights = Math.ceil((co - ci) / (1000 * 60 * 60 * 24));
-        bookedNights += Math.max(0, nights);
+        const ci = availabilityService.toDay(Math.max(b.checkIn.getTime(), startDate.getTime()));
+        const co = availabilityService.toDay(Math.min(b.checkOut.getTime(), endDate.getTime()));
+        bookedNights += Math.max(0, availabilityService.nightsBetween(ci, co));
       }
 
       const totalPossibleNights = daysInMonth * room.totalRooms;
@@ -392,8 +479,9 @@ const getPopularRooms = asyncHandler(async (req, res) => {
 const getBookingTrends = asyncHandler(async (req, res) => {
   const months = parseInt(req.query.months) || 12;
 
-  const startDate = new Date();
-  startDate.setMonth(startDate.getMonth() - months);
+  const now = new Date();
+  // UTC month-aligned start so monthly bucketing stays consistent.
+  const startDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - months, 1));
 
   const trends = await Booking.aggregate([
     { $match: { createdAt: { $gte: startDate } } },
@@ -489,6 +577,9 @@ const getAuditLogs = asyncHandler(async (req, res) => {
 
 module.exports = {
   adminLogin,
+  adminRefresh,
+  adminLogout,
+  adminSession,
   getDashboard,
   getUsers,
   getUserDetails,

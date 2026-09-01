@@ -124,7 +124,10 @@ FAM.Auth = (() => {
       body: { email, password },
       useAuth: false,
     });
-    if (data.data?.accessToken && data.data?.refreshToken) {
+    // Admin accounts authenticate through httpOnly cookies set by the server;
+    // their tokens are never persisted in localStorage.
+    const isAdmin = data.data?.user?.role === 'admin';
+    if (!isAdmin && data.data?.accessToken && data.data?.refreshToken) {
       setTokens(data.data.accessToken, data.data.refreshToken);
     }
     return data;

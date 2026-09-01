@@ -19,10 +19,18 @@
 
   function availabilityPill(r) {
     let cls = 'avail-free';
-    let txt = 'Free';
-    if (r.blockedToday) { cls = 'avail-' + (r.blockKind || 'blocked'); txt = r.blockKind || 'Blocked'; }
-    if (r.currentGuest) { cls = 'avail-booked'; txt = 'Occupied'; }
+    let txt = 'Available';
+    if (r.currentGuest) { cls = 'avail-booked'; txt = 'Booked'; }
+    else if (r.status === 'maintenance' || r.status === 'out_of_service') { cls = 'avail-maintenance'; txt = 'Maintenance'; }
+    else if (r.blockedToday) { cls = 'avail-blocked'; txt = r.blockKind === 'reserved' ? 'Reserved' : 'Blocked'; }
     return '<span class="avail-pill ' + cls + '">' + txt + '</span>';
+  }
+
+  function roomStatusLabel(r) {
+    if (r.currentGuest) return 'Booked';
+    if (r.status === 'maintenance' || r.status === 'out_of_service') return 'Maintenance';
+    if (r.blockedToday) return r.blockKind === 'reserved' ? 'Reserved' : 'Blocked';
+    return 'Available';
   }
 
   window.AdminViews.dashboard = function (stage) {
@@ -34,8 +42,29 @@
       const recents = data.recentBookings || [];
       const maxRev = (data.revenueByMonth || []).reduce(function (m, r) { return Math.max(m, r.revenue || 0); }, 0) || 1;
 
+      var counts = { Available: 0, Booked: 0, Reserved: 0, Maintenance: 0, Blocked: 0 };
+      snap.forEach(function (r) { var k = roomStatusLabel(r); if (counts[k] !== undefined) counts[k]++; });
+
+      var roomStatusRows = snap.map(function (r) {
+        var label = roomStatusLabel(r);
+        var cls = label === 'Available' ? 'c-available' : label === 'Booked' ? 'c-booked' : label === 'Reserved' ? 'c-reserved' : label === 'Maintenance' ? 'c-maintenance' : 'c-blocked';
+        return '<tr><td><strong>' + window.AdminUI.esc(r.name) + '</strong></td>' +
+          '<td><span class="dot ' + cls + '" style="display:inline-block;width:10px;height:10px;border-radius:50;margin-right:6px;vertical-align:middle"></span>' + label + '</td>' +
+          '<td>' + (r.currentGuest ? window.AdminUI.esc(r.currentGuest) : '—') + '</td></tr>';
+      }).join('');
+
+      var countBar = Object.keys(counts).map(function (k) {
+        return '<span class="chip">' + k + ': ' + counts[k] + '</span>';
+      }).join('');
+
       stage.innerHTML =
         '<div class="stats-grid">' + statCards(data.stats) + '</div>' +
+
+        '<div class="card"><div class="card-head"><h3>Today\'s Rooms</h3></div>' +
+        '<div class="today-chips">' + countBar + '</div>' +
+        '<table class="table"><thead><tr><th>Room</th><th>Status</th><th>Guest</th></tr></thead><tbody>' +
+        roomStatusRows +
+        '</tbody></table></div>' +
 
         '<div class="card"><div class="card-head"><h3>Today ' +
         window.AdminUI.esc(avail.today || '') + '</h3>' +

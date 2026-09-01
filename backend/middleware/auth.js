@@ -4,13 +4,21 @@ const ApiError = require('../utils/ApiError');
 const asyncHandler = require('../utils/asyncHandler');
 
 const authenticate = asyncHandler(async (req, res, next) => {
+  let token = null;
   const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw ApiError.unauthorized('Access token is required');
+  // Prefer the secure httpOnly cookie (admin session), then fall back to a
+  // Bearer header (legacy / customer clients). Tokens are never returned to
+  // the admin front-end JavaScript.
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  } else if (req.cookies && req.cookies.access_token) {
+    token = req.cookies.access_token;
   }
 
-  const token = authHeader.split(' ')[1];
+  if (!token) {
+    throw ApiError.unauthorized('Access token is required');
+  }
 
   let decoded;
   try {
@@ -20,7 +28,7 @@ const authenticate = asyncHandler(async (req, res, next) => {
   }
 
   const user = await User.findById(decoded.id);
-  if (!user) {
+  if (!user || user.isDeleted === true) {
     throw ApiError.unauthorized('User not found');
   }
 
