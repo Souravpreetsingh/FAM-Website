@@ -45,6 +45,10 @@ services:
         sync: false
       - key: RAZORPAY_KEY_SECRET
         sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET
+        sync: false
+      - key: PENDING_BOOKING_TTL_MINUTES
+        value: "1440"
       - key: SMTP_HOST
         sync: false
       - key: SMTP_PORT

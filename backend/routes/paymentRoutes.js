@@ -1,10 +1,47 @@
 const express = require('express');
 const router = express.Router();
 const paymentController = require('../controllers/paymentController');
-const { authenticate } = require('../middleware/auth');
+const { authenticate, authorizeAdmin } = require('../middleware/auth');
+const validate = require('../middleware/validate');
+const rateLimit = require('express-rate-limit');
+const {
+  createPaymentOrderSchema,
+  verifyPaymentSchema,
+  refundSchema,
+} = require('../validations/paymentValidation');
 
-router.post('/create-order', authenticate, paymentController.createOrder);
-router.post('/verify', paymentController.verifyPayment);
+// Verify is a sensitive, signed endpoint that creates/updates financial state.
+// Tight limit; the webhook (separate, verified by signature) handles retries so
+// we do NOT throttle it — Razorpay retries must never be blocked.
+const verifyLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many verification attempts, please try again later.',
+  },
+});
+
+const createOrderLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many order requests, please try again later.',
+  },
+});
+
+router.post('/create-order', authenticate, createOrderLimiter, validate(createPaymentOrderSchema), paymentController.createOrder);
+// Verify now requires authentication + ownership (previously public & replayable).
+router.post('/verify', authenticate, verifyLimiter, validate(verifyPaymentSchema), paymentController.verifyPayment);
+// Webhook intentionally has NO auth middleware and NO rate limit — it is
+// authenticated by the Razorpay signature over the raw body (see service).
+router.post('/webhook', paymentController.webhook);
+router.post('/:bookingId/refund', authenticate, authorizeAdmin, validate(refundSchema), paymentController.refund);
 router.get('/:id', authenticate, paymentController.getPaymentDetails);
 
 module.exports = router;

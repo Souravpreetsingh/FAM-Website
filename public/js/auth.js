@@ -3,19 +3,13 @@ FAM.Auth = (() => {
   'use strict';
 
   // ── API Base Resolution ──
-  // Same-origin /api/v1/auth only works when the page is served by the backend
-  // (combined Render instance). Any other host must call the production API
-  // explicitly.
+  // Frontend is served by the same Express backend, so same-origin is the
+  // default. A separately-hosted build can override via FAM_ENV.API_BASE or
+  // FAM_API_BASE (see api-base.js).
   function resolveApiBase() {
     if (window.FAM_API_BASE) return window.FAM_API_BASE;
-    const host = window.location.hostname;
-    const sameOriginApiHosts = [
-      'localhost',
-      '127.0.0.1',
-      'fam-website-wq2e.onrender.com',
-    ];
-    if (sameOriginApiHosts.includes(host)) return '/api/v1/auth';
-    return 'https://fam-website-wq2e.onrender.com/api/v1/auth';
+    if (window.FAM_ENV && window.FAM_ENV.API_BASE) return window.FAM_ENV.API_BASE.replace(/\/$/, '') + '/auth';
+    return '/api/v1/auth';
   }
 
   const API_BASE = resolveApiBase();

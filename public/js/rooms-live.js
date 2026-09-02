@@ -15,9 +15,10 @@
 
   function apiBase() {
     if (window.FAM_API_BASE) return window.FAM_API_BASE.replace(/\/auth$/, '');
-    var host = window.location.hostname;
-    if (host === 'localhost' || host === '127.0.0.1' || host === 'fam-website-wq2e.onrender.com') return '/api/v1';
-    return 'https://fam-website-wq2e.onrender.com/api/v1';
+    // Same-origin default (frontend served by the same backend); overridable
+    // via FAM_ENV.API_BASE for a separately-hosted static build.
+    if (window.FAM_ENV && window.FAM_ENV.API_BASE) return window.FAM_ENV.API_BASE.replace(/\/$/, '');
+    return '/api/v1';
   }
 
   function esc(s) {

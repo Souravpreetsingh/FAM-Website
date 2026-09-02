@@ -6,10 +6,11 @@
 
   function apiBase() {
     if (window.FAM_API_BASE) return window.FAM_API_BASE.replace(/\/auth$/, '');
-    var host = window.location.hostname;
-    var sameOriginHosts = ['localhost', '127.0.0.1', 'fam-website-wq2e.onrender.com'];
-    if (sameOriginHosts.indexOf(host) !== -1) return '/api/v1';
-    return 'https://fam-website-wq2e.onrender.com/api/v1';
+    // Frontend is served by the same Express backend, so same-origin is the
+    // default and needs no hard-coded host. An optional global FAM_ENV can point
+    // a separately-hosted static build at an API (see api-base.js).
+    if (window.FAM_ENV && window.FAM_ENV.API_BASE) return window.FAM_ENV.API_BASE.replace(/\/$/, '');
+    return '/api/v1';
   }
 
   function authHeaders() {
@@ -45,6 +46,37 @@
 
   FAM.Booking = {
     apiBase: apiBase,
+
+    // ── Login-return booking draft (non-sensitive state only) ──
+    // Preserved across the sign-in hop so the customer resumes the SAME
+    // booking + payment step instead of re-filling the wizard. sessionStorage
+    // is tab-scoped and short-lived. No tokens, signatures or card data are
+    // ever stored here.
+    DRAFT_KEY: 'fam_booking_draft',
+
+    saveDraft: function () {
+      try {
+        var b = window.booking;
+        if (!b || !b.room) return;
+        var draft = {
+          roomId: b.room.id, // static ROOMS id (slug) — what restore() looks up
+          checkIn: ymd(b.checkIn),
+          checkOut: ymd(b.checkOut),
+          adults: b.adults,
+          children: b.children,
+          fullName: b.fullName || '',
+          email: b.email || '',
+          phone: b.phone || '',
+          specialRequests: b.specialRequests || '',
+          paymentMethod: b.paymentMethod || null,
+        };
+        sessionStorage.setItem(FAM.Booking.DRAFT_KEY, JSON.stringify(draft));
+      } catch (e) { /* storage unavailable — still redirect to login */ }
+    },
+
+    clearDraft: function () {
+      try { sessionStorage.removeItem(FAM.Booking.DRAFT_KEY); } catch (e) { /* ignore */ }
+    },
 
     rooms: function (params) {
       var qs = '';
@@ -181,6 +213,12 @@
 
     // 3. Real booking creation + Razorpay payment on "Pay Now" click.
     window.handlePayment = function () {
+      // Re-entry guard: a single click/branch must not kick off a second
+      // booking/reservation while one is in flight.
+      if (window.__famPaymentInFlight) { return; }
+      window.__famPaymentInFlight = true;
+      var release = function () { window.__famPaymentInFlight = false; };
+
       var payBtn = document.getElementById('pay-btn');
       var payErr = function (msg) {
         if (payBtn) { payBtn.textContent = 'Pay Now'; payBtn.disabled = false; }
@@ -198,8 +236,12 @@
       if (payBtn) { payBtn.textContent = 'Reserving…'; payBtn.disabled = true; }
 
       if (!FAM.Auth || !FAM.Auth.isAuthenticated || !FAM.Auth.isAuthenticated()) {
+        release();
+        // Preserve the in-progress booking so the customer resumes exactly where
+        // they left off after signing in instead of re-filling the wizard.
+        FAM.Booking.saveDraft();
         payErr('Please sign in to confirm your booking.');
-        window.location.href = '/pages/login.html?redirect=' + encodeURIComponent('/pages/booking.html');
+        window.location.href = '/pages/login.html?redirect=' + encodeURIComponent('/pages/booking.html?return=1');
         return;
       }
 
@@ -250,6 +292,7 @@
           return startOrder(booking);
         });
       }).catch(function (err) {
+        release();
         if (createdBooking) {
           // Booking exists but payment couldn't start — keep the reservation,
           // show confirmation as pending rather than a dead-end error.
@@ -311,10 +354,12 @@
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
             }).then(function () {
+              window.__famPaymentInFlight = false;
               var pc = document.getElementById('pay-btn');
               if (pc) { pc.textContent = 'Pay Now'; pc.disabled = false; }
               showConfirmation(booking, true);
             }).catch(function (err) {
+              window.__famPaymentInFlight = false;
               var pc2 = document.getElementById('pay-btn');
               if (pc2) { pc2.textContent = 'Pay Now'; pc2.disabled = false; }
               var total = document.getElementById('payment-total');
@@ -330,6 +375,7 @@
           },
           modal: {
             ondismiss: function () {
+              window.__famPaymentInFlight = false;
               var pc3 = document.getElementById('pay-btn');
               if (pc3) { pc3.textContent = 'Pay Now'; pc3.disabled = false; }
             },
@@ -337,6 +383,7 @@
         };
         var rzp = new Razorpay(options);
         rzp.on('payment.failed', function (resp) {
+          window.__famPaymentInFlight = false;
           var pc4 = document.getElementById('pay-btn');
           if (pc4) { pc4.textContent = 'Pay Now'; pc4.disabled = false; }
           var total = document.getElementById('payment-total');
@@ -351,6 +398,7 @@
         });
         rzp.open();
       }).catch(function (err) {
+        window.__famPaymentInFlight = false;
         showConfirmation(booking, false);
         var pb = document.getElementById('pay-btn');
         if (pb) { pb.textContent = 'Pay Now'; pb.disabled = false; }
@@ -367,6 +415,7 @@
     }
 
     function showConfirmation(booking, paid, note) {
+      FAM.Booking.clearDraft();
       if (window.booking) window.booking.paymentMethod = paid ? 'Paid online' : 'Pending';
       if (window.renderConfirmation) window.renderConfirmation();
       var conf = document.getElementById('confirmation-summary');

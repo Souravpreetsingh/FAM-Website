@@ -99,6 +99,8 @@ const bookingSchema = new mongoose.Schema(
       enum: ['pending', 'partial', 'paid', 'refunded', 'failed'],
       default: 'pending',
     },
+    refundedAt: Date,
+    confirmationEmailSentAt: Date,
     payment: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Payment',

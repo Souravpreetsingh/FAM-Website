@@ -50,6 +50,47 @@ const paymentSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    // Lifecycle timestamps (not managed by `timestamps` which only sets
+    // createdAt/updatedAt) so the state machine has explicit audit points.
+    paidAt: {
+      type: Date,
+      default: null,
+    },
+    failedAt: {
+      type: Date,
+      default: null,
+    },
+    refundedAt: {
+      type: Date,
+      default: null,
+    },
+    failureReason: {
+      type: String,
+      default: '',
+    },
+    // Webhook de-duplication bookkeeping.
+    lastWebhookEventId: {
+      type: String,
+      default: null,
+    },
+    lastWebhookEventAt: {
+      type: Date,
+      default: null,
+    },
+    webhookEvents: [
+      {
+        eventId: {
+          type: String,
+          unique: true,
+          sparse: true,
+        },
+        event: String,
+        receivedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
     metadata: {
       type: mongoose.Schema.Types.Mixed,
       default: {},
@@ -63,6 +104,12 @@ const paymentSchema = new mongoose.Schema(
 paymentSchema.index({ booking: 1 });
 paymentSchema.index({ user: 1 });
 paymentSchema.index({ razorpayOrderId: 1 });
+paymentSchema.index({ razorpayPaymentId: 1 });
 paymentSchema.index({ status: 1 });
+
+// Application-level idempotency is enforced in paymentService (the sparse
+// unique index on razorpayOrderId is created by the safe migration script in
+// scripts/ensurePaymentIndexes.js after an explicit duplicate check, so we
+// never trigger a destructive index build against existing production data).
 
 module.exports = mongoose.model('Payment', paymentSchema);

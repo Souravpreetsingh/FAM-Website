@@ -240,6 +240,11 @@ const updateBooking = asyncHandler(async (req, res) => {
     throw ApiError.forbidden('Not authorized to update this booking');
   }
 
+  // Paid bookings must not have dates/price changed without a refund + re-charge.
+  if (['paid', 'refunded'].includes(booking.paymentStatus) && (req.body.checkIn || req.body.checkOut)) {
+    throw ApiError.badRequest('Dates cannot be changed after payment. Contact us or cancel for a refund.');
+  }
+
   const { checkIn, checkOut, guests, specialRequests } = req.body;
 
   let newCheckIn = booking.checkIn;
@@ -319,6 +324,20 @@ const cancelBooking = asyncHandler(async (req, res) => {
     if (!booking.canCancel()) throw ApiError.badRequest('Booking cannot be cancelled in its current state');
   } else {
     if (!booking.canCancel()) throw ApiError.badRequest('Booking cannot be cancelled in its current state');
+  }
+
+  // Paid bookings are financial invariants: they must go through the admin
+  // refund flow so a Razorpay refund is actually processed. Never silently
+  // cancel a paid booking.
+  if (booking.paymentStatus === 'paid' || booking.paymentStatus === 'refunded') {
+    if (!isAdmin) {
+      throw ApiError.badRequest('Your booking has already been paid. Please contact us to request a refund.');
+    }
+    if (booking.paymentStatus === 'paid') {
+      throw ApiError.badRequest(
+        'This booking is paid. Use the refund action on the payment to process a Razorpay refund.'
+      );
+    }
   }
 
   booking.status = 'cancelled';
@@ -536,6 +555,16 @@ const moveBookingRoom = asyncHandler(async (req, res) => {
 const updateReservation = asyncHandler(async (req, res) => {
   const booking = await Booking.findById(req.params.id);
   if (!booking) throw ApiError.notFound('Booking not found');
+
+  // A paid booking's dates/room/price are financial invariants; changing them
+  // would silently alter what was captured (and block on capture reconciliation).
+  if (['paid', 'refunded'].includes(booking.paymentStatus)) {
+    if (req.body?.checkIn || req.body?.checkOut || req.body?.room || req.body?.paymentStatus === 'pending') {
+      throw ApiError.badRequest(
+        'Paid bookings cannot have dates, room or payment regressed. Cancel and issue a refund instead.'
+      );
+    }
+  }
 
   const {
     checkIn,

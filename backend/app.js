@@ -29,19 +29,64 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "cdnjs.cloudflare.com", "unpkg.com", "instant.page", "fonts.googleapis.com"],
+      // Razorpay checkout SDK (checkout.js), its inline scripts, fonts and the
+      // payment iframe all require their own origins. No wildcards / unsafe-eval.
+      scriptSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        "https://checkout.razorpay.com",
+        "https://api.razorpay.com",
+        "cdnjs.cloudflare.com",
+        "unpkg.com",
+        "instant.page",
+        "fonts.googleapis.com",
+      ],
       scriptSrcAttr: ["'unsafe-inline'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com", "fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:", "https://*.googleusercontent.com", "https://*.supabase.co", "https://images.unsplash.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com", "fonts.gstatic.com", "https://checkout.razorpay.com"],
+      imgSrc: [
+        "'self'",
+        "data:",
+        "https://*.googleusercontent.com",
+        "https://*.supabase.co",
+        "https://images.unsplash.com",
+        "https://checkout.razorpay.com",
+        "https://*.razorpay.com",
+      ],
       fontSrc: ["'self'", "fonts.gstatic.com", "https:", "data:"],
-      connectSrc: ["'self'"],
-      frameSrc: ["'self'", "https://www.google.com", "https://www.instagram.com"],
+      connectSrc: [
+        "'self'",
+        "https://checkout.razorpay.com",
+        "https://api.razorpay.com",
+        "https://*.razorpay.com",
+      ],
+      frameSrc: [
+        "'self'",
+        "https://www.google.com",
+        "https://www.instagram.com",
+        "https://checkout.razorpay.com",
+        "https://*.razorpay.com",
+      ],
       mediaSrc: ["'self'"],
       objectSrc: ["'none'"],
       upgradeInsecureRequests: [],
     },
   },
 }));
+
+// Razorpay webhook verification needs the RAW request body (Razorpay signs the
+// exact bytes). Parse it before the global JSON parser consumes the stream and
+// stash it on req.rawBody. Only matched for the webhook path.
+const razorpayWebhookRaw = express.raw({ type: '*/*', limit: '1mb' });
+app.use('/api/v1/payments/webhook', (req, res, next) => {
+  razorpayWebhookRaw(req, res, (err) => {
+    if (err) return next(err);
+    if (req.body && Buffer.isBuffer(req.body)) {
+      req.rawBody = req.body;
+      req.body = JSON.parse(req.body.toString('utf8'));
+    }
+    next();
+  });
+});
 
 const corsOptions = {
   origin(origin, callback) {

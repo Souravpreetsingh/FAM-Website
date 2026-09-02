@@ -6,6 +6,7 @@ const connectDB = require('./config/db');
 const { configureCloudinary } = require('./config/cloudinary');
 const { initializeSocket } = require('./sockets/index');
 const { startJobs } = require('./jobs/index');
+const { validateEnvironment } = require('./config/envValidation');
 
 const PORT = process.env.PORT || 5000;
 
@@ -41,6 +42,7 @@ const ensureAdmin = async () => {
 
 const startServer = async () => {
   try {
+    validateEnvironment();
     await connectDB();
     configureCloudinary();
     await ensureAdmin();

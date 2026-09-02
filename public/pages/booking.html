@@ -954,14 +954,22 @@
   }
 
   // ====== PAYMENT ======
+  // The real payment flow is provided by booking-data.js (window.handlePayment),
+  // which drives Razorpay checkout. This is a safe fallback for environments
+  // where booking-data.js hasn't been injected: it delegates to the real
+  // handler when available, and otherwise shows the pending state without
+  // falsely claiming a payment was processed.
   function handlePayment() {
-    document.getElementById('pay-btn').textContent = 'Processing…';
+    if (typeof window.handlePayment === 'function' && window.handlePayment !== handlePayment) {
+      return window.handlePayment();
+    }
     document.getElementById('pay-btn').disabled = true;
-    setTimeout(function() {
-      renderConfirmation();
-      goToStep(6);
-    }, 1200);
+    renderConfirmation();
+    goToStep(6);
   }
+
+  // Re-entry guard for the live payment flow (set by booking-data.js)
+  window.__famPaymentInFlight = false;
 
   function renderConfirmation() {
     document.getElementById('confirmation-name').textContent = booking.fullName.split(' ')[0];
@@ -1144,9 +1152,12 @@
       });
     });
 
-    // Pay button
+    // Pay button — bound to the live handler (window.handlePayment). Guarded so
+    // booking-data.js can rebind a fresh clone without stacking a second listener.
     el = document.getElementById('pay-btn');
-    if (el) el.addEventListener('click', handlePayment);
+    if (el && !el.dataset.wzReady) {
+      el.addEventListener('click', handlePayment);
+    }
 
     // Mobile resize handler — re-render rooms when crossing 768px boundary
     if (!window._bookingResizeInit) {
@@ -1174,6 +1185,10 @@
 
   <script src="/js/mobile-nav.js"></script>
   <script src="/js/seasonal.js"></script>
+  <!-- Auth must load BEFORE booking-data.js: booking-data depends on FAM.Auth
+       (isAuthenticated / getAccessToken). Without it the payment guard always
+       treats the customer as signed-out and loops to the login page. -->
+  <script src="/js/auth.js?v=3"></script>
   <script src="/js/concierge.js?v=3"></script>
   <script src="/js/booking-data.js?v=20260902"></script>
   <script src="/js/animations.js"></script>
@@ -1185,6 +1200,85 @@
     });
   </script>
   <script src="/js/page-transitions.js"></script>
+  <script>
+  // Restore the booking draft saved before the sign-in redirect so the customer
+  // resumes at the SAME payment step instead of re-filling the wizard. Only
+  // re-applies on a genuine login round-trip (?return=1) and only stores
+  // non-sensitive booking state (room, dates, guests, contact, payment method).
+  (function () {
+    var DRAFT_KEY = 'fam_booking_draft';
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(function () {
+        try {
+          if (window.__famDraftRestored) return;
+          var q = new URLSearchParams(window.location.search);
+          if (!q.get('return')) return;
+          var raw = sessionStorage.getItem(DRAFT_KEY);
+          if (!raw) return;
+          var draft = JSON.parse(raw);
+          if (!draft || !draft.roomId || !draft.checkIn || !draft.checkOut) return;
+          window.__famDraftRestored = true;
+          sessionStorage.removeItem(DRAFT_KEY);
+
+          var room = ROOMS.find(function (r) { return r.id === draft.roomId; });
+          if (!room) return;
+          selectRoom(draft.roomId);
+
+          booking.checkIn = new Date(draft.checkIn + 'T00:00:00');
+          booking.checkOut = new Date(draft.checkOut + 'T00:00:00');
+          renderCal('checkin');
+          renderCal('checkout');
+          updateDateDisplay();
+
+          booking.adults = typeof draft.adults === 'number' ? draft.adults : 2;
+          booking.children = typeof draft.children === 'number' ? draft.children : 0;
+          if (booking.adults + booking.children > room.capacity) {
+            booking.adults = Math.min(booking.adults, room.capacity);
+            booking.children = 0;
+          }
+          document.getElementById('adults-count').textContent = booking.adults;
+          document.getElementById('children-count').textContent = booking.children;
+          updateGuestTotal();
+          updateNavState();
+
+          booking.fullName = draft.fullName || '';
+          booking.email = draft.email || '';
+          booking.phone = draft.phone || '';
+          booking.specialRequests = draft.specialRequests || '';
+          var nm = document.getElementById('input-name');
+          var em = document.getElementById('input-email');
+          var ph = document.getElementById('input-phone');
+          var rq = document.getElementById('input-requests');
+          if (nm) nm.value = booking.fullName;
+          if (em) em.value = booking.email;
+          if (ph) ph.value = booking.phone;
+          if (rq) rq.value = booking.specialRequests;
+          if (typeof syncForm === 'function') syncForm();
+
+          document.querySelectorAll('.payment-option').forEach(function (l) {
+            var match = l.getAttribute('data-method') === draft.paymentMethod;
+            var radio = l.querySelector('.pay-radio');
+            var input = l.querySelector('input');
+            if (radio) {
+              radio.className = match
+                ? 'w-5 h-5 rounded-full border-2 border-accent-gold pay-radio bg-accent-gold/10'
+                : 'w-5 h-5 rounded-full border-2 border-outline-variant/30 pay-radio';
+            }
+            if (input) input.checked = match;
+            if (match) booking.paymentMethod = draft.paymentMethod;
+          });
+          updateNavState();
+
+          renderPaymentTotal();
+          goToStep(5);
+          if (document.getElementById('step-payment')) {
+            window.scrollTo({ top: 320, behavior: 'smooth' });
+          }
+        } catch (e) { /* draft restore is best-effort; normal flow still works */ }
+      }, 0);
+    });
+  })();
+  </script>
   <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
   <script src="/js/service-worker.js"></script>
   <script type="module" src="//instant.page/5.2.0"></script>
