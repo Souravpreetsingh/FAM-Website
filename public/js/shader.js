@@ -148,6 +148,12 @@ void main() {
     start() {
       if (this.running) return;
       this.running = true;
+      // Pause/resume when tab hidden/visible to free GPU/CPU for video
+      this._visHandler = () => {
+        if (document.hidden) this.stop();
+        else if (this.running !== false) this.start();
+      };
+      document.addEventListener('visibilitychange', this._visHandler);
       this._render(0);
     }
 

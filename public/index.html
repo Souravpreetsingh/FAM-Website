@@ -151,16 +151,15 @@
   <main id="main-content">
   <!-- ====== CINEMATIC SCROLL HERO ====== -->
   <section class="hero-root" id="hero" data-scroll-hero>
-    <video id="hero-video" class="hero-canvas" autoplay muted loop playsinline preload="metadata" aria-hidden="true" poster="/images/hero/hero-video-poster.jpg" tabindex="-1">
+    <video id="hero-video" class="hero-canvas" autoplay muted loop playsinline preload="auto" fetchpriority="high" aria-hidden="true" poster="/images/hero/hero-video-poster.jpg" tabindex="-1">
       <source src="/videos/hero-home.mp4" type="video/mp4" />
     </video>
     <div class="hero-gradient-overlay"></div>
 
-    <!-- Sound toggle — left side of hero -->
-    <button id="hero-sound-toggle" type="button" aria-label="Unmute video" style="position:absolute;z-index:10;left:24px;bottom:120px;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.2);border-radius:9999px;padding:10px 16px;color:#fff;font-family:inherit;font-size:13px;letter-spacing:0.04em;cursor:pointer;transition:background 0.25s, border-color 0.25s;">
-      <svg id="hero-sound-icon-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-      <svg id="hero-sound-icon-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-      <span id="hero-sound-label">Unmute</span>
+    <!-- Sound toggle — left side of hero, icon only, near bottom -->
+    <button id="hero-sound-toggle" type="button" aria-label="Unmute video" style="position:absolute;z-index:10;left:24px;bottom:24px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.2);border-radius:9999px;width:44px;height:44px;color:#fff;cursor:pointer;transition:background 0.25s, border-color 0.25s;">
+      <svg id="hero-sound-icon-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+      <svg id="hero-sound-icon-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
     </button>
 
     <div class="hero-content">
@@ -1033,7 +1032,6 @@
       var btn    = document.getElementById('hero-sound-toggle');
       var iconOn = document.getElementById('hero-sound-icon-on');
       var iconOff= document.getElementById('hero-sound-icon-off');
-      var label  = document.getElementById('hero-sound-label');
       var video  = document.getElementById('hero-video');
       if (!btn || !video) return;
 
@@ -1041,7 +1039,6 @@
         var muted = video.muted;
         iconOn.style.display  = muted ? 'none'  : 'block';
         iconOff.style.display = muted ? 'block' : 'none';
-        label.textContent    = muted ? 'Unmute' : 'Mute';
         btn.setAttribute('aria-label', muted ? 'Unmute video' : 'Mute video');
         btn.style.borderColor = muted ? 'rgba(255,255,255,0.2)' : 'rgba(201,168,106,0.6)';
       }

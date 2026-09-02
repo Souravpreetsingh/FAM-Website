@@ -57,6 +57,9 @@ self.addEventListener('fetch', function(event) {
   event.respondWith(
     fetch(event.request).then(function(networkRes) {
       if (networkRes.status === 206) return networkRes;
+      // Skip caching large media files — they stream better from the network
+      var ext = url.pathname.split('.').pop().toLowerCase();
+      if (ext === 'mp4' || ext === 'webm' || ext === 'ogg') return networkRes;
       var clone = networkRes.clone();
       caches.open(CACHE_NAME).then(function(cache) {
         if (networkRes && networkRes.ok && networkRes.type === 'basic') {

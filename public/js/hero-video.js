@@ -3,70 +3,85 @@
 
   var video = null;
   var hero = null;
-  var interactionRetryBound = null;
-  var lastUserScroll = 0;
-  var PLAYBACK_RATE = 1;
+  var initialized = false;
 
-  function applyRate() {
-    if (!video) return;
-    try { video.playbackRate = PLAYBACK_RATE; } catch (e) {}
-  }
+  // Scroll-aware state: suppress IntersectionObserver pause during smooth scroll
+  var lastScrollTime = 0;
+  var SCROLL_GRACE_MS = 1200; // keep playing for 1.2s after last scroll event
+  var isPlaying = false;
 
-  function playVideo() {
-    if (!video) return;
-    var p = video.play();
+  // ── Single safe play wrapper ──
+  function safePlay() {
+    if (!video || video.ended || video.error) return;
+    if (isPlaying && !video.paused) return; // already playing — skip redundant call
+    var p;
+    try { p = video.play(); } catch (e) { return; }
     if (p && p.catch) p.catch(function () {});
   }
 
-  function removeInteractionListeners() {
-    if (!interactionRetryBound) return;
-    ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (type) {
-      window.removeEventListener(type, interactionRetryBound, { passive: true });
-    });
-    interactionRetryBound = null;
+  // ── Scroll tracking ──
+  function onScroll() {
+    lastScrollTime = Date.now();
   }
 
-  function onInteraction() {
-    playVideo();
+  // ── Visibility: pause when tab hidden, resume when visible ──
+  function onVisibilityChange() {
+    if (!video) return;
+    if (document.hidden) {
+      if (!video.paused) video.pause();
+    } else {
+      safePlay();
+    }
   }
 
+  // ── IntersectionObserver: only PAUSE when hero is fully off-screen AND not scrolling ──
   function initVisibility() {
     if (!video || !('IntersectionObserver' in window)) return;
     var obs = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
+      for (var i = 0; i < entries.length; i++) {
+        var entry = entries[i];
         if (entry.isIntersecting) {
-          if (video.paused && !document.hidden) playVideo();
+          // Hero in view — resume if paused and not hidden
+          if (video.paused && !document.hidden) safePlay();
         } else {
-          video.pause();
+          // Hero out of view — only pause if NOT mid-scroll
+          // (Lenis smooth scroll fires continuous scroll events;
+          //  pausing here causes the play/pause stutter loop)
+          var scrolling = Date.now() - lastScrollTime < SCROLL_GRACE_MS;
+          if (!scrolling && !video.paused) video.pause();
         }
-      });
+      }
     }, { threshold: 0.01 });
-    obs.observe(video);
+    obs.observe(hero || video);
   }
 
-  function markUserScroll() {
-    lastUserScroll = Date.now();
-  }
-
+  // ── Watchdog: resume playback if video stopped for non-scroll reasons ──
   function initWatchdog() {
-    if (!video) return;
-    window.addEventListener('scroll', markUserScroll, { passive: true });
-    window.addEventListener('touchmove', markUserScroll, { passive: true });
     window.setInterval(function () {
-      if (document.hidden || !video) return;
+      if (document.hidden || !video || video.ended || video.error) return;
       var r = video.getBoundingClientRect();
       var inView = r.bottom > 0 && r.top < window.innerHeight;
-      var userScrolling = Date.now() - lastUserScroll < 600;
-      if (inView && video.paused && !video.ended && !video.error && !userScrolling) playVideo();
-    }, 4000);
+      var scrolling = Date.now() - lastScrollTime < SCROLL_GRACE_MS;
+      if (inView && video.paused && !scrolling) safePlay();
+    }, 8000); // relaxed interval — no tight polling
+  }
+
+  // ── Track playing state ──
+  function initPlayStateTracking() {
+    video.addEventListener('playing', function () { isPlaying = true; });
+    video.addEventListener('pause', function () { isPlaying = false; });
+    video.addEventListener('ended', function () { isPlaying = false; });
+    video.addEventListener('error', function () { isPlaying = false; });
   }
 
   function boot() {
     video = document.getElementById('hero-video');
-    if (!video) return;
+    if (!video || initialized) return;
     hero = document.querySelector('.hero-root');
     if (!hero) return;
+    initialized = true;
 
+    // Enforce playback attributes
     try {
       video.muted = true;
       video.loop = true;
@@ -77,24 +92,18 @@
       video.setAttribute('playsinline', '');
     } catch (e) {}
 
-    applyRate();
-    video.addEventListener('loadedmetadata', applyRate, { once: true });
+    initPlayStateTracking();
+    safePlay();
 
-    playVideo();
-    interactionRetryBound = onInteraction;
-    ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (type) {
-      window.addEventListener(type, interactionRetryBound, { passive: true });
-    });
-    if (video.readyState >= 3) {
-      removeInteractionListeners();
-    } else {
-      video.addEventListener('playing', function onPlaying() {
-        removeInteractionListeners();
-        video.removeEventListener('playing', onPlaying);
-      }, { once: true });
-    }
+    // Scroll listener (passive — no main-thread cost)
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('touchmove', onScroll, { passive: true });
 
-    setTimeout(initVisibility, 300);
+    // Pause/resume when tab becomes hidden/visible
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    // Delayed visibility init (let page settle first)
+    setTimeout(initVisibility, 500);
     initWatchdog();
   }
 

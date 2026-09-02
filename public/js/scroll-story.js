@@ -20,6 +20,13 @@
     isHidden = document.hidden;
     if (isHidden && rafId) { cancelAnimationFrame(rafId); rafId = null; }
     else if (!isHidden && animElements.length > 0 && !rafId) { rafId = requestAnimationFrame(mainLoop); }
+    // Pause/resume Lenis smooth scroll when tab hidden/visible
+    if (typeof lenis !== 'undefined' && lenis) {
+      try {
+        if (isHidden) lenis.stop();
+        else lenis.start();
+      } catch (e) {}
+    }
   });
 
   /* ============================================
