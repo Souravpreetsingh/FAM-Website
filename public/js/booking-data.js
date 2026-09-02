@@ -67,6 +67,19 @@
     createBooking: function (payload) {
       return request('/bookings', { method: 'POST', body: payload });
     },
+
+    myBookings: function (status) {
+      var qs = status ? '?status=' + encodeURIComponent(status) : '';
+      return request('/bookings/my' + qs);
+    },
+
+    createPaymentOrder: function (bookingId) {
+      return request('/payments/create-order', { method: 'POST', body: { bookingId: bookingId } });
+    },
+
+    verifyPayment: function (payload) {
+      return request('/payments/verify', { method: 'POST', body: payload });
+    },
   };
 
   // ====== booking.html wizard patch ======
@@ -166,20 +179,31 @@
       return base;
     };
 
-    // 3. Real booking creation on "Pay ¥…" click.
+    // 3. Real booking creation + Razorpay payment on "Pay Now" click.
     window.handlePayment = function () {
       var payBtn = document.getElementById('pay-btn');
+      var payErr = function (msg) {
+        if (payBtn) { payBtn.textContent = 'Pay Now'; payBtn.disabled = false; }
+        var total = document.getElementById('payment-total');
+        var base = total && total.parentNode ? total.parentNode : null;
+        var old = base && base.parentNode ? base.parentNode.querySelector('#pay-error') : null;
+        if (old) old.remove();
+        if (!msg || !base) return;
+        var box = document.createElement('div');
+        box.style.cssText = 'margin-top:10px;padding:10px 14px;border-radius:12px;background:rgba(186,26,26,0.09);color:#b91c1c;font-size:13px;';
+        box.textContent = msg;
+        box.id = 'pay-error';
+        base.insertAdjacentElement('afterend', box);
+      };
       if (payBtn) { payBtn.textContent = 'Reserving…'; payBtn.disabled = true; }
 
       if (!FAM.Auth || !FAM.Auth.isAuthenticated || !FAM.Auth.isAuthenticated()) {
-        if (payBtn) { payBtn.textContent = 'Pay Now'; payBtn.disabled = false; }
-        window.alert('Please sign in to confirm your booking. You\'ll be redirected to log in — your selection is preserved.');
+        payErr('Please sign in to confirm your booking.');
         window.location.href = '/pages/login.html?redirect=' + encodeURIComponent('/pages/booking.html');
         return;
       }
 
       var b = window.booking;
-      var nights = window.getNights ? window.getNights() : 0;
       var payload = {
         room: b.room && b.room._id ? b.room._id : b.room.id,
         checkIn: ymd(b.checkIn),
@@ -191,33 +215,174 @@
         specialRequests: b.specialRequests || '',
       };
 
-      FAM.Booking.createBooking(payload).then(function (data) {
-        var booking = data && data.booking ? data.booking : null;
-        if (window.renderConfirmation) window.renderConfirmation();
-        var conf = document.getElementById('confirmation-summary');
-        if (conf && booking && booking._id) {
-          conf.insertAdjacentHTML('beforeend',
-            '<div class="flex items-center justify-between py-2"><span class="text-on-surface-variant/40 font-body text-[11px] tracking-[0.1em] uppercase">Booking ID</span>' +
-            '<span class="text-primary font-body text-sm font-medium">FAM-' + String(booking._id).slice(-6).toUpperCase() + '</span></div>' +
-            '<div class="flex items-center justify-between py-2"><span class="text-on-surface-variant/40 font-body text-[11px] tracking-[0.1em] uppercase">Payment</span>' +
-            '<span class="text-primary font-body text-sm font-medium capitalize">Pay at property</span></div>');
+      var createdBooking = null;
+
+      function startOrder(booking) {
+        createdBooking = booking;
+        if (payBtn) { payBtn.textContent = 'Preparing payment…'; }
+        return FAM.Booking.createPaymentOrder(booking._id).then(function (order) {
+          return openRazorpayCheckout(order, booking, b);
+        });
+      }
+
+      // Reuse an existing pending reservation for the same room & dates so a
+      // dismissed/failed checkout doesn't double-book.
+      var datesMatch = function (bk) {
+        var r = bk.room || {};
+        var roomMatch = false;
+        if (r._id && b.room && b.room._id) roomMatch = String(r._id) === String(b.room._id);
+        if (!roomMatch && r.slug && b.room) roomMatch = r.slug === b.room.id;
+        return roomMatch &&
+          ymd(new Date(bk.checkIn)) === ymd(b.checkIn) &&
+          ymd(new Date(bk.checkOut)) === ymd(b.checkOut);
+      };
+
+      FAM.Booking.myBookings('pending').then(function (data) {
+        var list = (data && data.results) || [];
+        var reuse = null;
+        list.some(function (bk) { if (datesMatch(bk)) { reuse = bk; return true; } return false; });
+        if (reuse && reuse._id) {
+          return startOrder(reuse);
         }
-        if (window.goToStep) window.goToStep(6);
+        return FAM.Booking.createBooking(payload).then(function (data2) {
+          var booking = data2 && data2.booking ? data2.booking : null;
+          if (!booking || !booking._id) { payErr('Booking could not be created.'); return; }
+          return startOrder(booking);
+        });
       }).catch(function (err) {
-        if (payBtn) { payBtn.textContent = 'Pay Now'; payBtn.disabled = false; }
-        var total = document.getElementById('payment-total');
-        var base = total && total.parentNode ? total.parentNode : null;
-        var box = document.createElement('div');
-        box.style.cssText = 'margin-top:10px;padding:10px 14px;border-radius:12px;background:rgba(186,26,26,0.09);color:#b91c1c;font-size:13px;';
-        box.textContent = 'Unable to create your booking: ' + (err.message || 'please try again.');
-        box.id = 'pay-error';
-        if (base) {
-          var old = base.parentNode && base.parentNode.querySelector('#pay-error');
-          if (old) old.remove();
-          base.insertAdjacentElement('afterend', box);
+        if (createdBooking) {
+          // Booking exists but payment couldn't start — keep the reservation,
+          // show confirmation as pending rather than a dead-end error.
+          showConfirmation(createdBooking, false, err.message || null);
+        } else {
+          payErr('Unable to complete your booking: ' + (err.message || 'please try again.'));
         }
       });
     };
+
+    // ── Razorpay checkout ──
+    function loadRazorpayScript() {
+      return new Promise(function (resolve, reject) {
+        if (window.Razorpay) { resolve(window.Razorpay); return; }
+        var s = document.createElement('script');
+        s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        s.onload = function () { resolve(window.Razorpay); };
+        s.onerror = function () { reject(new Error('Could not load payment gateway.')); };
+        document.head.appendChild(s);
+      });
+    }
+
+    function openRazorpayCheckout(order, booking, b) {
+      var orderId = order.razorpayOrderId || order.orderId;
+      var keyId = order.keyId || (order.notes && order.notes.key);
+      if (!orderId || !keyId) {
+        var boxPay = document.getElementById('pay-error');
+        var base = document.getElementById('payment-total') ? document.getElementById('payment-total').parentNode : null;
+        var o2 = base ? base.parentNode.querySelector('#pay-error') : null;
+        if (o2) o2.textContent = 'Payment gateway is not configured yet.';
+        else {
+          var nb = document.createElement('div');
+          nb.id = 'pay-error';
+          nb.style.cssText = 'margin-top:10px;padding:10px 14px;border-radius:12px;background:rgba(186,26,26,0.09);color:#b91c1c;font-size:13px;';
+          nb.textContent = 'Payment is temporarily unavailable. Your booking is reserved — please contact us to complete payment.';
+          if (base) base.insertAdjacentElement('afterend', nb);
+        }
+        showConfirmation(booking, false);
+        return;
+      }
+
+      return loadRazorpayScript().then(function (Razorpay) {
+        var options = {
+          key: keyId,
+          amount: Number(order.amount !== undefined ? order.amount : (booking.totalAmount * 100)),
+          currency: order.currency || booking.currency || 'INR',
+          name: 'Flamingo aur Maina',
+          description: 'Booking ' + booking._id,
+          order_id: orderId,
+          prefill: {
+            name: b.fullName || '',
+            email: b.email || '',
+            contact: b.phone || '',
+          },
+          theme: { color: '#0a341d' },
+          handler: function (response) {
+            return FAM.Booking.verifyPayment({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            }).then(function () {
+              var pc = document.getElementById('pay-btn');
+              if (pc) { pc.textContent = 'Pay Now'; pc.disabled = false; }
+              showConfirmation(booking, true);
+            }).catch(function (err) {
+              var pc2 = document.getElementById('pay-btn');
+              if (pc2) { pc2.textContent = 'Pay Now'; pc2.disabled = false; }
+              var total = document.getElementById('payment-total');
+              var base = total && total.parentNode ? total.parentNode : null;
+              var old = base && base.parentNode ? base.parentNode.querySelector('#pay-error') : null;
+              if (old) old.remove();
+              var box = document.createElement('div');
+              box.id = 'pay-error';
+              box.style.cssText = 'margin-top:10px;padding:10px 14px;border-radius:12px;background:rgba(186,26,26,0.09);color:#b91c1c;font-size:13px;';
+              box.textContent = 'Payment was not confirmed: ' + (err.message || 'please try again.');
+              if (base) base.insertAdjacentElement('afterend', box);
+            });
+          },
+          modal: {
+            ondismiss: function () {
+              var pc3 = document.getElementById('pay-btn');
+              if (pc3) { pc3.textContent = 'Pay Now'; pc3.disabled = false; }
+            },
+          },
+        };
+        var rzp = new Razorpay(options);
+        rzp.on('payment.failed', function (resp) {
+          var pc4 = document.getElementById('pay-btn');
+          if (pc4) { pc4.textContent = 'Pay Now'; pc4.disabled = false; }
+          var total = document.getElementById('payment-total');
+          var base = total && total.parentNode ? total.parentNode : null;
+          var old = base && base.parentNode ? base.parentNode.querySelector('#pay-error') : null;
+          if (old) old.remove();
+          var fb = document.createElement('div');
+          fb.id = 'pay-error';
+          fb.style.cssText = 'margin-top:10px;padding:10px 14px;border-radius:12px;background:rgba(186,26,26,0.09);color:#b91c1c;font-size:13px;';
+          fb.textContent = 'Payment failed: ' + ((resp && resp.error && resp.error.description) || 'please try again.');
+          if (base) base.insertAdjacentElement('afterend', fb);
+        });
+        rzp.open();
+      }).catch(function (err) {
+        showConfirmation(booking, false);
+        var pb = document.getElementById('pay-btn');
+        if (pb) { pb.textContent = 'Pay Now'; pb.disabled = false; }
+        var total = document.getElementById('payment-total');
+        var base = total && total.parentNode ? total.parentNode : null;
+        var old = base && base.parentNode ? base.parentNode.querySelector('#pay-error') : null;
+        if (old) old.remove();
+        var eb = document.createElement('div');
+        eb.id = 'pay-error';
+        eb.style.cssText = 'margin-top:10px;padding:10px 14px;border-radius:12px;background:rgba(186,26,26,0.09);color:#b91c1c;font-size:13px;';
+        eb.textContent = 'Unable to start payment: ' + (err.message || 'please try again.');
+        if (base) base.insertAdjacentElement('afterend', eb);
+      });
+    }
+
+    function showConfirmation(booking, paid, note) {
+      if (window.booking) window.booking.paymentMethod = paid ? 'Paid online' : 'Pending';
+      if (window.renderConfirmation) window.renderConfirmation();
+      var conf = document.getElementById('confirmation-summary');
+      if (conf && booking && booking._id) {
+        conf.insertAdjacentHTML('beforeend',
+          '<div class="flex items-center justify-between py-2"><span class="text-on-surface-variant/40 font-body text-[11px] tracking-[0.1em] uppercase">Booking ID</span>' +
+          '<span class="text-primary font-body text-sm font-medium">FAM-' + String(booking._id).slice(-6).toUpperCase() + '</span></div>');
+        if (note) {
+          conf.insertAdjacentHTML('beforeend',
+            '<div class="mt-2 rounded-xl bg-accent-gold/10 border border-accent-gold/20 px-3 py-2 font-body text-[12px] text-on-surface-variant/70">' + note + '</div>');
+        }
+      }
+      var pb = document.getElementById('pay-btn');
+      if (pb) { pb.textContent = 'Pay Now'; pb.disabled = false; }
+      if (window.goToStep) window.goToStep(6);
+    }
 
     // 4. The inline wizard bound its original handler to the old button during
     // DOMContentLoaded. Replace the node (no listeners cloned) and re-bind.
