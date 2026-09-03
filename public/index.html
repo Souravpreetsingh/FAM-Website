@@ -413,72 +413,7 @@
       <!-- LEFT: Illustration -->
       <div class="tp-illustration">
         <svg viewBox="0 0 500 550" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="tpSky" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#e8dcc8"/>
-              <stop offset="100%" stop-color="#f8f4ec"/>
-            </linearGradient>
-            <linearGradient id="tpSunG" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#C9A86A"/>
-              <stop offset="100%" stop-color="#b8925a"/>
-            </linearGradient>
-            <filter id="tpGlowF">
-              <feGaussianBlur stdDeviation="6" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <filter id="tpShadow"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.08"/></filter>
-          </defs>
           <image x="0" y="0" width="500" height="550" preserveAspectRatio="xMidYMid slice" href="/images/tp-bg-img6872.jpg"/>
-          <!-- Sun -->
-          <circle cx="380" cy="130" r="32" fill="#C9A86A" opacity="0.12" filter="url(#tpGlowF)"/>
-          <circle class="tp-float" cx="380" cy="130" r="18" fill="url(#tpSunG)" style="animation-delay:0s"/>
-          <!-- Clouds -->
-          <g class="tp-cloud" opacity="0.4" style="animation-delay:0s">
-            <ellipse cx="100" cy="95" rx="38" ry="12" fill="#fff"/>
-            <ellipse cx="125" cy="89" rx="26" ry="10" fill="#fff" opacity="0.7"/>
-          </g>
-          <g class="tp-cloud" opacity="0.3" style="animation-delay:2s">
-            <ellipse cx="320" cy="75" rx="30" ry="9" fill="#fff"/>
-            <ellipse cx="340" cy="70" rx="20" ry="7" fill="#fff" opacity="0.6"/>
-          </g>
-          <!-- Birds -->
-          <g opacity="0.25" class="tp-float" style="animation-delay:0.6s">
-            <path d="M220,110 Q228,104 236,110 Q244,104 252,110" stroke="#0a341d" fill="none" stroke-width="1.5"/>
-          </g>
-          <g opacity="0.2" class="tp-float" style="animation-delay:1.2s">
-            <path d="M265,95 Q272,90 279,95 Q286,90 293,95" stroke="#0a341d" fill="none" stroke-width="1.2"/>
-          </g>
-          <!-- Mountain layer 1 (back) -->
-          <path d="M0,340 L50,270 L90,300 L130,240 L180,280 L230,220 L280,270 L330,230 L370,260 L420,200 L460,240 L500,210 L500,400 L0,400 Z" fill="#234b32" opacity="0.35" class="tp-mtn" style="animation-delay:0s"/>
-          <!-- Mountain layer 2 (mid) -->
-          <path d="M0,380 L40,320 L80,350 L140,290 L190,330 L250,270 L310,320 L360,280 L410,310 L450,260 L500,300 L500,450 L0,450 Z" fill="#1a3d28" opacity="0.5" class="tp-mtn" style="animation-delay:0.3s"/>
-          <!-- Mountain layer 3 (front) -->
-          <path d="M0,420 L60,370 L120,400 L180,350 L230,380 L300,330 L360,370 L420,340 L470,370 L500,350 L500,500 L0,500 Z" fill="#0a341d" opacity="0.7" class="tp-mtn" style="animation-delay:0.6s"/>
-          <!-- Snow caps -->
-          <polygon points="230,220 222,240 238,240" fill="#f8f4ec" opacity="0.8"/>
-          <polygon points="420,200 412,220 428,220" fill="#f8f4ec" opacity="0.8"/>
-          <polygon points="300,330 293,348 307,348" fill="#f8f4ec" opacity="0.6"/>
-          <!-- Pine trees -->
-          <g opacity="0.3">
-            <polygon points="70,420 78,370 86,420" fill="#0a341d"/>
-            <polygon points="160,410 168,365 176,410" fill="#0a341d"/>
-            <polygon points="340,400 348,350 356,400" fill="#0a341d"/>
-            <polygon points="420,410 427,365 434,410" fill="#0a341d"/>
-          </g>
-          <!-- River -->
-          <path d="M400,320 Q410,350 395,380 Q380,410 390,440 Q400,470 395,500" stroke="#C9A86A" stroke-width="2.5" fill="none" opacity="0.2"/>
-          <path d="M402,320 Q412,350 397,380 Q382,410 392,440 Q402,470 397,500" stroke="#C9A86A" stroke-width="1" fill="none" opacity="0.1"/>
-          <!-- Trail -->
-          <path d="M180,480 Q220,450 280,430 Q340,410 380,380 Q420,350 440,300" stroke="#0a341d" stroke-width="1.5" fill="none" opacity="0.08" stroke-dasharray="4 4"/>
-          <!-- Floating travel icons -->
-          <text x="70" y="175" font-size="22" class="tp-float" style="animation-delay:0.2s">&#9992;</text>
-          <text x="410" y="290" font-size="20" class="tp-float" style="animation-delay:1s">&#128247;</text>
-          <text x="140" y="240" font-size="18" class="tp-float" style="animation-delay:0.7s">&#9749;</text>
-          <text x="340" y="420" font-size="20" class="tp-float" style="animation-delay:1.5s">&#129496;</text>
-          <text x="220" y="390" font-size="16" class="tp-float" style="animation-delay:0.4s">&#127826;</text>
-          <text x="60" y="320" font-size="18" class="tp-float" style="animation-delay:1.8s">&#127797;</text>
-          <!-- Bottom whisper -->
-          <text x="250" y="535" text-anchor="middle" font-family="'Playfair Display',serif" font-size="10" fill="#0a341d" opacity="0.12" font-style="italic">Begin your story in the mountains</text>
         </svg>
       </div>
 
