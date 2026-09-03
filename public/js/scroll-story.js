@@ -5,7 +5,7 @@
   var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReducedMotion || isMobile) return;
 
-  var gsap, ScrollTrigger, lenis;
+  var gsap, ScrollTrigger;
   var animElements = [];
   var rafId = null;
   var prevTime = 0;
@@ -20,48 +20,25 @@
     isHidden = document.hidden;
     if (isHidden && rafId) { cancelAnimationFrame(rafId); rafId = null; }
     else if (!isHidden && animElements.length > 0 && !rafId) { rafId = requestAnimationFrame(mainLoop); }
-    // Pause/resume Lenis smooth scroll when tab hidden/visible
-    if (typeof lenis !== 'undefined' && lenis) {
-      try {
-        if (isHidden) lenis.stop();
-        else lenis.start();
-      } catch (e) {}
-    }
   });
 
   /* ============================================
      SETUP
+     ============================================
+     Lenis smooth scrolling is intentionally NOT initialized here.
+     Intercepting wheel/trackpad events with Lenis fights macOS's native
+     inertial/momentum scrolling, causing the scroll "jump"/snap defects on
+     Mac trackpads. We keep the browser's native scroll in full control and
+     drive every animation (GSAP/ScrollTrigger, parallax, reveal) FROM the
+     native scroll position instead. ScrollTrigger binds to window scroll
+     automatically; no custom virtual-scroll render loop is needed.
      ============================================ */
-  function initLenis() {
-    if (typeof Lenis === 'undefined') return;
-    if (typeof FAM !== 'undefined' && FAM.lenis) { lenis = FAM.lenis; return; }
-    if (window.matchMedia('(pointer: coarse)').matches) return;
-    if ('ontouchstart' in window) return;
-    lenis = new Lenis({
-      duration: 1.2,
-      easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
-      orientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1.0,
-      touchMultiplier: 1.5
-    });
-    if (typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined') {
-      lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add(function(time) {
-        lenis.raf(time * 1000);
-      });
-    } else {
-      function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-      requestAnimationFrame(raf);
-    }
-  }
-
   function initScrollTrigger() {
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
     gsap = window.gsap;
     ScrollTrigger = window.ScrollTrigger;
     gsap.registerPlugin(ScrollTrigger);
-    initLenis();
+    // Native scroll updates ScrollTrigger; no Lenis loop to feed it.
     createChapters();
     createAtmosphere();
     createProgressBar();
@@ -77,17 +54,11 @@
     bar.className = 'ss-progress';
     bar.id = 'ss-progress';
     document.body.appendChild(bar);
-    if (lenis) {
-      lenis.on('scroll', function(e) {
-        bar.style.transform = 'scaleX(' + e.progress + ')';
-      });
-    } else {
-      window.addEventListener('scroll', function() {
-        var h = document.documentElement;
-        var p = (h.scrollTop || document.body.scrollTop) / (h.scrollHeight - h.clientHeight);
-        bar.style.transform = 'scaleX(' + p + ')';
-      }, { passive: true });
-    }
+    window.addEventListener('scroll', function() {
+      var h = document.documentElement;
+      var p = (h.scrollTop || document.body.scrollTop) / (h.scrollHeight - h.clientHeight);
+      bar.style.transform = 'scaleX(' + p + ')';
+    }, { passive: true });
   }
 
   /* ============================================
