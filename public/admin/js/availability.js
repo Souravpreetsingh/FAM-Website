@@ -116,11 +116,14 @@
         }).catch(function (e) { window.AdminUI.toast(e.message, true); });
       });
     } else {
+      const dt = new Date(date + 'T00:00:00Z');
+      dt.setUTCDate(dt.getUTCDate() + 1);
+      const next = dt.toISOString().split('T')[0];
       document.getElementById('saveBlockBtn').addEventListener('click', function () {
         window.AdminAPI.post('/availability/block', {
           roomId: cell.dataset.room,
           startDate: date,
-          endDate: date,
+          endDate: next,
           reason: document.getElementById('blkReason').value,
           kind: document.getElementById('blkKind').value,
         }).then(function () {
@@ -145,8 +148,9 @@
     window.AdminUI.openModal(inner);
 
     const today = U.todayStr();
+    const tomorrow = U.fmtDate(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString());
     document.getElementById('rbStart').value = today;
-    document.getElementById('rbEnd').value = today;
+    document.getElementById('rbEnd').value = tomorrow;
 
     window.AdminAPI.get('/rooms?limit=100').then(function (data) {
       const rooms = data.rooms || [];
