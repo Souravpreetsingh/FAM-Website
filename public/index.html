@@ -86,6 +86,135 @@
     .skip-link { position: absolute; left: -9999px; z-index: 999; padding: 8px 16px; background: #0a341d; color: #fff; text-decoration: none; }
     .skip-link:focus { left: 8px; top: 8px; }
     .img-fallback { background: #e8e8e4; min-height: 100px; display: flex; align-items: center; justify-content: center; color: #727972; font-family: Inter, sans-serif; font-size: 13px; }
+    #ai-trip-planner { scroll-margin-top: 110px; }
+    .hero-btns-row2 { display: flex; justify-content: center; width: 100%; margin-top: 20px; pointer-events: auto; animation-delay: 0.8s; }
+    .hero-btn-ai {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 16px 40px; border-radius: 9999px;
+      border: 1.5px solid transparent;
+      background: linear-gradient(rgba(10,52,29,0.9), #0a341d) padding-box, linear-gradient(135deg, #c9a86a, #e8d5b5, #c9a86a) border-box;
+      color: #e8d5b5; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; white-space: nowrap;
+      cursor: pointer; position: relative; overflow: hidden;
+      transition: transform 0.45s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.45s ease, color 0.3s ease;
+      box-shadow: 0 8px 28px rgba(10,52,29,0.35), 0 0 24px rgba(201,168,106,0.12);
+    }
+    .hero-btn-ai:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 12px 40px rgba(10,52,29,0.45), 0 0 34px rgba(201,168,106,0.28); color: #f5e8cd; }
+    .hero-btn-ai:focus-visible { outline: 2px solid #c9a86a; outline-offset: 3px; }
+    .hero-btn-ai::before {
+      content: ""; position: absolute; inset: 0; border-radius: 9999px; pointer-events: none;
+      background: linear-gradient(120deg, transparent 35%, rgba(232,213,181,0.28) 50%, transparent 65%);
+      background-size: 220% 100%; background-repeat: no-repeat;
+      animation: heroAiShine 5.5s ease-in-out infinite;
+    }
+    .hero-btn-ai span { position: relative; z-index: 1; }
+    @keyframes heroAiShine { 0% { background-position: 130% 0; } 100% { background-position: -130% 0; } }
+    .hero-content .hero-btn-primary {
+      border: 1.5px solid transparent;
+      background: linear-gradient(rgba(10,52,29,0.9), #0a341d) padding-box, linear-gradient(135deg, #c9a86a, #e8d5b5, #c9a86a) border-box;
+      color: #e8d5b5;
+      box-shadow: 0 8px 28px rgba(10,52,29,0.35), 0 0 24px rgba(201,168,106,0.12);
+    }
+    .hero-content .hero-btn-primary:before {
+      content: ""; position: absolute; inset: 0; border-radius: 9999px; pointer-events: none;
+      background: linear-gradient(120deg, transparent 35%, rgba(232,213,181,0.28) 50%, transparent 65%);
+      background-size: 220% 100%; background-repeat: no-repeat;
+      animation: heroAiShine 5.5s ease-in-out infinite;
+    }
+    .hero-content .hero-btn-primary:after {
+      content: ""; position: absolute; inset: 0; border-radius: 9999px; pointer-events: none;
+      background: radial-gradient(circle at 50% -20%, rgba(201,168,106,0.25), transparent 60%);
+    }
+    .hero-content .hero-btn-primary:hover {
+      transform: translateY(-3px) scale(1.05);
+      background: linear-gradient(rgba(10,52,29,0.9), #0a341d) padding-box, linear-gradient(135deg, #c9a86a, #e8d5b5, #c9a86a) border-box;
+      color: #f5e8cd;
+      box-shadow: 0 12px 40px rgba(10,52,29,0.45), 0 0 34px rgba(201,168,106,0.28);
+    }
+    .hero-content .hero-btn-primary span { position: relative; z-index: 1; }
+    @media (min-width: 1152px) {
+      .hero-content .hero-btns { flex-wrap: nowrap; }
+    }
+    @media (max-width: 1151px) {
+      .hero-content .hero-btns { flex-direction: column; align-items: center; width: 100%; gap: 12px; }
+      .hero-content .hero-btns-row2 { margin-top: 14px; }
+    }
+    @media (min-width: 1152px) and (max-width: 1439px) {
+      .hero-content .hero-btn-primary, .hero-content .hero-btn-ai { padding-left: 20px; padding-right: 20px; font-size: 12px; }
+    }
+    @media (max-width: 480px) {
+      .hero-btns-row2 { margin-top: 14px; }
+      .hero-btn-ai { width: 100%; max-width: 320px; height: 56px; padding: 0 24px; font-size: 13px; }
+    }
+    .tp-budget-list { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    .tp-budget-list .budget-card { padding: 16px 20px; text-align: left; display: flex; flex-direction: column; gap: 5px; }
+    .tp-budget-name { display: flex; align-items: center; gap: 10px; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #0a341d; }
+    .tp-budget-dot { width: 18px; height: 18px; border-radius: 9999px; flex: none; box-sizing: border-box; border: 1.5px solid rgba(10,52,29,0.3); background: transparent; transition: all 0.25s ease; }
+    .tp-option.budget-card:hover .tp-budget-dot { border-color: #0a341d; }
+    .tp-option.budget-card.selected { border-color: #0a341d; background: rgba(10,52,29,0.06); box-shadow: 0 4px 16px rgba(10,52,29,0.06); }
+    .tp-option.budget-card.selected .tp-budget-dot { border: 5px solid #0a341d; background: #fff; }
+    .tp-option.budget-card:focus-visible { outline: 2px solid #c9a86a; outline-offset: 2px; }
+    .tp-hint { font-size: 12px; color: #727972; line-height: 1.6; margin-top: 12px; }
+    .tp-dates { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .tp-date-field { background: rgba(255,255,255,0.5); border: 1.5px solid rgba(10,52,29,0.12); border-radius: 16px; padding: 6px 4px; text-align: center; transition: border-color 0.25s ease; }
+    .tp-date-field:focus-within { border-color: #0a341d; }
+    .tp-date-label { display: block; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #414942; margin: 8px 0 6px; }
+    .tp-date-input { width: 100%; box-sizing: border-box; border: none; background: transparent; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: #0a341d; outline: none; text-align: center; cursor: pointer; padding: 0 8px 8px; }
+    .tp-date-input::-webkit-calendar-picker-indicator { opacity: 0.55; cursor: pointer; }
+    .tp-date-input:focus-visible { outline: 2px solid #c9a86a; outline-offset: 2px; border-radius: 8px; }
+    .tp-nights { margin-top: 12px; font-size: 13px; color: #0a341d; font-weight: 600; }
+    .tp-avail-note { margin-top: 10px; font-size: 12px; line-height: 1.5; }
+    .tp-avail-ok { color: #1f7a45; }
+    .tp-avail-warn { color: #b06a1f; }
+    .tp-avail-err { color: #b91c1c; }
+    .tp-counter { display: flex; align-items: center; justify-content: center; gap: 24px; background: rgba(255,255,255,0.5); border: 1.5px solid rgba(10,52,29,0.1); border-radius: 20px; padding: 22px 18px; margin-top: 4px; }
+    .tp-counter-btn { width: 46px; height: 46px; border-radius: 9999px; border: 1.5px solid rgba(10,52,29,0.2); background: #fff; color: #0a341d; font-size: 22px; line-height: 1; font-weight: 600; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; justify-content: center; }
+    .tp-counter-btn:hover { border-color: #0a341d; background: rgba(10,52,29,0.06); }
+    .tp-counter-btn:focus-visible { outline: 2px solid #c9a86a; outline-offset: 2px; }
+    .tp-counter-val { font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 700; color: #0a341d; min-width: 64px; text-align: center; line-height: 1; }
+    .tp-counter-unit { font-size: 13px; color: #414942; margin-top: 6px; text-align: center; }
+    .tp-rec { border: 1.5px solid rgba(10,52,29,0.1); border-radius: 18px; padding: 16px; margin-bottom: 16px; background: rgba(255,255,255,0.45); }
+    .tp-rec-head { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #0a341d; font-weight: 700; margin-bottom: 12px; }
+    .tp-rec-pitch { font-size: 14px; line-height: 1.6; color: #414942; background: rgba(201,168,106,0.12); border: 1px solid rgba(201,168,106,0.25); border-radius: 12px; padding: 10px 14px; font-family: 'Playfair Display', serif; font-style: italic; margin-bottom: 12px; }
+    .tp-rec-item { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px dashed rgba(10,52,29,0.1); }
+    .tp-rec-item:last-of-type { border-bottom: none; }
+    .tp-rec-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: #0a341d; }
+    .tp-rec-sleeps { font-size: 12px; color: #727972; white-space: nowrap; }
+    .tp-rec-total { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #0a341d; padding-top: 10px; margin-top: 6px; }
+    .tp-rec-note { font-size: 12px; color: #727972; line-height: 1.5; margin-top: 10px; }
+    .tp-rec-note a { color: #0a341d; }
+    .tp-rec-cta { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .tp-rec-cta a { flex: 1; min-width: 150px; justify-content: center; }
+    #tp-dots.tp-step-dots { justify-content: center; gap: 0; margin-top: 18px; }
+    .tp-step-num { width: 34px; height: 34px; border-radius: 9999px; flex: none; display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; color: #87908a; background: rgba(10,52,29,0.05); border: 1.5px solid rgba(10,52,29,0.14); transition: all 0.35s ease; position: relative; margin-right: 16px; }
+    .tp-step-num::after { content: ""; position: absolute; left: calc(100% + 6px); top: 50%; transform: translateY(-50%); width: 10px; height: 1.5px; background: rgba(10,52,29,0.15); }
+    .tp-step-num:last-child { margin-right: 0; }
+    .tp-step-num:last-child::after { display: none; }
+    .tp-step-num:hover { border-color: rgba(10,52,29,0.4); color: #0a341d; }
+    .tp-step-num.done { color: #0a341d; border-color: #0a341d; background: rgba(10,52,29,0.07); }
+    .tp-step-num.done::after { background: #0a341d; }
+    .tp-step-num.active { color: #e8d5b5; border-color: #0a341d; background: #0a341d; box-shadow: 0 0 0 4px rgba(10,52,29,0.08); font-weight: 700; }
+    .tp-duration-pills { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
+    .tp-duration-pills .tp-pill { justify-content: center; padding: 18px 20px; border-radius: 16px; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: #0a341d; display: flex; align-items: center; background: rgba(255,255,255,0.55); border: 1.5px solid rgba(10,52,29,0.12); cursor: pointer; transition: all 0.3s ease; text-align: center; }
+    .tp-duration-pills .tp-pill.selected { background: rgba(10,52,29,0.07); border-color: #0a341d; box-shadow: 0 4px 16px rgba(10,52,29,0.06); }
+    .tp-duration-pills .tp-pill:focus-visible { outline: 2px solid #c9a86a; outline-offset: 2px; }
+    .tp-sum { border: 1px solid rgba(10,52,29,0.1); border-radius: 16px; padding: 2px 18px; margin-bottom: 16px; background: rgba(255,255,255,0.45); }
+    .tp-sum-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px dashed rgba(10,52,29,0.12); font-size: 14px; }
+    .tp-sum-row:last-child { border-bottom: none; }
+    .tp-sum-row span { color: #727972; font-size: 13px; }
+    .tp-sum-row strong { color: #0a341d; font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; text-align: right; }
+    .tp-gen-error { color: #b91c1c; font-size: 12px; line-height: 1.5; margin-bottom: 10px; }
+    .tp-intro { font-size: 14px; line-height: 1.7; color: #414942; margin: 0 0 16px; border-left: 3px solid #c9a86a; padding: 2px 0 2px 14px; font-family: 'Playfair Display', serif; font-style: italic; }
+    .tp-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; border-radius: 9999px; animation: tp-spin 0.8s linear infinite; margin-right: 8px; vertical-align: -2px; }
+    @keyframes tp-spin { to { transform: rotate(360deg); } }
+    @media (max-width: 480px) {
+      .tp-step-num { width: 26px; height: 26px; font-size: 10px; margin-right: 14px; }
+      .tp-step-num::after { width: 8px; left: calc(100% + 5px); }
+      .tp-duration-pills { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .tp-duration-pills .tp-pill { padding: 14px 12px; font-size: 15px; }
+      .tp-sum-row { flex-direction: column; align-items: flex-start; gap: 3px; }
+      .tp-sum-row strong { text-align: left; }
+    }
   </style>
   <script>document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('img').forEach(function(i){i.onerror=function(){this.onerror=null;this.style.display='none';var p=this.parentElement;if(p){var f=document.createElement('div');f.className='img-fallback';f.textContent='Image unavailable';p.appendChild(f)}}})})</script>
 </head>
@@ -109,12 +238,10 @@
         <a href="pages/gallery.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Gallery</a>
         <a href="pages/amenities.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Amenities</a>
         <div class="flex items-center gap-3">
-          <button type="button" onclick="window.location.href='pages/login.html'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
           <button type="button" onclick="window.location.href='pages/booking.html'" class="nav-book-btn" aria-label="Book your stay at FAM">Book Your Stay</button>
         </div>
       </div>
       <div class="nav-mobile-actions">
-        <button type="button" onclick="window.location.href='pages/login.html'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
         <button class="nav-hamburger" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
       </div>
     </div>
@@ -137,7 +264,6 @@
       <a href="pages/gallery.html" class="mobile-menu-link">Gallery</a>
       <a href="pages/amenities.html" class="mobile-menu-link">Amenities</a>
       <div class="mobile-menu-cta-group">
-        <button type="button" onclick="window.location.href='pages/login.html'" class="nav-mobile-signin">Sign In</button>
         <button type="button" onclick="window.location.href='pages/booking.html'" class="nav-mobile-book">Book Your Stay</button>
       </div>
     </nav>
@@ -173,6 +299,12 @@
             <span>Book Your Stay</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
+          <a href="#ai-trip-planner" class="hero-btn-ai" aria-label="Plan My Trip with AI">
+            <span aria-hidden="true">&#10022;</span>
+            <span>Plan My Trip with AI</span>
+          </a>
+        </div>
+        <div class="hero-btns-row2 hero-seq">
           <a href="pages/explore.html" class="hero-btn-secondary">
             Explore Jibhi
           </a>
@@ -426,12 +558,13 @@
         <!-- Progress -->
         <div class="tp-progress">
           <div class="tp-progress-bar"><div class="tp-progress-fill" id="tp-fill"></div></div>
-          <div class="tp-step-dots" id="tp-dots">
-            <span class="tp-step-dot active" data-s="1">1</span>
-            <span class="tp-step-dot" data-s="2">2</span>
-            <span class="tp-step-dot" data-s="3">3</span>
-            <span class="tp-step-dot" data-s="4">4</span>
-            <span class="tp-step-dot" data-s="5">5</span>
+          <div class="tp-step-dots" id="tp-dots" role="list" aria-label="Trip planner progress">
+            <span class="tp-step-num active" data-s="1">01</span>
+            <span class="tp-step-num" data-s="2">02</span>
+            <span class="tp-step-num" data-s="3">03</span>
+            <span class="tp-step-num" data-s="4">04</span>
+            <span class="tp-step-num" data-s="5">05</span>
+            <span class="tp-step-num" data-s="6">06</span>
           </div>
         </div>
 
@@ -450,7 +583,7 @@
 
   <script>
   (function(){
-    var state = { step: 1, traveler: null, days: null, budget: null, interests: [] };
+    var state = { step: 1, travelCompanion: null, tripDuration: null, guests: 2, budget: null, interests: [] };
     var content = document.getElementById('tp-content');
     var fill = document.getElementById('tp-fill');
     var dots = document.getElementById('tp-dots');
@@ -458,61 +591,166 @@
     var nextBtn = document.getElementById('tp-next');
 
     var steps = {
-      1: { label: 'Step 1', question: 'Who are you travelling with?', type: 'traveler' },
-      2: { label: 'Step 2', question: 'How many days?', type: 'days' },
-      3: { label: 'Step 3', question: 'What\'s your budget?', type: 'budget' },
-      4: { label: 'Step 4', question: 'What interests you? (select all that apply)', type: 'interests' },
-      5: { label: 'Step 5', question: 'Ready to plan your escape?', type: 'generate' }
+      1: { label: 'STEP 1', question: 'Who are you travelling with?', type: 'traveler' },
+      2: { label: 'STEP 2', question: 'How many days are you staying?', type: 'days' },
+      3: { label: 'STEP 3', question: 'How many guests?', type: 'guests' },
+      4: { label: 'STEP 4', question: 'What\u2019s your travel style?', type: 'budget' },
+      5: { label: 'STEP 5', question: 'What are you interested in?', type: 'interests' },
+      6: { label: 'STEP 6', question: 'Ready to discover Jibhi?', type: 'generate' }
     };
 
     var travelers = [
+      { id:'solo', icon:'&#127934;', label:'Solo' },
       { id:'couple', icon:'&#10084;&#65039;', label:'Couple' },
-      { id:'family', icon:'&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102;', label:'Family' },
       { id:'friends', icon:'&#128101;', label:'Friends' },
-      { id:'solo', icon:'&#127934;', label:'Solo' }
+      { id:'family', icon:'&#128104;&#8205;&#128105;&#8205;&#128103;&#8205;&#128102;', label:'Family' }
     ];
 
-    var dayOpts = [
-      { id:1, label:'1 Day' }, { id:2, label:'2 Days' }, { id:3, label:'3 Days' },
-      { id:4, label:'4 Days' }, { id:5, label:'5+ Days' }
+    var tripDurations = [
+      { id:'1-2', label:'1\u20132 Days' },
+      { id:'3-4', label:'3\u20134 Days' },
+      { id:'5-7', label:'5\u20137 Days' },
+      { id:'7+', label:'7+ Days' }
     ];
+
+    function companionLabel(c) {
+      var m = { solo:'Solo', couple:'Couple', friends:'Friends', family:'Family' };
+      return m[c] || 'Guest';
+    }
+    function durationLabel(d) {
+      var m = { '1-2':'1\u20132 Days', '3-4':'3\u20134 Days', '5-7':'5\u20137 Days', '7+':'7+ Days' };
+      return m[d] || '';
+    }
+    function durationLabelLower(d) {
+      var m = { '1-2':'1\u20132-day', '3-4':'3\u20134-day', '5-7':'5\u20137-day', '7+':'7+ day' };
+      return m[d] || '';
+    }
+    function tripDurationDays(d) {
+      if (d === '1-2') return 2;
+      if (d === '3-4') return 4;
+      return 7;
+    }
+    function guestVal(g) {
+      return String(g);
+    }
+    function countUnit(g) {
+      return g === 1 ? 'Guest' : 'Guests';
+    }
+    function setGuests(g) {
+      state.guests = Math.max(1, Math.min(N_MAX_GUESTS, g));
+      updateUI();
+    }
 
     var budgetOpts = [
-      { id:'budget', label:'&#8377;5,000', sub:'Budget Friendly' },
-      { id:'moderate', label:'&#8377;10,000', sub:'Comfortable' },
-      { id:'premium', label:'&#8377;20,000', sub:'Premium' },
-      { id:'luxury', label:'Luxury', sub:'Experience' }
+      { id:'budget-friendly', label:'Budget Friendly', sub:'Smart choices and memorable experiences.' },
+      { id:'comfortable', label:'Comfortable', sub:'A balanced mix of comfort and experiences.' },
+      { id:'premium', label:'Premium', sub:'Elevated stays, dining and experiences.' },
+      { id:'luxury', label:'Luxury', sub:'The most refined and indulgent experience.' }
     ];
 
     var interestOpts = [
-      { id:'cafe', icon:'&#9749;', label:'Coffee &amp; Snacks' },
-      { id:'trekking', icon:'&#129496;', label:'Trekking' },
-      { id:'photography', icon:'&#128247;', label:'Photography' },
-      { id:'bonfire', icon:'&#128293;', label:'Bonfire' },
       { id:'nature', icon:'&#127796;', label:'Nature' },
-      { id:'workcation', icon:'&#128187;', label:'Workcation' },
-      { id:'orchard', icon:'&#127822;', label:'Apple Orchard' },
-      { id:'stargazing', icon:'&#127776;', label:'Stargazing' },
-      { id:'relaxation', icon:'&#129720;', label:'Relaxation' }
+      { id:'adventure', icon:'&#129406;', label:'Adventure' },
+      { id:'cafe', icon:'&#9749;', label:'Caf\u00e9s &amp; Food' },
+      { id:'photography', icon:'&#128247;', label:'Photography' },
+      { id:'relaxation', icon:'&#129496;', label:'Relaxation' },
+      { id:'exploring', icon:'&#128506;', label:'Exploring' },
+      { id:'scenic', icon:'&#127748;', label:'Scenic Experiences' }
     ];
 
-    var roomData = {
-      couple: { id: 'flamingo-2', name:'Flamingo 2', img:'images/rooms/flamingo-2/01.jpg', guests:'2 Guests', price:'&#8377;5,000 / night (incl. GST)', desc:'A cozy attic retreat with a skylight, heater, and bonfire — perfect for a romantic mountain escape.' },
-      solo: { id: 'maina-2', name:'Maina 2', img:'images/rooms/maina-2/01.jpg', guests:'1 Guest', price:'&#8377;2,000 / night (incl. GST)', desc:'A compact, cosy private room with valley views and a peaceful nook for quiet reflection.' },
-      friends: { id: 'flamingo-1', name:'Flamingo 1', img:'images/rooms/flamingo-1/01.jpg', guests:'4 Guests', price:'&#8377;6,000 / night (incl. GST)', desc:'A spacious duplex with mountain views, Wi-Fi, heater, bonfire, and a private sit-out — ideal for groups.' },
-      family: { id: 'flamingo-3', name:'Flamingo 3', img:'images/rooms/flamingo-3/01.jpg', guests:'4 Guests', price:'&#8377;6,000 / night (incl. GST)', desc:'A generous duplex with garden access, heater, bonfire, and tea/coffee — built for family comfort.' }
-    };
+    var N_MAX_GUESTS = 18;
+    var API = (window.FAM && window.FAM.Booking && window.FAM.Booking.apiBase) ? window.FAM.Booking.apiBase() : '/api/v1';
+    var liveRooms = [];
+    var roomsOk = false;
+
+    function loadRooms() {
+      return fetch(API + '/rooms?limit=50', { headers: { 'Content-Type': 'application/json' } })
+        .then(function(r){ return r.json(); })
+        .then(function(json){
+          var list = (json && json.data && json.data.rooms) || [];
+          liveRooms = list.filter(function(r){ return r && r.slug; });
+          roomsOk = liveRooms.length > 0;
+          return liveRooms;
+        })
+        .catch(function(){ roomsOk = false; return []; });
+    }
+
+    function sleepCap(r) { return (r.capacity && r.capacity.maxGuests) ? r.capacity.maxGuests : (r.capacity || 0); }
+    function roomPrice(r) { return r.discountPrice || r.pricePerNight || 0; }
+    function isPremiumRoom(r) {
+      var t = (r.type || '').toLowerCase();
+      return t.indexOf('duplex') !== -1 || t.indexOf('king attic') !== -1 || (r.name || '').toLowerCase().indexOf('flamingo') !== -1;
+    }
+    function roomUsable(r) {
+      if (!r) return false;
+      if (r.isAvailable === false) return false;
+      if (r.status === 'maintenance' || r.status === 'out_of_service') return false;
+      return true;
+    }
+    function sumTier(c) { return c.rooms.reduce(function(s,r){ return s + (isPremiumRoom(r) ? 1 : 0); }, 0); }
+
+    function buildCombos(guests) {
+      var usable = liveRooms.filter(function(r){ return roomUsable(r) && sleepCap(r) > 0; });
+      var totalCap = usable.reduce(function(s,r){ return s + sleepCap(r); }, 0);
+      if (usable.length === 0 || totalCap < guests) return [];
+      var combos = [];
+      var n = usable.length;
+      for (var mask = 1; mask < (1 << n); mask++) {
+        var c = { rooms: [], cap: 0, price: 0 };
+        for (var j = 0; j < n; j++) {
+          if (mask & (1 << j)) {
+            var rr = usable[j];
+            c.rooms.push(rr);
+            c.cap += sleepCap(rr);
+            c.price += roomPrice(rr);
+          }
+        }
+        if (c.cap >= guests) combos.push(c);
+      }
+      return combos;
+    }
+
+    function compareCombos(a, b, guests, budget) {
+      if (a.rooms.length !== b.rooms.length) return a.rooms.length - b.rooms.length;
+      if (budget === 'premium' || budget === 'luxury') {
+        if (a.price !== b.price) return b.price - a.price;
+        var sp = a.cap - guests, tp = b.cap - guests;
+        if (sp !== tp) return sp - tp;
+        if (sumTier(a) !== sumTier(b)) return sumTier(b) - sumTier(a);
+        return a.price - b.price;
+      }
+      var sa = a.cap - guests, sb = b.cap - guests;
+      if (sa !== sb) return sa - sb;
+      var aa = a.price / guests, bb = b.price / guests;
+      if (budget === 'budget-friendly') return aa - bb;
+      var ma = Math.abs(aa - 3800), mb = Math.abs(bb - 3800);
+      if (ma !== mb) return ma - mb;
+      if (sumTier(a) !== sumTier(b)) return sumTier(a) - sumTier(b);
+      return a.price - b.price;
+    }
+
+    function recommend(guests, budget) {
+      if (!roomsOk || liveRooms.length === 0) return { error: 'Live room data is temporarily unavailable. Please try generating again in a moment.' };
+      var combos = buildCombos(guests);
+      if (combos.length === 0) return { error: 'Our current room inventory cannot comfortably fit ' + guests + ' guests in one configuration. Please lower the guest count or contact us to arrange a custom stay.' };
+      combos.sort(function(a,b){ return compareCombos(a, b, guests, budget); });
+      return { combo: combos[0], options: combos.length };
+    }
+
+    function bookingUrl(slug) {
+      var q = '?room=' + encodeURIComponent(slug);
+      if (state.guests) q += '&guests=' + state.guests;
+      return 'pages/booking.html' + q;
+    }
 
     var interestAddons = {
-      cafe: 'Relax in the garden with hot coffee &amp; snacks',
-      trekking: 'Guided nature trek through pine forests',
-      photography: 'Photography walk at golden hour',
-      bonfire: 'Bonfire under the stars',
+      cafe: 'Leisurely caf\u00e9 breaks with garden views',
+      adventure: 'Guided adventure trek through the pine forests',
+      photography: 'Golden-hour photography walk',
+      relaxation: 'Yoga &amp; meditation by the riverside',
       nature: 'Nature walk through the apple orchard',
-      workcation: 'Work from the garden with mountain views',
-      orchard: 'Apple orchard tour &amp; fresh apple tasting',
-      stargazing: 'Stargazing session under clear mountain skies',
-      relaxation: 'Yoga &amp; meditation by the riverside'
+      exploring: 'Village exploration with local stories',
+      scenic: 'Scenic drive along the Jalori Pass'
     };
 
     var dayPlans = {
@@ -520,7 +758,8 @@
       2: [ { d:1, acts:['Check in at FAM','Explore Jibhi Village','Photography walk','Bonfire Evening'] }, { d:2, acts:['Visit Jibhi Waterfall','Morning tea in the garden','Nature walk','Departure'] } ],
       3: [ { d:1, acts:['Check in at FAM','Relax in Apple Orchard','Explore the property','Bonfire Evening'] }, { d:2, acts:['Jalori Pass Excursion','Serolsar Lake Trek','Photography Stop','Evening relax at FAM'] }, { d:3, acts:['Jibhi Waterfall','Morning tea in garden','Checkout'] } ],
       4: [ { d:1, acts:['Check in at FAM','Explore the property','Bonfire Evening'] }, { d:2, acts:['Jalori Pass','Serolsar Lake Trek','Photography walk','Evening relax'] }, { d:3, acts:['Chehni Kothi Visit','Mini Thailand','Evening river walk','Bonfire Night'] }, { d:4, acts:['Jibhi Waterfall','Morning tea','Checkout'] } ],
-      5: [ { d:1, acts:['Check in at FAM','Relax &amp; settle in','Bonfire welcome'] }, { d:2, acts:['Jalori Pass Excursion','Serolsar Lake Trek','Photography stop','Evening relax at FAM'] }, { d:3, acts:['Great Himalayan NP Trek','Picnic lunch','Wildlife spotting','Return to FAM'] }, { d:4, acts:['Chehni Kothi Visit','Mini Thailand','River walk','Farewell bonfire'] }, { d:5, acts:['Jibhi Waterfall','Morning tea','Checkout'] } ]
+      5: [ { d:1, acts:['Check in at FAM','Relax &amp; settle in','Bonfire welcome'] }, { d:2, acts:['Jalori Pass Excursion','Serolsar Lake Trek','Photography stop','Evening relax at FAM'] }, { d:3, acts:['Great Himalayan NP Trek','Picnic lunch','Wildlife spotting','Return to FAM'] }, { d:4, acts:['Chehni Kothi Visit','Mini Thailand','River walk','Farewell bonfire'] }, { d:5, acts:['Jibhi Waterfall','Morning tea','Checkout'] } ],
+      6: [ { d:1, acts:['Check in at FAM','Relax &amp; settle in','Apple orchard walk','Bonfire welcome'] }, { d:2, acts:['Jalori Pass Excursion','Serolsar Lake Trek','Photography stop','Evening relax at FAM'] }, { d:3, acts:['Chehni Kothi &amp; Bathani Visit','Streamside picnic','Village walk','Bonfire evening'] }, { d:4, acts:['Great Himalayan NP Trail','Picnic lunch','Wildlife spotting','Return to FAM'] }, { d:5, acts:['Mini Thailand &amp; River Trail','River-side caf\u00e9 breaks','Golden-hour photography','Relaxed evening'] }, { d:6, acts:['Shoja &amp; Gushaini Exploration','Local village lunch','Apple tasting','Nature walk'] }, { d:7, acts:['Jibhi Waterfall','Morning tea in garden','Checkout'] } ]
     };
 
     function insertAddons(acts, interests) {
@@ -534,13 +773,29 @@
       return result;
     }
 
+    var budgetFlavor = {
+      'budget-friendly': 'Value-first picks: local food and budget-smart shared cabs',
+      'comfortable': 'A comfortable mix of curated outings and relaxed downtime',
+      'premium': 'Premium dining and upgraded in-stay experiences with extra comfort',
+      'luxury': 'Exclusive private dinner, bespoke concierge and the most refined comfort'
+    };
+
+    function applyBudget(acts, budget) {
+      var tip = budgetFlavor[budget] || budgetFlavor['comfortable'];
+      var insertAt = Math.max(1, Math.floor(acts.length / 2));
+      acts.splice(insertAt, 0, tip);
+      return acts;
+    }
+
     function generate() {
-      var plan = dayPlans[state.days] || dayPlans[3];
-      var traveler = state.traveler || 'couple';
+      var traveler = state.travelCompanion || 'couple';
+      var days = tripDurationDays(state.tripDuration);
+      var plan = days <= 2 ? dayPlans[2] : (days <= 4 ? dayPlans[4] : dayPlans[6]);
       var itinerary = plan.map(function(day){
         var acts = day.acts.slice();
         acts = insertAddons(acts, state.interests);
-        // Traveler-specific modifier
+        acts = applyBudget(acts, state.budget);
+        // Companion-specific modifier
         if (traveler === 'couple') {
           acts.splice(1,0,'Romantic candlelight dinner setup');
         } else if (traveler === 'family') {
@@ -552,17 +807,17 @@
         }
         return { day: day.d, acts: acts };
       });
-      return itinerary;
+      return { itinerary: itinerary, days: days, traveler: traveler };
     }
 
     function getBudgetLabel(b) {
-      var map = { budget:'&#8377;5,000 - &#8377;8,000', moderate:'&#8377;10,000 - &#8377;15,000', premium:'&#8377;20,000 - &#8377;25,000', luxury:'&#8377;30,000+' };
+      var map = { 'budget-friendly':'Budget Friendly', comfortable:'Comfortable', premium:'Premium', luxury:'Luxury' };
       return map[b] || 'Custom';
     }
 
     function getPacking(traveler, days) {
       var base = ['Warm jacket','Comfortable shoes','Power bank','Water bottle','Toiletries'];
-      if (state.interests.indexOf('trekking') !== -1) base.push('Trekking poles','Snacks');
+      if (state.interests.indexOf('adventure') !== -1) base.push('Trekking poles','Snacks');
       if (days > 3) base.push('Laundry bag','Extra socks');
       if (state.interests.indexOf('photography') !== -1) base.push('Camera');
       return base.slice(0,5+Math.min(days,2));
@@ -576,16 +831,32 @@
 
     function getAttractions() {
       if (state.interests.length === 0) return 'Jibhi Waterfall, Jalori Pass, Serolsar Lake';
-      var map = { cafe:'Garden Cafe', trekking:'Forest Trails', photography:'Jalori Pass', bonfire:'FAM Bonfire Pit', nature:'Apple Orchard', workcation:'Garden Workspace', orchard:'Apple Orchard', stargazing:'Open Terrace', relaxation:'River Bank' };
+      var map = { cafe:'Garden Cafe', adventure:'Forest Trails', photography:'Jalori Pass', relaxation:'River Bank', nature:'Apple Orchard', exploring:'Village Walk', scenic:'Jalori Pass' };
       var names = state.interests.map(function(i){ return map[i]; }).filter(Boolean);
       return names.slice(0,4).join(', ');
     }
 
+    function interestsLabel() {
+      var map = { nature:'Nature', adventure:'Adventure', cafe:'Caf\u00e9s &amp; Food', photography:'Photography', relaxation:'Relaxation', exploring:'Exploring', scenic:'Scenic Experiences' };
+      var names = state.interests.map(function(i){ return map[i]; }).filter(Boolean);
+      return names.join(', ').replace(/, ([^,]*)$/, ' and $1');
+    }
+
+    function missingFields() {
+      var missing = [];
+      if (!state.travelCompanion) missing.push('who you are travelling with');
+      if (!state.tripDuration) missing.push('your trip length');
+      if (!state.guests || state.guests < 1) missing.push('the number of guests');
+      if (!state.budget) missing.push('your travel style');
+      if (state.interests.length === 0) missing.push('at least one interest');
+      return missing;
+    }
+
     function updateUI() {
       // Progress
-      var pct = ((state.step - 1) / 4) * 100;
+      var pct = ((state.step - 1) / 5) * 100;
       fill.style.width = pct + '%';
-      dots.querySelectorAll('.tp-step-dot').forEach(function(d){
+      dots.querySelectorAll('.tp-step-num').forEach(function(d){
         var s = parseInt(d.getAttribute('data-s'));
         d.classList.toggle('active', s === state.step);
         d.classList.toggle('done', s < state.step);
@@ -598,21 +869,26 @@
       renderStep();
 
       // Next button
-      if (state.step === 5) {
-        nextBtn.textContent = 'Generate My Trip ';
-        nextBtn.disabled = false;
-      } else if (state.step === 4) {
+      nextBtn.classList.remove('hidden');
+      if (state.step === 6) {
+        nextBtn.textContent = 'Create My Trip ';
+        nextBtn.disabled = true;
+        nextBtn.classList.add('hidden');
+      } else if (state.step === 5) {
         nextBtn.textContent = 'Next ';
         nextBtn.disabled = state.interests.length === 0;
-      } else if (state.step === 3) {
+      } else if (state.step === 4) {
         nextBtn.textContent = 'Next ';
         nextBtn.disabled = !state.budget;
+      } else if (state.step === 3) {
+        nextBtn.textContent = 'Next ';
+        nextBtn.disabled = !state.guests;
       } else if (state.step === 2) {
         nextBtn.textContent = 'Next ';
-        nextBtn.disabled = !state.days;
+        nextBtn.disabled = !state.tripDuration;
       } else if (state.step === 1) {
         nextBtn.textContent = 'Next ';
-        nextBtn.disabled = !state.traveler;
+        nextBtn.disabled = !state.travelCompanion;
       }
     }
 
@@ -624,41 +900,50 @@
       if (state.step === 1) {
         html += '<div class="tp-options col2">';
         travelers.forEach(function(t){
-          var sel = state.traveler === t.id ? ' selected' : '';
-          html += '<div class="tp-option' + sel + '" data-val="' + t.id + '"><span class="tp-option-icon">' + t.icon + '</span><span class="tp-option-label">' + t.label + '</span></div>';
+          var sel = state.travelCompanion === t.id ? ' selected' : '';
+          html += '<div class="tp-option' + sel + '" data-val="' + t.id + '" role="radio" tabindex="0" aria-checked="' + (sel?'true':'false') + '"><span class="tp-option-icon">' + t.icon + '</span><span class="tp-option-label">' + t.label + '</span></div>';
         });
         html += '</div>';
       } else if (state.step === 2) {
-        html += '<div class="tp-pills">';
-        dayOpts.forEach(function(o){
-          var sel = state.days === o.id ? ' selected' : '';
-          html += '<span class="tp-pill' + sel + '" data-val="' + o.id + '">' + o.label + '</span>';
+        html += '<div class="tp-pills tp-duration-pills">';
+        tripDurations.forEach(function(o){
+          var sel = state.tripDuration === o.id ? ' selected' : '';
+          html += '<span class="tp-pill' + sel + '" data-val="' + o.id + '" role="radio" tabindex="0" aria-checked="' + (sel?'true':'false') + '">' + o.label + '</span>';
         });
         html += '</div>';
       } else if (state.step === 3) {
-        html += '<div class="tp-options col4">';
+        html += '<div class="tp-counter" role="group" aria-label="Number of guests">';
+        html += '<button type="button" class="tp-counter-btn" id="tp-guests-minus" aria-label="Decrease guests">&#8722;</button>';
+        html += '<div><div class="tp-counter-val" id="tp-guests-val">' + guestVal(state.guests) + '</div><div class="tp-counter-unit">' + countUnit(state.guests) + '</div></div>';
+        html += '<button type="button" class="tp-counter-btn" id="tp-guests-plus" aria-label="Increase guests">+</button>';
+        html += '</div>';
+        html += '<p class="tp-hint">Choose how many guests will be staying. FAM rooms sleep from 1 to 18 guests across our combined inventory.</p>';
+      } else if (state.step === 4) {
+        html += '<div class="tp-options tp-budget-list" role="radiogroup" aria-label="Travel style">';
         budgetOpts.forEach(function(o){
           var sel = state.budget === o.id ? ' selected' : '';
-          html += '<div class="tp-option budget-card' + sel + '" data-val="' + o.id + '"><span class="tp-price">' + o.label + '</span><span class="tp-option-sub">' + o.sub + '</span></div>';
-        });
-        html += '</div>';
-      } else if (state.step === 4) {
-        html += '<div class="tp-chips">';
-        interestOpts.forEach(function(o){
-          var sel = state.interests.indexOf(o.id) !== -1 ? ' selected' : '';
-          html += '<span class="tp-chip' + sel + '" data-val="' + o.id + '">' + o.icon + ' ' + o.label + '</span>';
+          html += '<div class="tp-option budget-card' + sel + '" data-val="' + o.id + '" role="radio" tabindex="0" aria-checked="' + (sel?'true':'false') + '"><span class="tp-budget-name"><span class="tp-budget-dot" aria-hidden="true"></span>' + o.label + '</span><span class="tp-option-sub">' + o.sub + '</span></div>';
         });
         html += '</div>';
       } else if (state.step === 5) {
-        html += '<p style="font-size:14px;color:#414942;line-height:1.7;margin-bottom:12px;">We\'ll create a personalized itinerary based on your preferences. Click the button below to generate your perfect Jibhi escape.</p>';
-        var summary = '';
-        summary += '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">';
-        if (state.traveler) summary += '<span style="padding:4px 12px;background:rgba(10,52,29,0.06);border-radius:9999px;font-size:12px;color:#414942;">' + (state.traveler.charAt(0).toUpperCase() + state.traveler.slice(1)) + '</span>';
-        if (state.days) summary += '<span style="padding:4px 12px;background:rgba(10,52,29,0.06);border-radius:9999px;font-size:12px;color:#414942;">' + state.days + ' Day' + (state.days > 1 ? 's' : '') + '</span>';
-        if (state.budget) summary += '<span style="padding:4px 12px;background:rgba(10,52,29,0.06);border-radius:9999px;font-size:12px;color:#414942;">' + getBudgetLabel(state.budget) + '</span>';
-        summary += '</div>';
-        html += summary;
-        html += '<button class="tp-generate" id="tp-gen-btn"><span>Generate My Trip</span> <span style="font-size:18px;"></span></button>';
+        html += '<p class="tp-hint" style="margin-top:0;margin-bottom:12px;">Select as many as you like.</p>';
+        html += '<div class="tp-chips">';
+        interestOpts.forEach(function(o){
+          var sel = state.interests.indexOf(o.id) !== -1 ? ' selected' : '';
+          html += '<span class="tp-chip' + sel + '" data-val="' + o.id + '" role="checkbox" tabindex="0" aria-checked="' + (sel?'true':'false') + '">' + o.icon + ' ' + o.label + '</span>';
+        });
+        html += '</div>';
+      } else if (state.step === 6) {
+        html += '<p class="tp-hint" style="margin-top:0;">Here\'s your Jibhi escape so far \u2014 create your trip to see your personalized itinerary and room recommendation.</p>';
+        html += '<div class="tp-sum">';
+        html += '<div class="tp-sum-row"><span>Travelling with</span><strong>' + companionLabel(state.travelCompanion) + '</strong></div>';
+        html += '<div class="tp-sum-row"><span>Trip length</span><strong>' + durationLabel(state.tripDuration) + '</strong></div>';
+        html += '<div class="tp-sum-row"><span>Guests</span><strong>' + guestVal(state.guests) + ' ' + countUnit(state.guests) + '</strong></div>';
+        html += '<div class="tp-sum-row"><span>Travel style</span><strong>' + getBudgetLabel(state.budget) + '</strong></div>';
+        html += '<div class="tp-sum-row"><span>Interests</span><strong>' + interestsLabel() + '</strong></div>';
+        html += '</div>';
+        html += '<div class="tp-gen-error" id="tp-gen-error" role="alert"></div>';
+        html += '<button class="tp-generate" id="tp-gen-btn"><span>&#10024; Create My Trip</span></button>';
       }
 
       html += '</div>';
@@ -667,35 +952,67 @@
       // Bind events
       content.querySelectorAll('.tp-option').forEach(function(el){
         el.addEventListener('click', function(){
-          var val = el.getAttribute('data-val');
           if (state.step === 1) {
-            state.traveler = val;
-            el.parentElement.querySelectorAll('.tp-option').forEach(function(e){ e.classList.remove('selected'); });
-          } else if (state.step === 3) {
-            state.budget = val;
-            el.parentElement.querySelectorAll('.tp-option').forEach(function(e){ e.classList.remove('selected'); });
+            state.travelCompanion = el.getAttribute('data-val');
+            el.parentElement.querySelectorAll('.tp-option').forEach(function(e){ e.classList.remove('selected'); e.setAttribute('aria-checked','false'); });
+          } else if (state.step === 4) {
+            state.budget = el.getAttribute('data-val');
+            el.parentElement.querySelectorAll('.tp-option').forEach(function(e){ e.classList.remove('selected'); e.setAttribute('aria-checked','false'); });
+          } else {
+            return;
           }
           el.classList.add('selected');
+          el.setAttribute('aria-checked','true');
           updateUI();
+        });
+        el.addEventListener('keydown', function(e){
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            var val = el.getAttribute('data-val');
+            el.click();
+            var fresh = content.querySelector('.tp-option[data-val="' + val + '"]');
+            if (fresh) fresh.focus();
+          }
         });
       });
 
       content.querySelectorAll('.tp-pill').forEach(function(el){
         el.addEventListener('click', function(){
-          state.days = parseInt(el.getAttribute('data-val'));
-          el.parentElement.querySelectorAll('.tp-pill').forEach(function(e){ e.classList.remove('selected'); });
+          state.tripDuration = el.getAttribute('data-val');
+          el.parentElement.querySelectorAll('.tp-pill').forEach(function(e){ e.classList.remove('selected'); e.setAttribute('aria-checked','false'); });
           el.classList.add('selected');
+          el.setAttribute('aria-checked','true');
           updateUI();
         });
+        el.addEventListener('keydown', function(e){
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            var val = el.getAttribute('data-val');
+            el.click();
+            var fresh = content.querySelector('.tp-pill[data-val="' + val + '"]');
+            if (fresh) fresh.focus();
+          }
+        });
       });
+
+      var minusEl = document.getElementById('tp-guests-minus');
+      var plusEl = document.getElementById('tp-guests-plus');
+      if (minusEl) minusEl.addEventListener('click', function(){ setGuests(state.guests - 1); });
+      if (plusEl) plusEl.addEventListener('click', function(){ setGuests(state.guests + 1); });
 
       content.querySelectorAll('.tp-chip').forEach(function(el){
         el.addEventListener('click', function(){
           var val = el.getAttribute('data-val');
           var idx = state.interests.indexOf(val);
-          if (idx !== -1) { state.interests.splice(idx, 1); el.classList.remove('selected'); }
-          else { state.interests.push(val); el.classList.add('selected'); }
+          if (idx !== -1) { state.interests.splice(idx, 1); el.classList.remove('selected'); el.setAttribute('aria-checked','false'); }
+          else { state.interests.push(val); el.classList.add('selected'); el.setAttribute('aria-checked','true'); }
           updateUI();
+        });
+        el.addEventListener('keydown', function(e){
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            el.click();
+          }
         });
       });
 
@@ -703,23 +1020,40 @@
       if (genBtn) {
         genBtn.addEventListener('click', function(e){
           e.preventDefault();
+          var missing = missingFields();
+          var err = document.getElementById('tp-gen-error');
+          if (missing.length > 0) {
+            var msg = 'Please select ' + missing.join(', ') + ' before creating your trip.';
+            if (err) { err.textContent = msg; }
+            return;
+          }
+          if (err) { err.textContent = ''; }
           genBtn.classList.add('loading');
-          genBtn.innerHTML = '<span class="tp-spinner"></span><span>Generating your perfect trip...</span>';
+          genBtn.innerHTML = '<span class="tp-spinner"></span><span>Creating your perfect trip...</span>';
           genBtn.disabled = true;
-          setTimeout(function(){ showResult(); }, 1800);
+          setTimeout(function(){
+            if (!roomsOk) { loadRooms().then(showResult).catch(showResult); }
+            else { showResult(); }
+          }, 1100);
         });
       }
     }
 
     function showResult() {
-      var itinerary = generate();
-      var room = roomData[state.traveler] || roomData.couple;
-      var days = state.days || 3;
-      var traveler = state.traveler || 'couple';
+      var generated = generate();
+      var itinerary = generated.itinerary;
+      var days = generated.days;
+      var guests = state.guests || 2;
+      var companion = state.travelCompanion || 'couple';
+      var budget = state.budget || 'comfortable';
 
       var html = '<div class="tp-result">';
-      html += '<div class="tp-result-badge"><span>&#10004;&#65039;</span> Your Personalized Itinerary is Ready</div>';
+      html += '<div class="tp-result-badge"><span>&#10004;&#65039;</span> Your Jibhi Escape is Ready</div>';
       html += '<h4>Your Jibhi Escape</h4>';
+
+      // Personalized introduction
+      var intro = 'Designed for a ' + companionLabel(companion).toLowerCase() + ' seeking a ' + getBudgetLabel(budget).toLowerCase() + ' ' + durationLabelLower(state.tripDuration) + ' mountain escape with a love for ' + interestsLabel().toLowerCase() + '.';
+      html += '<p class="tp-intro">' + intro + '</p>';
 
       // Days
       itinerary.forEach(function(day){
@@ -730,29 +1064,48 @@
         html += '</ul></div>';
       });
 
-      // Recommended room
-      html += '<div class="tp-room-card">';
-      html += '<img src="' + room.img + '" alt="' + room.name + '" loading="lazy">';
-      html += '<div class="tp-room-info"><h5>' + room.name + '</h5>';
-      html += '<div class="tp-room-tags"><span>' + room.guests + '</span><span>' + room.price + '</span></div>';
-      html += '<p>' + room.desc + '</p>';
-      html += '<a href="pages/booking.html?room=' + room.id + '" class="tp-room-book">Book Now </a>';
-      html += '</div></div>';
+      // Room recommendation (live FAM room data, guest count + budget aware)
+      var rec = recommend(guests, budget);
+      html += '<div class="tp-rec">';
+      html += '<div class="tp-rec-head">Your Stay</div>';
+      if (rec.error) {
+        html += '<p class="tp-rec-pitch">' + rec.error + '</p>';
+        if (!roomsOk) html += '<p class="tp-rec-note">Room suggestions will appear here as soon as live data loads. You can still browse all rooms on the <a href="pages/rooms.html">Rooms page</a>.</p>';
+      } else {
+        var combo = rec.combo;
+        var names = combo.rooms.map(function(r){ return r.name; });
+        var joined = names.join(', ').replace(/, ([^,]*)$/, ' and $1');
+        var leadIn = combo.rooms.length === 1 ? 'the ' : 'a combination of ';
+        html += '<p class="tp-rec-pitch">Based on ' + guests + ' ' + (guests === 1 ? 'guest' : 'guests') + ' and your ' + getBudgetLabel(budget) + ' travel style, we recommend ' + leadIn + joined + '.</p>';
+        html += '<div>';
+        combo.rooms.forEach(function(r){
+          html += '<div class="tp-rec-item"><span class="tp-rec-name">' + r.name + '</span><span class="tp-rec-sleeps">Sleeps ' + sleepCap(r) + '</span></div>';
+        });
+        html += '</div>';
+        html += '<div class="tp-rec-total"><span>Suitable for your stay</span><span>' + combo.cap + ' guests</span></div>';
+        var primary = combo.rooms.slice().sort(function(a,b){ return sleepCap(b) - sleepCap(a); })[0];
+        html += '<div class="tp-rec-cta">';
+        html += '<a href="pages/rooms.html" class="tp-room-book">View Room</a>';
+        html += '<a href="' + bookingUrl(primary.slug) + '" class="tp-room-book">Book Your Stay</a>';
+        html += '</div>';
+      }
+      html += '</div>';
 
       // Summary
       html += '<div class="tp-summary-card"><h5>Trip Summary</h5><div class="tp-summary-grid">';
-      html += '<div class="tp-summary-item"><strong>Budget</strong>' + getBudgetLabel(state.budget || 'moderate') + '</div>';
-      html += '<div class="tp-summary-item"><strong>Duration</strong>' + days + ' Day' + (days > 1 ? 's' : '') + '</div>';
-      html += '<div class="tp-summary-item"><strong>Attractions</strong>' + getAttractions() + '</div>';
-      html += '<div class="tp-summary-item"><strong>Packing</strong>' + getPacking(traveler, days).join(', ') + '</div>';
-      html += '<div class="tp-summary-item" style="grid-column:1/-1;"><strong>Best Time</strong>' + getBestTime(traveler) + '</div>';
+      html += '<div class="tp-summary-item"><strong>Travelling with</strong>' + companionLabel(companion) + '</div>';
+      html += '<div class="tp-summary-item"><strong>Trip length</strong>' + durationLabel(state.tripDuration) + '</div>';
+      html += '<div class="tp-summary-item"><strong>Guests</strong>' + guestVal(guests) + ' ' + countUnit(guests) + '</div>';
+      html += '<div class="tp-summary-item"><strong>Travel style</strong>' + getBudgetLabel(budget) + '</div>';
+      html += '<div class="tp-summary-item" style="grid-column:1/-1;"><strong>Interests</strong>' + interestsLabel() + '</div>';
+      html += '<div class="tp-summary-item" style="grid-column:1/-1;"><strong>Packing</strong>' + getPacking(companion, days).join(', ') + '</div>';
       html += '</div></div>';
 
       // Export buttons
       html += '<div class="tp-export">';
       html += '<button class="tp-export-btn" onclick="alert(\'PDF download coming soon. Your itinerary will be available as a beautifully formatted PDF.\')"><span>&#128196;</span> Download Itinerary</button>';
       html += '<button class="tp-export-btn" onclick="if(navigator.share){navigator.share({title:\'My Jibhi Trip at Flamingo aur Maina\',text:\'Check out my personalized itinerary from FAM!\',url:window.location.href})}else{prompt(\'Copy this link to share:\',window.location.href)}"><span>&#128228;</span> Share Trip</button>';
-      html += '<a href="pages/booking.html?room=' + room.id + '" class="tp-export-btn solid"><span>&#128205;</span> Book Recommended Room</a>';
+      html += '<a href="' + (rec.combo ? bookingUrl(rec.combo.rooms.slice().sort(function(a,b){ return sleepCap(b) - sleepCap(a); })[0].slug) : 'pages/rooms.html') + '" class="tp-export-btn solid"><span>&#128205;</span> Book Recommended Room</a>';
       html += '</div>';
 
       html += '</div>';
@@ -766,24 +1119,26 @@
     }
 
     function goTo(n) {
-      state.step = Math.max(1, Math.min(5, n));
+      state.step = Math.max(1, Math.min(6, n));
       updateUI();
     }
 
     backBtn.addEventListener('click', function(){ goTo(state.step - 1); });
     nextBtn.addEventListener('click', function(){
-      if (state.step === 5) {
+      if (state.step === 6) {
         var genBtn = document.getElementById('tp-gen-btn');
         if (genBtn) { genBtn.click(); }
         return;
       }
-      if (state.step === 4 && state.interests.length === 0) return;
-      if (state.step === 3 && !state.budget) return;
-      if (state.step === 2 && !state.days) return;
-      if (state.step === 1 && !state.traveler) return;
+      if (state.step === 5 && state.interests.length === 0) return;
+      if (state.step === 4 && !state.budget) return;
+      if (state.step === 3 && !state.guests) return;
+      if (state.step === 2 && !state.tripDuration) return;
+      if (state.step === 1 && !state.travelCompanion) return;
       goTo(state.step + 1);
     });
 
+    loadRooms().catch(function(){});
     updateUI();
   })();
   </script>

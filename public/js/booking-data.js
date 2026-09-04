@@ -13,18 +13,15 @@
     return '/api/v1';
   }
 
-  function authHeaders() {
-    var headers = { 'Content-Type': 'application/json' };
-    if (FAM.Auth && FAM.Auth.getAccessToken) {
-      var token = FAM.Auth.getAccessToken();
-      if (token) headers['Authorization'] = 'Bearer ' + token;
-    }
-    return headers;
+  function jsonHeaders() {
+    // Public/guest booking: no Authorization header. Booking, order and payment
+    // are tied together server-side via the secure Razorpay relationship.
+    return { 'Content-Type': 'application/json' };
   }
 
   async function request(path, opts) {
     opts = opts || {};
-    var config = { method: opts.method || 'GET', headers: authHeaders() };
+    var config = { method: opts.method || 'GET', headers: jsonHeaders() };
     if (opts.body) config.body = JSON.stringify(opts.body);
     var res = await fetch(apiBase() + path, config);
     var json = null;
@@ -47,12 +44,14 @@
   FAM.Booking = {
     apiBase: apiBase,
 
-    // ── Login-return booking draft (non-sensitive state only) ──
-    // Preserved across the sign-in hop so the customer resumes the SAME
-    // booking + payment step instead of re-filling the wizard. sessionStorage
-    // is tab-scoped and short-lived. No tokens, signatures or card data are
-    // ever stored here.
+    // ── Guest booking state (non-sensitive) ──
+    // Persisted to sessionStorage so the booking survives page refresh, browser
+    // back/forward and a dismissed/failed Razorpay modal — WITHOUT any login.
+    // No tokens, signatures, keys or card data are ever stored here.
     DRAFT_KEY: 'fam_booking_draft',
+    // Id of the pending booking created this session, so a retried "Pay Now"
+    // reuses the same reservation instead of double-booking.
+    PENDING_KEY: 'fam_pending_booking_id',
 
     saveDraft: function () {
       try {
@@ -71,11 +70,31 @@
           paymentMethod: b.paymentMethod || null,
         };
         sessionStorage.setItem(FAM.Booking.DRAFT_KEY, JSON.stringify(draft));
-      } catch (e) { /* storage unavailable — still redirect to login */ }
+      } catch (e) { /* storage unavailable — best effort */ }
     },
 
     clearDraft: function () {
       try { sessionStorage.removeItem(FAM.Booking.DRAFT_KEY); } catch (e) { /* ignore */ }
+    },
+
+    savePendingBookingId: function (id, key) {
+      try {
+        if (id) sessionStorage.setItem(FAM.Booking.PENDING_KEY, id);
+        if (key) sessionStorage.setItem(FAM.Booking.PENDING_KEY + '_key', key);
+      } catch (e) { /* ignore */ }
+    },
+
+    getPendingBookingId: function () {
+      try { return sessionStorage.getItem(FAM.Booking.PENDING_KEY) || null; } catch (e) { return null; }
+    },
+
+    pendingMatchesKey: function (key) {
+      try { return sessionStorage.getItem(FAM.Booking.PENDING_KEY + '_key') === key; } catch (e) { return false; }
+    },
+
+    clearPendingBookingId: function () {
+      try { sessionStorage.removeItem(FAM.Booking.PENDING_KEY); } catch (e) { /* ignore */ }
+      try { sessionStorage.removeItem(FAM.Booking.PENDING_KEY + '_key'); } catch (e) { /* ignore */ }
     },
 
     rooms: function (params) {
@@ -235,17 +254,12 @@
       };
       if (payBtn) { payBtn.textContent = 'Reserving…'; payBtn.disabled = true; }
 
-      if (!FAM.Auth || !FAM.Auth.isAuthenticated || !FAM.Auth.isAuthenticated()) {
-        release();
-        // Preserve the in-progress booking so the customer resumes exactly where
-        // they left off after signing in instead of re-filling the wizard.
-        FAM.Booking.saveDraft();
-        payErr('Please sign in to confirm your booking.');
-        window.location.href = '/pages/login.html?redirect=' + encodeURIComponent('/pages/booking.html?return=1');
-        return;
-      }
-
       var b = window.booking;
+
+      // Persist non-sensitive booking state so a refresh or back/forward during
+      // checkout restores the wizard — no login is ever involved.
+      FAM.Booking.saveDraft();
+
       var payload = {
         room: b.room && b.room._id ? b.room._id : b.room.id,
         checkIn: ymd(b.checkIn),
@@ -257,41 +271,14 @@
         specialRequests: b.specialRequests || '',
       };
 
+      // Unique key for this room+date selection. Used to only reuse a session's
+      // pending reservation when it matches the current selection, preventing
+      // both double-booking and reusing a stale booking for different dates.
+      var payKey = (payload.room || '') + '|' + payload.checkIn + '|' + payload.checkOut + '|' + (b.adults || 2) + '|' + (b.children || 0);
+
       var createdBooking = null;
 
-      function startOrder(booking) {
-        createdBooking = booking;
-        if (payBtn) { payBtn.textContent = 'Preparing payment…'; }
-        return FAM.Booking.createPaymentOrder(booking._id).then(function (order) {
-          return openRazorpayCheckout(order, booking, b);
-        });
-      }
-
-      // Reuse an existing pending reservation for the same room & dates so a
-      // dismissed/failed checkout doesn't double-book.
-      var datesMatch = function (bk) {
-        var r = bk.room || {};
-        var roomMatch = false;
-        if (r._id && b.room && b.room._id) roomMatch = String(r._id) === String(b.room._id);
-        if (!roomMatch && r.slug && b.room) roomMatch = r.slug === b.room.id;
-        return roomMatch &&
-          ymd(new Date(bk.checkIn)) === ymd(b.checkIn) &&
-          ymd(new Date(bk.checkOut)) === ymd(b.checkOut);
-      };
-
-      FAM.Booking.myBookings('pending').then(function (data) {
-        var list = (data && data.results) || [];
-        var reuse = null;
-        list.some(function (bk) { if (datesMatch(bk)) { reuse = bk; return true; } return false; });
-        if (reuse && reuse._id) {
-          return startOrder(reuse);
-        }
-        return FAM.Booking.createBooking(payload).then(function (data2) {
-          var booking = data2 && data2.booking ? data2.booking : null;
-          if (!booking || !booking._id) { payErr('Booking could not be created.'); return; }
-          return startOrder(booking);
-        });
-      }).catch(function (err) {
+      function handleBookingError(err) {
         release();
         if (createdBooking) {
           // Booking exists but payment couldn't start — keep the reservation,
@@ -300,7 +287,44 @@
         } else {
           payErr('Unable to complete your booking: ' + (err.message || 'please try again.'));
         }
-      });
+      }
+
+      // A guest has no account, so we track the pending reservation created this
+      // session in sessionStorage. Reusing it across a retried "Pay Now" (only
+      // when room/dates match) avoids stacking duplicate reservations, while
+      // never requiring a login.
+      var pendingId = FAM.Booking.getPendingBookingId();
+      if (pendingId && FAM.Booking.pendingMatchesKey(payKey)) {
+        // createPaymentOrder is idempotent server-side; if the stored booking no
+        // longer exists / is not payable it throws and we fall through to a fresh
+        // reservation for the same request.
+        return FAM.Booking.createPaymentOrder(pendingId).then(function (order) {
+          return openRazorpayCheckout(order, { _id: pendingId }, b);
+        }).catch(function (err) {
+          if (createdBooking) return handleBookingError(err);
+          return FAM.Booking.createBooking(payload).then(function (data2) {
+            var booking = data2 && data2.booking ? data2.booking : null;
+            if (!booking || !booking._id) { release(); payErr('Booking could not be created.'); return; }
+            FAM.Booking.savePendingBookingId(booking._id, payKey);
+            return startOrder(booking);
+          }).catch(handleBookingError);
+        });
+      }
+
+      FAM.Booking.createBooking(payload).then(function (data2) {
+        var booking = data2 && data2.booking ? data2.booking : null;
+        if (!booking || !booking._id) { release(); payErr('Booking could not be created.'); return; }
+        FAM.Booking.savePendingBookingId(booking._id, payKey);
+        return startOrder(booking);
+      }).catch(handleBookingError);
+
+      function startOrder(booking) {
+        createdBooking = booking;
+        if (payBtn) { payBtn.textContent = 'Preparing payment…'; }
+        return FAM.Booking.createPaymentOrder(booking._id).then(function (order) {
+          return openRazorpayCheckout(order, booking, b);
+        });
+      }
     };
 
     // ── Razorpay checkout ──
@@ -416,6 +440,10 @@
 
     function showConfirmation(booking, paid, note) {
       FAM.Booking.clearDraft();
+      // Once paid/confirmed, clear the session's pending booking so a future
+      // reservation creates a fresh one. Keep it intact on failure so a retry
+      // reuses the same pending reservation instead of double-booking.
+      if (paid) FAM.Booking.clearPendingBookingId();
       if (window.booking) window.booking.paymentMethod = paid ? 'Paid online' : 'Pending';
       if (window.renderConfirmation) window.renderConfirmation();
       var conf = document.getElementById('confirmation-summary');

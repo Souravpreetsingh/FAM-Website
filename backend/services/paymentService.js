@@ -53,14 +53,26 @@ class PaymentService {
    * Create a Razorpay order for a booking. Idempotent: if a live order already
    * exists for this booking (created/attempted), reuse it instead of minting a
    * new one, so repeated Pay attempts never stack multiple Payment rows.
+   *
+   * `userId` is optional (guest bookings have no account). Ownership is enforced
+   * through the booking <-> payment <-> Razorpay order relationship rather than
+   * a customer JWT: when a booking is tied to a user, only that user may open an
+   * order for it; guest bookings have `booking.user === null` and are addressed
+   * via their payment/order ids which are never exposed insecurely.
    */
   async createOrder(bookingId, userId) {
     const booking = await Booking.findById(bookingId).populate('room');
     if (!booking) {
       throw ApiError.notFound('Booking not found');
     }
-    if (booking.user && booking.user.toString() !== userId.toString()) {
-      throw ApiError.forbidden('Not authorized for this booking');
+    // When the booking is linked to a user, only that user may create the order.
+    // Guest bookings (booking.user === null) need no account — their security
+    // rests on the booking/payment/order id relationship + Razorpay reconciliation
+    // in verifyPayment, plus the payable-state check below.
+    if (booking.user) {
+      if (!userId || booking.user.toString() !== userId.toString()) {
+        throw ApiError.forbidden('Not authorized for this booking');
+      }
     }
     if (booking.paymentStatus === 'paid' || booking.paymentStatus === 'refunded') {
       throw ApiError.badRequest('Booking payment is already completed');
@@ -98,7 +110,7 @@ class PaymentService {
       receipt: `booking_${booking._id}`,
       notes: {
         bookingId: booking._id.toString(),
-        userId: userId.toString(),
+        userId: userId ? userId.toString() : '',
       },
     };
 
@@ -106,7 +118,7 @@ class PaymentService {
 
     const payment = await Payment.create({
       booking: booking._id,
-      user: userId,
+      ...(userId ? { user: userId } : {}),
       razorpayOrderId: order.id,
       amount: booking.totalAmount,
       currency: booking.currency || 'INR',
@@ -145,13 +157,17 @@ class PaymentService {
   }
 
   /**
-   * Core payment confirmation. Used by the authenticated /verify endpoint.
+   * Core payment confirmation. Used by the (now guest-public) /verify endpoint.
    * Steps:
    *   1. timing-safe signature check,
    *   2. look up our payment by order id,
    *   3. ask Razorpay for the authoritative payment record and reconcile
    *      status, amount and currency,
    *   4. atomically move state (no duplicate paid emails).
+   *
+   * `userId` is optional (guests). When present and the payment is tied to a
+   * user, the caller must match; otherwise ownership is proven by the Razorpay
+   * HMAC signature + order/payment/amount/currency reconciliation below.
    */
   async verifyPayment(payload, userId) {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = payload;

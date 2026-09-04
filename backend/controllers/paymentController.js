@@ -6,24 +6,34 @@ const Booking = require('../models/Booking');
 
 const createOrder = asyncHandler(async (req, res) => {
   const { bookingId } = req.validated?.body || req.body || {};
-  const result = await paymentService.createOrder(bookingId, req.user._id);
+  // Guests have no user account, so ownership is established securely through
+  // the booking <-> payment <-> Razorpay order relationship (see paymentService).
+  const result = await paymentService.createOrder(bookingId);
   ApiResponse.success(result, 'Order created successfully').send(res);
 });
 
 const verifyPayment = asyncHandler(async (req, res) => {
   const payload = req.validated?.body || req.body || {};
-  const { payment, booking, createdMark } = await paymentService.verifyPayment(payload, req.user._id);
+  const { payment, booking, createdMark } = await paymentService.verifyPayment(payload);
 
   const populatedBooking = await Booking.findById(booking._id)
     .populate('room')
     .populate('user', 'name email');
 
   // Send the confirmation email only once ever, guarded by an explicit marker so
-  // neither a repeated /verify nor a racing webhook can double-email.
-  if (createdMark && populatedBooking.user && !populatedBooking.confirmationEmailSentAt) {
-    await emailService.sendBookingConfirmation(populatedBooking, populatedBooking.user, populatedBooking.room);
-    populatedBooking.confirmationEmailSentAt = new Date();
-    await populatedBooking.save();
+  // neither a repeated /verify nor a racing webhook can double-email. Guests have
+  // no User doc, so use the booking's guest contact email instead.
+  if (createdMark && !populatedBooking.confirmationEmailSentAt) {
+    const recipient = populatedBooking.user || { name: populatedBooking.guestName || 'Guest', email: populatedBooking.guestEmail };
+    if (recipient && recipient.email) {
+      try {
+        await emailService.sendBookingConfirmation(populatedBooking, recipient, populatedBooking.room);
+        populatedBooking.confirmationEmailSentAt = new Date();
+        await populatedBooking.save();
+      } catch (e) {
+        console.error('[Payment] Confirmation email failed:', e.message);
+      }
+    }
   }
 
   ApiResponse.success({ payment, booking: populatedBooking }, 'Payment verified successfully').send(res);
@@ -44,7 +54,8 @@ const webhook = asyncHandler(async (req, res) => {
 
   // When the webhook just moved a booking to paid, send the (idempotent)
   // confirmation email if it has never been sent — e.g. the user never finished
-  // the browser /verify handshake.
+  // the browser /verify handshake. Guests have no User doc, so fall back to the
+  // booking's guest contact email.
   if (result && result.updated && event === 'payment.captured') {
     const payment = req.body && req.body.payload && req.body.payload.payment && req.body.payload.payment.entity;
     const orderId = payment && (payment.order_id || null);
@@ -55,10 +66,17 @@ const webhook = asyncHandler(async (req, res) => {
         const booking = await Booking.findById(local.booking)
           .populate('room')
           .populate('user', 'name email');
-        if (booking && booking.user && !booking.confirmationEmailSentAt) {
-          await emailService.sendBookingConfirmation(booking, booking.user, booking.room);
-          booking.confirmationEmailSentAt = new Date();
-          await booking.save();
+        if (booking && !booking.confirmationEmailSentAt) {
+          const recipient = booking.user || { name: booking.guestName || 'Guest', email: booking.guestEmail };
+          if (recipient && recipient.email) {
+            try {
+              await emailService.sendBookingConfirmation(booking, recipient, booking.room);
+              booking.confirmationEmailSentAt = new Date();
+              await booking.save();
+            } catch (e) {
+              console.error('[Payment] Webhook confirmation email failed:', e.message);
+            }
+          }
         }
       }
     }
@@ -78,7 +96,12 @@ const getPaymentDetails = asyncHandler(async (req, res) => {
   if (!payment) {
     throw ApiErrorNotFound();
   }
+  // This endpoint is admin-only (see paymentRoutes: authenticate + authorizeAdmin),
+  // so a guest payment (payment.user === null) is always allowed; otherwise the
+  // payment's own user must match the caller.
   if (
+    payment.user &&
+    payment.user._id &&
     payment.user._id.toString() !== req.user._id.toString() &&
     req.user.role !== 'admin'
   ) {

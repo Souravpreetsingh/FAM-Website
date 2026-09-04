@@ -101,12 +101,10 @@
         <a href="gallery.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Gallery</a>
         <a href="amenities.html" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-accent-gold transition-colors">Amenities</a>
         <div class="flex items-center gap-3">
-          <button type="button" onclick="window.location.href='login.html'" class="nav-signin-btn" aria-label="Sign in to your account" data-direct-nav>Sign In</button>
           <button type="button" onclick="window.location.href='booking.html'" class="nav-book-btn" aria-label="Book your stay at FAM" aria-current="page">Book Your Stay</button>
         </div>
       </div>
       <div class="nav-mobile-actions">
-        <button type="button" onclick="window.location.href='login.html'" class="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
         <button class="nav-hamburger" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false"><svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
       </div>
     </div>
@@ -128,7 +126,6 @@
       <a href="gallery.html" class="mobile-menu-link">Gallery</a>
       <a href="amenities.html" class="mobile-menu-link">Amenities</a>
       <div class="mobile-menu-cta-group">
-        <button type="button" onclick="window.location.href='login.html'" class="nav-mobile-signin">Sign In</button>
         <button type="button" onclick="window.location.href='booking.html'" class="nav-mobile-book">Book Your Stay</button>
       </div>
     </nav>
@@ -1185,10 +1182,6 @@
 
   <script src="/js/mobile-nav.js"></script>
   <script src="/js/seasonal.js"></script>
-  <!-- Auth must load BEFORE booking-data.js: booking-data depends on FAM.Auth
-       (isAuthenticated / getAccessToken). Without it the payment guard always
-       treats the customer as signed-out and loops to the login page. -->
-  <script src="/js/auth.js?v=3"></script>
   <script src="/js/concierge.js?v=3"></script>
   <script src="/js/booking-data.js?v=20260902"></script>
   <script src="/js/animations.js"></script>
@@ -1201,24 +1194,25 @@
   </script>
   <script src="/js/page-transitions.js"></script>
   <script>
-  // Restore the booking draft saved before the sign-in redirect so the customer
-  // resumes at the SAME payment step instead of re-filling the wizard. Only
-  // re-applies on a genuine login round-trip (?return=1) and only stores
-  // non-sensitive booking state (room, dates, guests, contact, payment method).
+  // Restore the saved (non-sensitive) booking state after a page refresh or
+  // browser back/forward so the guest resumes at the SAME step — no sign-in is
+  // ever involved. Only room, dates, guests, contact and payment method are
+  // stored; never tokens, signatures or card data.
   (function () {
     var DRAFT_KEY = 'fam_booking_draft';
     document.addEventListener('DOMContentLoaded', function () {
       setTimeout(function () {
         try {
           if (window.__famDraftRestored) return;
-          var q = new URLSearchParams(window.location.search);
-          if (!q.get('return')) return;
           var raw = sessionStorage.getItem(DRAFT_KEY);
+          // Only auto-restore when the guest was mid-checkout this session
+          // (a pending reservation id exists). After a completed booking both the
+          // draft and the pending id are cleared, so a fresh visit starts clean.
           if (!raw) return;
+          if (!sessionStorage.getItem('fam_pending_booking_id')) return;
           var draft = JSON.parse(raw);
           if (!draft || !draft.roomId || !draft.checkIn || !draft.checkOut) return;
           window.__famDraftRestored = true;
-          sessionStorage.removeItem(DRAFT_KEY);
 
           var room = ROOMS.find(function (r) { return r.id === draft.roomId; });
           if (!room) return;

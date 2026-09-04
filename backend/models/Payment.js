@@ -10,7 +10,9 @@ const paymentSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: [true, 'User is required'],
+      default: null,
+      // nullable for guest bookings (no customer account). Admin-only refunds and
+      // the webhook reconcile by booking/order ids regardless.
     },
     razorpayOrderId: {
       type: String,

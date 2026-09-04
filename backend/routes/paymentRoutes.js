@@ -35,13 +35,18 @@ const createOrderLimiter = rateLimit({
   },
 });
 
-router.post('/create-order', authenticate, createOrderLimiter, validate(createPaymentOrderSchema), paymentController.createOrder);
-// Verify now requires authentication + ownership (previously public & replayable).
-router.post('/verify', authenticate, verifyLimiter, validate(verifyPaymentSchema), paymentController.verifyPayment);
+// Guest/public booking flow — no customer authentication required. The create
+// order & verify endpoints rely on the secure Razorpay order/payment
+// relationship and HMAC signature verification in paymentService, NOT on a
+// customer account or JWT.
+router.post('/create-order', createOrderLimiter, validate(createPaymentOrderSchema), paymentController.createOrder);
+router.post('/verify', verifyLimiter, validate(verifyPaymentSchema), paymentController.verifyPayment);
 // Webhook intentionally has NO auth middleware and NO rate limit — it is
 // authenticated by the Razorpay signature over the raw body (see service).
 router.post('/webhook', paymentController.webhook);
+// Admin-only refund. Ownership/authorization enforced via authenticate + authorizeAdmin.
 router.post('/:bookingId/refund', authenticate, authorizeAdmin, validate(refundSchema), paymentController.refund);
-router.get('/:id', authenticate, paymentController.getPaymentDetails);
+// Payment details are admin-only now that customers have no accounts.
+router.get('/:id', authenticate, authorizeAdmin, paymentController.getPaymentDetails);
 
 module.exports = router;
