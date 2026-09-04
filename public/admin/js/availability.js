@@ -96,14 +96,22 @@
     const blockId = cell.dataset.blockid;
     const status = cell.dataset.status;
 
-    let inner =
-      '<h3>' + U.esc(roomName) + '</h3>' +
-      '<p class="muted">' + U.fmtDate(date) + ' · currently ' + (STATUS_META[status] ? STATUS_META[status].label : status) + '</p>' +
-      (blockId
-        ? '<div class="modal-row"><button class="btn btn-danger" id="delBlockBtn">Mark available (remove block)</button></div>'
-        : '<label class="field"><span>Kind</span><select id="blkKind"><option value="BLOCKED">Blocked</option><option value="RESERVED">Reserved (hold)</option><option value="MAINTENANCE">Maintenance</option></select></label>' +
-          '<label class="field"><span>Reason</span><input id="blkReason" maxlength="500" placeholder="Optional" /></label>' +
-          '<button class="btn btn-primary btn-block" id="saveBlockBtn">Apply</button>');
+    let inner;
+    if (blockId && status === 'booked') {
+      inner = '<h3>' + U.esc(roomName) + '</h3>' +
+        '<p class="muted">' + U.fmtDate(date) + ' · currently Booked</p>' +
+        '<p class="muted">This night is held by a real booking and cannot be removed here. Go to <strong>Reservations</strong> to confirm, cancel or move it.</p>';
+    } else if (blockId) {
+      inner = '<h3>' + U.esc(roomName) + '</h3>' +
+        '<p class="muted">' + U.fmtDate(date) + ' · currently ' + (STATUS_META[status] ? STATUS_META[status].label : status) + '</p>' +
+        '<div class="modal-row"><button class="btn btn-danger" id="delBlockBtn">Mark available (remove block)</button></div>';
+    } else {
+      inner = '<h3>' + U.esc(roomName) + '</h3>' +
+        '<p class="muted">' + U.fmtDate(date) + ' · currently ' + (STATUS_META[status] ? STATUS_META[status].label : status) + '</p>' +
+        '<label class="field"><span>Kind</span><select id="blkKind"><option value="BLOCKED">Blocked</option><option value="RESERVED">Reserved (hold)</option><option value="MAINTENANCE">Maintenance</option></select></label>' +
+        '<label class="field"><span>Reason</span><input id="blkReason" maxlength="500" placeholder="Optional" /></label>' +
+        '<button class="btn btn-primary btn-block" id="saveBlockBtn">Apply</button>';
+    }
 
     window.AdminUI.openModal(inner);
 
