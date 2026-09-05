@@ -27,7 +27,10 @@
     var json = null;
     try { json = await res.json(); } catch (e) { /* no body */ }
     if (!res.ok || (json && json.success === false)) {
-      var err = new Error((json && json.message) || ('Request failed (' + res.status + ')'));
+      var detail = json && Array.isArray(json.errors) && json.errors.length
+        ? json.errors.map(function (e) { return e.message + (e.field ? ' (' + e.field + ')' : ''); }).slice(0, 2).join('; ')
+        : '';
+      var err = new Error(((json && json.message) || ('Request failed (' + res.status + ')')) + (detail ? ' \u2014 ' + detail : ''));
       err.status = res.status;
       throw err;
     }

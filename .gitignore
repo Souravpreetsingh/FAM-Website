@@ -58,3 +58,5 @@ backend/uploads/*
 *.tmp
 *.temp
 ezgif-temp/
+
+backend/.env.test
