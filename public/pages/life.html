@@ -70,6 +70,9 @@
     @media (max-width: 767px) { .fam-frame { padding: 0; } }
     /* Chapter 07 — container ratio locked to the photo (2128x951) so the frame fits the image exactly */
     .fam-stars { aspect-ratio: 2128 / 951; }
+    /* The star divs have no position rule in the built stylesheet, so on desktop they render as
+       static in-flow blocks and stack above the photo. Take them out of flow. */
+    #star-container .star { position: absolute; }
 </style>
   <script>document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('img').forEach(function(i){i.onerror=function(){this.onerror=null;this.style.display='none';var p=this.parentElement;if(p){var f=document.createElement('div');f.className='img-fallback';f.textContent='Image unavailable';p.appendChild(f)}}})})</script>
 </head>
