@@ -62,12 +62,12 @@
     .skip-link { position: absolute; left: -9999px; z-index: 999; padding: 8px 16px; background: #0a341d; color: #fff; text-decoration: none; }
     .skip-link:focus { left: 8px; top: 8px; }
 .img-fallback { background: #e8e8e4; min-height: 100px; display: flex; align-items: center; justify-content: center; color: #727972; font-family: Inter, sans-serif; font-size: 13px; }
-    /* Chapter 06 — white gallery frame: photo fits whole, never cropped */
-    .fam-frame { position: relative; aspect-ratio: 1591 / 1060; overflow: hidden; background: #ffffff; padding: 16px; }
+    /* Chapter 06 — photo fills the frame edge to edge, no mat, no crop */
+    .fam-frame { position: relative; aspect-ratio: 1370 / 914; overflow: hidden; background: transparent; padding: 0; }
     .fam-frame-inner { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
-    .fam-frame img { display: block; height: 100%; width: auto; max-width: 100%; object-fit: contain; box-shadow: 0 10px 28px rgba(10, 52, 29, 0.28); transition: transform 0.7s ease; }
+    .fam-frame img { display: block; height: 100%; width: 100%; object-fit: cover; transition: transform 0.7s ease; }
     .group:hover .fam-frame img { transform: scale(1.04); }
-    @media (max-width: 767px) { .fam-frame { padding: 10px; } }
+    @media (max-width: 767px) { .fam-frame { padding: 0; } }
     /* Chapter 07 — container ratio locked to the photo (2128x951) so the frame fits the image exactly */
     .fam-stars { aspect-ratio: 2128 / 951; }
 </style>
@@ -221,7 +221,7 @@
         <div class="flex flex-col h-full bg-surface-container-low rounded-xl overflow-hidden shadow-sm group gsap-reveal">
           <div class="fam-frame">
             <div class="fam-frame-inner">
-              <img alt="Jibhi exploration" loading="lazy" src="../images/life/chapter-06.jpg?v=3"/>
+              <img alt="Jibhi exploration" loading="lazy" src="../images/life/chapter-06.jpg?v=4"/>
             </div>
           </div>
           <div class="p-8 md:p-12 flex-1 flex flex-col justify-center">
