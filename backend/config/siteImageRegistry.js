@@ -159,7 +159,7 @@ function buildPages() {
     });
   });
   roomImages.push(bg('rooms.cta', 'rooms', 'Rooms CTA background',
-    'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=1200&q=80'));
+    '/images/rooms/rooms-cta.jpg'));
   pages.push({ ...page('rooms', 'Rooms'), images: roomImages });
 
   // ----------------------------------------------------------- Amenities ----
