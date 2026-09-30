@@ -167,7 +167,7 @@ function buildPages() {
     ...page('amenities', 'Amenities'),
     images: [
       bg('amenities.hero', 'amenities', 'Page background',
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuDadx8bWjHH5cRqMoFbR_LdcYa4CxHl3FFV9NsqEp9XtvIQh_uqQa45hQ2Cod6q38T6ya0IMd0KBa91W2Hwen3fFK3tUV3-OdkAmlBw1eQCE84R43TaCIjwe6gyYNOyIjbDrySAhi8GMO8zPNh4YMELlQ7MqEQGS5c8l8DSVDbyYEFV4iA2k3EkiX6S_OvkZvSob2MEOEEgoGHkZ1kfs6VzIWXsHw1O0uRbQ1bdTYGBXZAtS3a3Po4KFyKlHsb0rnAJaX2wXzNnL7o'),
+        '/images/amenities/amenities-hero.jpg'),
       meta('amenities.og', 'amenities', 'Social share image', OG_HERO_BG),
     ],
   });
