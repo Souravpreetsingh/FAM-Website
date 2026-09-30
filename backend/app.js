@@ -93,6 +93,8 @@ app.use('/api/v1/payments/webhook', (req, res, next) => {
 const corsOptions = {
   origin(origin, callback) {
     const allowedOrigins = [
+      'https://www.flamingoaurmaina.com',
+      'https://flamingoaurmaina.com',
       'https://fam-website-wq2e.onrender.com',
       'https://famorg-website.onrender.com',
       'http://localhost:5173',
@@ -211,6 +213,21 @@ app.get('/api/v1/health', (req, res) => {
     uptime: process.uptime(),
   });
 });
+
+// Optional canonical-host redirect. Inert unless CANONICAL_HOST is set, so the
+// Render host keeps working (and Render's health check on "/" keeps passing)
+// until the custom domain is confirmed live. Mounted after the API routes so
+// /api/* traffic is never redirected.
+const CANONICAL_HOST = String(process.env.CANONICAL_HOST || '').trim().toLowerCase().replace(/\/+$/, '');
+if (CANONICAL_HOST) {
+  app.use((req, res, next) => {
+    if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+    const host = String(req.headers.host || '').split(':')[0].toLowerCase();
+    if (!host || host === CANONICAL_HOST) return next();
+    const proto = String(req.headers['x-forwarded-proto'] || req.protocol || 'https').split(',')[0];
+    res.redirect(301, `${proto}://${CANONICAL_HOST}${req.originalUrl}`);
+  });
+}
 
 // Serve frontend static files
 const publicPath = path.join(__dirname, '..', 'public');
