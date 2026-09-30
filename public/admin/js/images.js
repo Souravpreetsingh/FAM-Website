@@ -6,6 +6,15 @@
     return window.AdminAPI;
   }
 
+  // Fallbacks are written relative to the page that uses them ("images/x.jpg"
+  // on the home page, "../images/x.jpg" inside /pages). The admin panel lives at
+  // /admin/, so resolve them against the site root to get a previewable URL.
+  function previewUrl(u) {
+    if (!u) return '';
+    if (/^(https?:|data:|\/)/i.test(u)) return u;
+    return '/' + u.replace(/^(\.\.\/|\.\/)+/, '');
+  }
+
   function renderPageCard(page, images) {
     const esc = U.esc;
     var html = '';
@@ -15,16 +24,13 @@
     html += '</div>';
     html += '<div class="img-grid">';
     images.forEach(function (img) {
-      const eff = img.effectiveUrl || '';
-      const hasOverride = !!img.isOverridden;
-      const kindLabel = img.kind === 'bg' ? 'Background' : img.kind === 'meta' ? 'Meta image' : 'Image';
+      var eff = previewUrl(img.effectiveUrl);
+      var hasOverride = !!img.isOverridden;
+      var kindLabel = img.kind === 'bg' ? 'Background' : img.kind === 'meta' ? 'Meta image' : 'Image';
       html += '<div class="img-slot' + (hasOverride ? ' overridden' : '') + '" data-key="' + esc(img.key) + '">';
       html += '<div class="img-preview">';
-      if (eff && img.kind !== 'meta' && !/^(url\(|#)/i.test(eff)) {
+      if (eff && img.kind !== 'meta') {
         html += '<img src="' + esc(eff) + '" loading="lazy" alt="" />';
-      } else if (eff && img.kind === 'bg' && /^url\(/.test(eff)) {
-        // cannot preview easily; show a swatch
-        html += '<div style="width:100%;height:100%;background:' + esc(eff) + ';background-size:cover;background-position:center;border-radius:8px;"></div>';
       } else {
         html += '<div style="padding:20px;font-size:12px;color:#666">No preview for this slot</div>';
       }
@@ -32,7 +38,7 @@
       html += '</div>';
       html += '<div class="img-meta">';
       html += '<h4>' + esc(img.label) + '</h4>';
-      html += '<div class="small muted">' + kindLabel + ' �?" ' + esc(img.key) + '</div>';
+      html += '<div class="small muted">' + kindLabel + ' &middot; ' + esc(img.key) + '</div>';
       if (img.updatedAt) {
         html += '<div class="small muted">Updated ' + esc(new Date(img.updatedAt).toLocaleString()) + (img.updatedByEmail ? ' by ' + esc(img.updatedByEmail) : '') + '</div>';
       }
@@ -55,7 +61,7 @@
       html += '<div class="img-slot library-item" data-public-id="' + U.esc(r.public_id) + '" data-url="' + U.esc(r.url) + '">';
       html += '<div class="img-preview"><img src="' + U.esc(r.url) + '" loading="lazy"/></div>';
       html += '<div class="small muted">' + U.esc((r.public_id || '').replace(/^fam\//, '')) + '</div>';
-      if (r.bytes) html += '<div class="small muted">' + Math.round(r.bytes/1024) + ' KB �?" ' + (r.width||'?') + '×' + (r.height||'?') + '</div>';
+      if (r.bytes) html += '<div class="small muted">' + Math.round(r.bytes/1024) + ' KB &middot; ' + (r.width||'?') + '&times;' + (r.height||'?') + '</div>';
       html += '</div>';
     });
     html += '</div>';
@@ -72,15 +78,18 @@
       el.addEventListener('click', function () {
         const url = el.dataset.url;
         const pid = el.dataset.publicId;
-        applyOverride(state.key, { url: url, publicId: pid });
+        // openModal replaces the modal root, so the editor (and its alt field)
+        // is gone by now. Carry the alt text across in state.
+        const payload = { url: url, publicId: pid };
+        if (state.alt) payload.alt = state.alt;
+        applyOverride(state.key, payload);
         window.AdminUI.closeModal();
       });
     });
     const more = wrap.querySelector('[data-action="more"]');
     if (more) {
-      more.addEventListener('click', function (btn) {
-        const cursor = btn.target.dataset.cursor;
-        loadLibrary(cursor, state);
+      more.addEventListener('click', function (e) {
+        loadLibrary(e.currentTarget.dataset.cursor, state);
       });
     }
   }
@@ -94,10 +103,10 @@
   }
 
   function applyOverride(key, payload) {
-    api().put('/site-images/' + key, payload).then(function () {
+    return api().put('/site-images/' + key, payload).then(function () {
       window.AdminUI.toast('Image updated');
       loadView();
-    }).catch(function (e){ window.AdminUI.toast(e.message,true); });
+    });
   }
 
   function openEditor(img) {
@@ -110,8 +119,10 @@
     html += '<div class="pager"><button type="submit" class="btn btn-primary">Apply</button><button type="button" class="btn btn-ghost" data-close="1">Cancel</button></div>';
     html += '</form></div>';
     const wrap = window.AdminUI.openModal(html);
-    const state = { key: img.key, library: [], libraryCursor: null };
+    const state = { key: img.key, alt: img.alt || '', library: [], libraryCursor: null };
     wrap.querySelector('#pickLib').addEventListener('click', function () {
+      // Capture the alt text before the library modal replaces this one.
+      state.alt = wrap.querySelector('#imgAlt').value;
       loadLibrary('', state);
     });
     wrap.querySelector('#imgForm').addEventListener('submit', function (e) {
@@ -124,6 +135,8 @@
       window.AdminUI.toast('Uploading image...');
       api().upload('/site-images/upload', fd).then(function (up) {
         return applyOverride(img.key, { url: up.url, publicId: up.public_id, alt: alt });
+      }).then(function () {
+        window.AdminUI.closeModal();
       }).catch(function (err){ window.AdminUI.toast(err.message,true); });
     });
   }

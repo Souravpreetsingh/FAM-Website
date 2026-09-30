@@ -116,15 +116,7 @@ async function run() {
   console.log('\n4. endpoint unreachable keeps the authored page');
   {
     const img = el('img', { 'data-fam-img': 'home.story', src: '/images/fam-big-pic.jpg' });
-    const { sandbox, win } = makeEnv({
-      map: { urls: {}, alts: {} },
-      elementsBySelector: { '[data-fam-img]': [img], '[data-fam-bg]': [], '[data-fam-meta]': [] },
-    });
-    sandbox.fetch = () => Promise.reject(new Error('offline'));
-    const { win: w2 } = makeEnv({ map: { urls: {}, alts: {} }, elementsBySelector: { '[data-fam-img]': [img], '[data-fam-bg]': [], '[data-fam-meta]': [] } });
-    w2.__unused = true;
-    const { win: w3 } = (() => {
-      const s = Object.assign({}, sandbox, { fetch: () => Promise.reject(new Error('offline')) });
+    const { win } = (() => {
       const winx = {};
       const sbx = {
         window: winx,
@@ -137,9 +129,44 @@ async function run() {
       vm.runInContext(SRC, sbx);
       return { win: winx };
     })();
-    await w3.FamImages.ready;
+    await win.FamImages.ready;
     check('img survives fetch failure', img.getAttribute('src'), '/images/fam-big-pic.jpg');
-    void win;
+  }
+
+  console.log('\n5. refresh() really refetches and re-applies');
+  {
+    const img = el('img', { 'data-fam-img': 'home.story', src: '/images/fam-big-pic.jpg' });
+    const img2 = el('img', { 'data-fam-img': 'home.story', src: '/images/fam-big-pic.jpg' });
+    let call = 0;
+    const store = {};
+    const win = {};
+    const sbx = {
+      window: win,
+      document: {
+        readyState: 'complete',
+        querySelectorAll: (sel) => ({ '[data-fam-img]': [img, img2], '[data-fam-bg]': [], '[data-fam-meta]': [] }[sel] || []),
+        addEventListener: () => {},
+      },
+      sessionStorage: {
+        getItem: (k) => (k in store ? store[k] : null),
+        setItem: (k, v) => { store[k] = v; },
+        removeItem: (k) => { delete store[k]; },
+      },
+      fetch: () => {
+        call += 1;
+        const urls = call === 1 ? {} : { 'home.story': 'https://cdn/v2.jpg' };
+        return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({ success: true, data: { urls, alts: {} } }) });
+      },
+      Promise, setTimeout, console,
+    };
+    vm.createContext(sbx);
+    vm.runInContext(SRC, sbx);
+    await win.FamImages.ready;
+    check('first load leaves the fallback', img.getAttribute('src'), '/images/fam-big-pic.jpg');
+    await win.FamImages.refresh();
+    check('refresh triggered a second request', call, 2);
+    check('refresh applied the new URL to the first node', img.getAttribute('src'), 'https://cdn/v2.jpg');
+    check('refresh applied the new URL to a later node too', img2.getAttribute('src'), 'https://cdn/v2.jpg');
   }
 
   console.log('\n' + (failures === 0 ? 'ALL LOADER CHECKS PASSED' : failures + ' LOADER CHECK(S) FAILED') + '\n');

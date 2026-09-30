@@ -7,7 +7,7 @@ const auditService = require('../services/auditService');
 
 const getSiteImages = asyncHandler(async (req, res) => {
   const data = await siteImageService.listImages();
-  res.json(new ApiResponse.success(data, 'Site images loaded'));
+  ApiResponse.success(data, 'Site images loaded').send(res);
 });
 
 // Public, unauthenticated. Consumed by public/js/site-images.js. Kept tiny and
@@ -24,7 +24,7 @@ const getLibrary = asyncHandler(async (req, res) => {
     maxResults: req.query.limit,
     prefix: req.query.prefix,
   });
-  res.json(new ApiResponse.success(data, 'Library loaded'));
+  ApiResponse.success(data, 'Library loaded').send(res);
 });
 
 const uploadImage = asyncHandler(async (req, res) => {
@@ -35,7 +35,7 @@ const uploadImage = asyncHandler(async (req, res) => {
     entityId: result.public_id,
     changes: { publicId: result.public_id, bytes: result.bytes },
   });
-  res.status(201).json(new ApiResponse.created(result, 'Image uploaded'));
+  ApiResponse.created(result, 'Image uploaded').send(res);
 });
 
 const updateImage = asyncHandler(async (req, res) => {
@@ -47,7 +47,7 @@ const updateImage = asyncHandler(async (req, res) => {
     entityId: data.key,
     changes: { from: before.effectiveUrl, to: data.effectiveUrl, alt: data.alt },
   });
-  res.json(new ApiResponse.success(data, 'Image updated'));
+  ApiResponse.success(data, 'Image updated').send(res);
 });
 
 const revertImage = asyncHandler(async (req, res) => {
@@ -59,7 +59,7 @@ const revertImage = asyncHandler(async (req, res) => {
     entityId: data.key,
     changes: { from: before.effectiveUrl, to: data.effectiveUrl },
   });
-  res.json(new ApiResponse.success(data, 'Image restored to the site default'));
+  ApiResponse.success(data, 'Image restored to the site default').send(res);
 });
 
 module.exports = {

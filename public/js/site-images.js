@@ -150,6 +150,16 @@
       alts = {};
       loaded = false;
       pending = null;
+      // Start a real fetch and hand back a promise for it. Returning the old
+      // FamImages.ready here would resolve instantly and never refetch.
+      FamImages.ready = load().then(function () {
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', apply);
+        } else {
+          apply();
+        }
+        return urls;
+      });
       return FamImages.ready;
     },
   };

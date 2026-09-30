@@ -152,7 +152,7 @@
     <!-- Hero with dynamic step title -->
     <section id="bk-hero" class="relative h-[35vh] min-h-[300px] overflow-hidden reveal">
       <div id="bk-hero-bg" class="absolute inset-0 will-change-transform">
-        <video id="bk-hero-video" class="w-full h-full object-cover bk-kenburns" autoplay muted loop playsinline preload="metadata" poster="/images/hero/hero-video-poster.jpg" aria-hidden="true">
+        <video id="bk-hero-video" class="w-full h-full object-cover bk-kenburns" autoplay muted loop playsinline preload="metadata" poster="/images/hero/hero-video-poster.jpg" data-fam-img="booking.hero.poster" data-fam-attr="poster" aria-hidden="true">
           <source src="/videos/hero.mp4" type="video/mp4" />
         </video>
         <div class="absolute inset-0 bg-gradient-to-b from-surface/60 via-surface/30 to-surface"></div>
@@ -521,7 +521,7 @@
       image: '',
       amenities: ['Forest View', 'Queen Bed', 'Reading Nook', 'Wi-Fi', 'Heater', 'Hot Water'] },
     { id: 'maina-2', name: 'Maina 2', type: 'Private Room', capacity: 2, price: 2000,
-      desc: 'Minimalist comfort meets mountain charm in this cozy private room �?" a restful haven for budget-conscious travelers.',
+      desc: 'Minimalist comfort meets mountain charm in this cozy private room — a restful haven for budget-conscious travelers.',
       image: '',
       amenities: ['Compact Design', 'Queen Bed', 'Mountain View', 'Wi-Fi', 'Heater', 'Hot Water'] },
     { id: 'maina-3', name: 'Maina 3', type: 'Private Room', capacity: 2, price: 2500,
@@ -537,6 +537,21 @@
     ROOMS.forEach(function (room) {
       room.famKey = 'rooms.' + room.id + '.cover';
       room.image = famImages ? famImages.url(room.famKey, room.image) : room.image;
+    });
+
+    // The override map arrives over the network, so on a cold load the covers
+    // above are still the built-in ones. The Maina rooms have no built-in cover
+    // at all, which means they render a "Photo coming soon" panel with no image
+    // element for the loader to correct. Re-resolve once the map lands and
+    // repaint the grid so a cover uploaded from Admin > Images shows up.
+    if (!famImages || !famImages.ready) return;
+    famImages.ready.then(function () {
+      var changed = false;
+      ROOMS.forEach(function (room) {
+        var next = famImages.url(room.famKey, room.image);
+        if (next && next !== room.image) { room.image = next; changed = true; }
+      });
+      if (changed && typeof renderRooms === 'function') renderRooms();
     });
   })();
 

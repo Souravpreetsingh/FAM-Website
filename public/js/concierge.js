@@ -428,11 +428,12 @@
       { name:'Mini Thailand', dist:'2 km · 10 min drive', desc:'Hidden riverside paradise with crystal-blue waters.' }
     ];
     var html = '<div class="cq-rec-title">Places to Explore Near FAM</div><div class="cq-attractions">';
+    var defaultImg = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=80&h=80&fit=crop&q=60';
+    var img = (window.FamImages && window.FamImages.url) ? window.FamImages.url('concierge.attraction', defaultImg) : defaultImg;
     for (var i = 0; i < cards.length; i++) {
       var c = cards[i];
-      var img = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=80&h=80&fit=crop&q=60';
       html += '<div class="cq-attr-card">' +
-        '<div class="cq-attr-img" style="background-image:url(' + img + ')"></div>' +
+        '<div class="cq-attr-img" data-fam-bg="concierge.attraction" style="background-image:url(' + img + ')"></div>' +
         '<div class="cq-attr-info">' +
           '<div class="cq-attr-name">' + c.name + '</div>' +
           '<div class="cq-attr-meta">' + c.dist + '</div>' +
