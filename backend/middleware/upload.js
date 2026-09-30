@@ -14,21 +14,29 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+  // GIF is included because services/imageBytes can verify its header and the
+  // admin library advertises it. This filter is only a cheap first pass; the
+  // real decision is made from the bytes at upload time.
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new ApiError(400, 'Only JPEG, PNG, and WebP images are allowed'), false);
+    cb(new ApiError(400, 'Only JPEG, PNG, WebP and GIF images are allowed'), false);
   }
 };
+
+// Single source of truth for the size cap, so the limit the admin panel shows
+// is the limit the server enforces. models/StoredImage imports it from here.
+const MAX_BYTES = 5 * 1024 * 1024;
 
 const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024,
+    fileSize: MAX_BYTES,
     files: 10,
   },
 });
 
 module.exports = upload;
+module.exports.MAX_BYTES = MAX_BYTES;

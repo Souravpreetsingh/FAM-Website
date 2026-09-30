@@ -121,15 +121,28 @@ test('readiness is false whenever any single variable is unusable', () => {
 
 test('listImages reports the same status it would enforce', async () => {
   // The admin banner is only trustworthy if it agrees with whether an upload
-  // would actually succeed, so both must derive from cloudinaryStatus().
-  const { cloudinaryStatus: fresh } = require('../config/cloudinaryStatus');
-  const service = require('../services/siteImageService');
+  // would actually succeed. Uploads no longer go through Cloudinary by
+  // default, so the check is now that listImages surfaces imageStorage.status()
+  // verbatim rather than re-deriving readiness some other way.
+  const imageStorage = require('../services/imageStorage');
   const source = fs.readFileSync(path.join(__dirname, '..', 'services', 'siteImageService.js'), 'utf8');
 
   assert.ok(
-    source.includes('cloudinary: cloudinaryStatus()'),
-    'listImages must return cloudinaryStatus() directly rather than a separate check'
+    source.includes('storage: imageStorage.status()'),
+    'listImages must return imageStorage.status() directly rather than a separate check'
   );
-  assert.strictEqual(fresh().ready, cloudinaryStatus().ready);
-  void service;
+
+  // Ready means "an upload right now would be stored", which is exactly when the
+  // banner stays quiet. Unusable Cloudinary settings must not read as ready.
+  for (const env of [{}, { IMAGE_STORAGE: 'cloudinary' }]) {
+    const s = imageStorage.status(env);
+    const enforced = imageStorage.activeProvider(env);
+    if (enforced === 'mongodb') {
+      assert.strictEqual(s.provider, 'mongodb');
+    } else {
+      assert.strictEqual(s.provider, 'cloudinary');
+      assert.strictEqual(s.ready, true);
+      assert.strictEqual(s.detail, null);
+    }
+  }
 });

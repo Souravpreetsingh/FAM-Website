@@ -16,45 +16,56 @@ const { test } = require('node:test');
 const assert = require('node:assert');
 
 const SERVICE_PATH = require.resolve('../services/siteImageService');
-const CLOUDINARY_PATH = require.resolve('../services/cloudinaryService');
+const STORAGE_PATH = require.resolve('../services/imageStorage');
 
 const serviceStub = {
   listImages: async () => ({
     pages: [{ id: 'home', title: 'Home', count: 3 }],
-    cloudinary: { ready: true, missing: [], placeholder: [] },
+    storage: { provider: 'mongodb', ready: true, accepts: ['image/jpeg'], maxBytes: 5242880, detail: null },
     images: [{ key: 'home.story' }],
   }),
   getImage: async (key) => ({ key, effectiveUrl: '/images/old.jpg', isOverridden: false }),
-  setOverride: async (key) => ({ key, effectiveUrl: 'https://res.cloudinary.com/demo/new.jpg', isOverridden: true }),
+  setOverride: async (key) => ({ key, effectiveUrl: '/api/v1/site-images/file/507f1f77bcf86cd799439011', isOverridden: true }),
   revert: async (key) => ({ key, effectiveUrl: '/images/original.jpg', isOverridden: false }),
   getOverrideMap: async () => ({ urls: {}, alts: {} }),
 };
 
-const cloudinaryStub = {
+const storageStub = {
   listLibrary: async () => ({ resources: [], nextCursor: null }),
-  uploadSiteImage: async () => ({ public_id: 'fam/site/new', url: 'https://res.cloudinary.com/demo/new.jpg' }),
+  store: async () => ({
+    public_id: '6abcc76956855fb0dad52c58',
+    url: '/api/v1/site-images/file/6abcc76956855fb0dad52c58',
+    width: 1600,
+    height: 900,
+    format: 'jpg',
+    bytes: 179309,
+    provider: 'mongodb',
+    contentType: 'image/jpeg',
+  }),
+  read: async () => null,
 };
 
 // Swap the stubs in before the controller (and therefore the real services) is
-// loaded, so nothing here can touch MongoDB or Cloudinary.
+// loaded, so nothing here can touch MongoDB or any third-party account.
 const realService = require.cache[SERVICE_PATH];
-const realCloudinary = require.cache[CLOUDINARY_PATH];
+const realStorage = require.cache[STORAGE_PATH];
 require.cache[SERVICE_PATH] = { id: SERVICE_PATH, filename: SERVICE_PATH, loaded: true, exports: serviceStub };
-require.cache[CLOUDINARY_PATH] = { id: CLOUDINARY_PATH, filename: CLOUDINARY_PATH, loaded: true, exports: cloudinaryStub };
+require.cache[STORAGE_PATH] = { id: STORAGE_PATH, filename: STORAGE_PATH, loaded: true, exports: storageStub };
 
 const controller = require('../controllers/siteImageController');
 
 test.after(() => {
   if (realService) require.cache[SERVICE_PATH] = realService; else delete require.cache[SERVICE_PATH];
-  if (realCloudinary) require.cache[CLOUDINARY_PATH] = realCloudinary; else delete require.cache[CLOUDINARY_PATH];
+  if (realStorage) require.cache[STORAGE_PATH] = realStorage; else delete require.cache[STORAGE_PATH];
 });
 
 // Minimal Express-shaped response recorder.
 function fakeRes() {
-  const rec = { statusCode: 200, body: undefined, ended: false };
+  const rec = { statusCode: 200, body: undefined, ended: false, headers: {} };
   rec.status = (code) => { rec.statusCode = code; return rec; };
   rec.json = (payload) => { rec.body = payload; rec.ended = true; return rec; };
-  rec.set = () => rec;
+  rec.set = (k, v) => { rec.headers[k] = v; return rec; };
+  rec.send = (payload) => { rec.body = payload; rec.ended = true; return rec; };
   return rec;
 }
 
@@ -82,10 +93,12 @@ test('getSiteImages responds 200 with the pages/images envelope', async () => {
   assert.ok(Array.isArray(res.body.data.pages), 'pages array present');
   assert.ok(Array.isArray(res.body.data.images), 'images array present');
   assert.strictEqual(res.body.data.images.length, 1);
-  // The admin UI keys its "Cloudinary is not configured" notice off this object.
-  assert.strictEqual(res.body.data.cloudinary.ready, true);
-  assert.deepStrictEqual(res.body.data.cloudinary.missing, []);
-  assert.deepStrictEqual(res.body.data.cloudinary.placeholder, []);
+  // The admin UI keys its "uploads are going to the database" notice off this.
+  assert.strictEqual(res.body.data.storage.provider, 'mongodb');
+  assert.strictEqual(res.body.data.storage.ready, true);
+  assert.deepStrictEqual(res.body.data.storage.detail, null);
+  assert.ok(Array.isArray(res.body.data.storage.accepts), 'accepted types are advertised to the UI');
+  assert.strictEqual(res.body.data.cloudinary, undefined, 'the old Cloudinary-shaped key must be gone');
 });
 
 test('getPublicOverrides responds 200 and sets a cacheable Cache-Control', async () => {
@@ -106,21 +119,81 @@ test('getLibrary responds 200 with a data envelope', async () => {
   assert.ok(Array.isArray(res.body.data.resources));
 });
 
-test('uploadImage responds 201 with the Cloudinary result under data', async () => {
+test('uploadImage responds 201 with the stored result under data', async () => {
   const res = await call(controller.uploadImage, { user: admin, file: { path: 'x.jpg' } });
   assert.strictEqual(res.statusCode, 201);
   assert.strictEqual(res.body.success, true);
-  assert.strictEqual(res.body.data.public_id, 'fam/site/new');
+  assert.strictEqual(res.body.data.public_id, '6abcc76956855fb0dad52c58');
+  assert.strictEqual(res.body.data.provider, 'mongodb');
+});
+
+test('uploadImage deletes the staged temp file, success or failure', async () => {
+  const fs = require('fs');
+  const os = require('os');
+  const path = require('path');
+
+  const staged = path.join(os.tmpdir(), 'fam-upload-test-' + process.pid + '.jpg');
+  try {
+    fs.writeFileSync(staged, 'staged bytes');
+    await call(controller.uploadImage, { user: admin, file: { path: staged } });
+    assert.strictEqual(fs.existsSync(staged), false, 'temp file must not survive a successful upload');
+
+    // Mutate the stub in place: the controller captured the module object when
+    // it was required, so replacing require.cache exports would not be seen.
+    const realStore = storageStub.store;
+    storageStub.store = async () => { throw new Error('nope'); };
+    try {
+      fs.writeFileSync(staged, 'staged bytes');
+      await assert.rejects(call(controller.uploadImage, { user: admin, file: { path: staged } }), /nope/);
+      assert.strictEqual(fs.existsSync(staged), false, 'temp file must not survive a failed upload either');
+    } finally {
+      storageStub.store = realStore;
+    }
+  } finally {
+    if (fs.existsSync(staged)) fs.unlinkSync(staged);
+  }
+});
+
+test('getStoredImage sends the bytes with a sniffed content type', async () => {
+  const bytes = Buffer.from('the-actual-image-bytes');
+  const realRead = storageStub.read;
+  storageStub.read = async () => ({ data: bytes, contentType: 'image/jpeg', size: bytes.length });
+  try {
+    const res = await call(controller.getStoredImage, { params: { id: '507f1f77bcf86cd799439011' } });
+    assert.strictEqual(res.headers['Content-Type'], 'image/jpeg');
+    assert.strictEqual(res.headers['X-Content-Type-Options'], 'nosniff');
+    assert.strictEqual(res.headers['Content-Disposition'], 'inline');
+    assert.match(res.headers['Cache-Control'], /immutable/);
+    assert.ok(Buffer.isBuffer(res.body), 'raw bytes, not a JSON envelope');
+    assert.strictEqual(res.body.toString('utf8'), 'the-actual-image-bytes');
+  } finally {
+    storageStub.read = realRead;
+  }
+});
+
+test('getStoredImage 404s when the image is gone', async () => {
+  const realRead = storageStub.read;
+  storageStub.read = async () => null;
+  try {
+    let failure = null;
+    const res = fakeRes();
+    controller.getStoredImage({ params: { id: '507f1f77bcf86cd799439011' } }, res, (e) => { failure = e; });
+    await new Promise((r) => setImmediate(r));
+    assert.ok(failure, 'a missing image must produce an error, not an empty 200');
+    assert.strictEqual(failure.statusCode, 404);
+  } finally {
+    storageStub.read = realRead;
+  }
 });
 
 test('updateImage responds 200 with the new effectiveUrl', async () => {
   const res = await call(controller.updateImage, {
     user: admin,
     params: { key: 'home.story' },
-    body: { url: 'https://res.cloudinary.com/demo/new.jpg', publicId: 'fam/site/new' },
+    body: { url: '/api/v1/site-images/file/507f1f77bcf86cd799439011', publicId: '507f1f77bcf86cd799439011' },
   });
   assert.strictEqual(res.statusCode, 200);
-  assert.strictEqual(res.body.data.effectiveUrl, 'https://res.cloudinary.com/demo/new.jpg');
+  assert.strictEqual(res.body.data.effectiveUrl, '/api/v1/site-images/file/507f1f77bcf86cd799439011');
   assert.strictEqual(res.body.data.isOverridden, true);
 });
 

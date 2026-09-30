@@ -1,10 +1,20 @@
 const SiteImage = require('../models/SiteImage');
-const cloudinaryService = require('./cloudinaryService');
 const { PAGES, ALL_IMAGES, PAGE_BY_ID } = require('../config/siteImageRegistry');
 const ApiError = require('../utils/ApiError');
-const { cloudinaryStatus } = require('../config/cloudinaryStatus');
+const imageStorage = require('./imageStorage');
 
 const REGISTRY_KEYS = ALL_IMAGES.map((i) => i.key);
+
+// Images live in one of two places, and both are known-good by construction:
+//   - our own storage route, for uploads kept in MongoDB
+//   - an https:// address, for a CDN such as Cloudinary
+// Nothing else is accepted, so a caller cannot smuggle in javascript:, data:
+// or a protocol-relative //host reference.
+const OWN_STORAGE_PATH = /^\/api\/v1\/site-images\/file\/[a-f0-9]{24}$/i;
+
+function isAcceptableImageUrl(url) {
+  return /^https:\/\//i.test(url) || OWN_STORAGE_PATH.test(url);
+}
 
 // Keeps the collection in step with the registry without ever clobbering an
 // owner's override: url/publicId/alt/isOverridden are left alone, only the
@@ -96,11 +106,10 @@ async function listImages() {
 
   return {
     pages: PAGES.map((p) => ({ id: p.id, title: p.title, count: images.filter((i) => i.page === p.id).length })),
-    // Tells the admin UI up front whether changing images can work, instead of
-    // letting the owner pick a file and only then discover a failed upload.
-    // cloudinaryStatus also rejects the "your-cloud-name" placeholders that ship
-    // in .env, which are non-empty but not usable.
-    cloudinary: cloudinaryStatus(),
+    // What uploads can currently do, so the admin UI can say so up front rather
+    // than letting the owner pick a file and only then hit a failure. With the
+    // default provider this is always usable, because images go to MongoDB.
+    storage: imageStorage.status(),
     images: images,
   };
 }
@@ -127,8 +136,10 @@ async function setOverride(key, payload, admin) {
   const patch = {};
   if (Object.prototype.hasOwnProperty.call(payload, 'url')) {
     const url = String(payload.url || '').trim();
-    if (url && !/^https:\/\//i.test(url)) {
-      throw ApiError.badRequest('Image URL must start with https://');
+    if (url && !isAcceptableImageUrl(url)) {
+      throw ApiError.badRequest(
+        'That image address is not allowed. Use the uploaded image, or an https:// address.'
+      );
     }
     patch.url = url;
     patch.publicId = String(payload.publicId || '').trim();
@@ -187,5 +198,6 @@ module.exports = {
   setOverride,
   revert,
   getOverrideMap,
+  isAcceptableImageUrl,
   REGISTRY_KEYS,
 };

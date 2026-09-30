@@ -82,18 +82,35 @@ test('reverting reports failures instead of looking successful', () => {
   );
 });
 
-test('the Cloudinary notice is driven by the service status object', () => {
-  const body = fn('cloudinaryNotice');
-  assert.ok(/if \(!c \|\| c\.ready\) return '';/.test(body), 'a ready service must show no notice');
-  assert.ok(/c\.missing \|\| \[\]/.test(body), 'must read the missing list');
-  assert.ok(/c\.placeholder \|\| \[\]/.test(body), 'must read the placeholder list');
+test('the storage notice is driven by the service status object', () => {
+  const body = fn('storageNotice');
+  // The database provider is the default and needs no credentials, so a healthy
+  // store must stay silent instead of nagging the owner about configuration.
+  assert.ok(/if \(s\.ready && !s\.detail\) return '';/.test(body), 'a working store must show no notice');
+  assert.ok(/s\.detail/.test(body), 'a real problem must be explained');
 });
 
-test('the notice distinguishes unset from placeholder, in singular and plural', () => {
-  const body = fn('cloudinaryNotice');
-  for (const phrase of ['is not set', 'are not set', 'still holds', 'still hold']) {
-    assert.ok(body.includes(phrase), 'missing phrase: ' + phrase);
-  }
+test('the notice says what is broken and never blames Cloudinary by default', () => {
+  const body = fn('storageNotice');
+  assert.ok(body.includes('not available'), 'must state the impact on the owner');
+  assert.ok(!/CLOUDINARY_CLOUD_NAME/.test(body), 'the default path has no Cloudinary config to report');
+});
+
+test('the size cap shown in the editor comes from the server, not a hardcoded guess', () => {
+  const body = fn('openEditor');
+  assert.ok(/storage && storage\.maxBytes/.test(body), 'must use the limit the server reported');
+  assert.ok(
+    /storage\.accepts|accept=/.test(body),
+    'the accept list shown to the owner must come from the server too'
+  );
+});
+
+test('the library explains itself when nothing has been uploaded yet', () => {
+  const body = fn('renderLibrary');
+  assert.ok(
+    /Upload an image first/.test(body),
+    'an empty library needs plain-language guidance instead of a blank grid'
+  );
 });
 
 test('a list failure still renders a visible error in the view', () => {
@@ -103,7 +120,7 @@ test('a list failure still renders a visible error in the view', () => {
 });
 
 test('the notice uses the styled panel, not bare text', () => {
-  assert.ok(src.includes('notice-card'), 'the Cloudinary notice should use .notice-card');
+  assert.ok(src.includes('notice-card'), 'the storage notice should use .notice-card');
   const css = fs.readFileSync(
     path.join(__dirname, '..', '..', 'public', 'admin', 'css', 'admin.css'),
     'utf8'

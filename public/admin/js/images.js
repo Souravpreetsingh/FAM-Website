@@ -54,14 +54,24 @@
     return html;
   }
 
+  // The owner recognises their own filenames, not storage ids. Cloudinary
+  // entries only have a path, so fall back to that.
+  function libraryLabel(r) {
+    if (r.originalName) return r.originalName;
+    return (r.public_id || '').replace(/^fam\//, '');
+  }
+
   function renderLibrary(resources, nextCursor) {
-    var html = '<div class="card"><div class="card-head"><h3>Pick an existing image from Cloudinary</h3><button class="btn btn-ghost" data-close="1">Close</button></div>';
+    var html = '<div class="card"><div class="card-head"><h3>Choose an image you already uploaded</h3><button class="btn btn-ghost" data-close="1">Close</button></div>';
+    if (!resources || !resources.length) {
+      html += '<p class="muted">Nothing here yet. Upload an image first, and it will show up here to reuse later.</p>';
+    }
     html += '<div class="img-grid">';
     (resources || []).forEach(function (r) {
       html += '<div class="img-slot library-item" data-public-id="' + U.esc(r.public_id) + '" data-url="' + U.esc(r.url) + '">';
-      html += '<div class="img-preview"><img src="' + U.esc(r.url) + '" loading="lazy"/></div>';
-      html += '<div class="small muted">' + U.esc((r.public_id || '').replace(/^fam\//, '')) + '</div>';
-      if (r.bytes) html += '<div class="small muted">' + Math.round(r.bytes/1024) + ' KB &middot; ' + (r.width||'?') + '&times;' + (r.height||'?') + '</div>';
+      html += '<div class="img-preview"><img src="' + U.esc(r.url) + '" alt="" loading="lazy"/></div>';
+      html += '<div class="small muted">' + U.esc(libraryLabel(r)) + '</div>';
+      if (r.bytes) html += '<div class="small muted">' + Math.round(r.bytes/1024) + ' KB' + (r.width ? ' &middot; ' + r.width + '&times;' + r.height : '') + '</div>';
       html += '</div>';
     });
     html += '</div>';
@@ -121,30 +131,24 @@
     });
   }
 
-  function cloudinaryNotice(c) {
-    if (!c || c.ready) return '';
+  function storageNotice(s) {
+    if (!s) return '';
 
-    // Name each variable with its own problem, so a half-finished setup reads
-    // accurately instead of blaming all three for the one that is a placeholder.
-    var missing = c.missing || [];
-    var placeholder = c.placeholder || [];
-    var parts = [];
-    if (missing.length) {
-      parts.push(missing.join(', ') + (missing.length === 1 ? ' is not set' : ' are not set'));
-    }
-    if (placeholder.length) {
-      parts.push(placeholder.join(', ') + (placeholder.length === 1 ? ' still holds' : ' still hold') +
-        ' the placeholder value from the example file');
-    }
-    if (!parts.length) return '';
+    // The default provider stores image bytes in the database, so uploads work
+    // out of the box. Only an actual failure needs to interrupt the owner.
+    if (s.ready && !s.detail) return '';
 
-    return 'Changing images needs the Cloudinary credentials. On this server ' + parts.join(', and ') +
-      '. You can still see every image below, but uploading and the image library will not work until that is fixed.';
+    var reason = s.detail
+      ? s.detail
+      : 'The server cannot save uploaded images right now, so uploading and the image library are unavailable. Please try again in a moment.';
+
+    return 'Uploading images is not available at the moment. ' + reason;
   }
 
-  function openEditor(img, cloudinary) {
+  function openEditor(img, storage) {
     var current = previewUrl(img.effectiveUrl);
-    var notice = cloudinaryNotice(cloudinary);
+    var notice = storageNotice(storage);
+    var mb = storage && storage.maxBytes ? Math.round(storage.maxBytes / (1024 * 1024)) : 5;
     var html = '';
     html += '<div class="card"><div class="card-head"><h3>Change image</h3><button class="btn btn-ghost" data-close="1">Close</button></div>';
     html += '<div class="field"><span class="muted">' + U.esc(img.label) + '</span>';
@@ -152,7 +156,7 @@
     html += '</div>';
     if (notice) html += '<div class="field"><div class="notice-card"><div>' + U.esc(notice) + '</div></div></div>';
     html += '<form id="imgForm">';
-    html += '<div class="field"><span>Upload a new image (JPG/PNG/WebP, up to 5MB)</span><input type="file" id="imgFile" accept="image/*" /></div>';
+    html += '<div class="field"><span>Upload a new image (JPG/PNG/WebP/GIF, up to ' + mb + 'MB)</span><input type="file" id="imgFile" accept="image/*" /></div>';
     html += '<div class="field"><span>Or choose one you already uploaded</span><button type="button" class="btn btn-ghost" id="pickLib">Choose from library</button></div>';
     html += '<div class="field"><span>Alt text (optional, leave blank to keep existing)</span><input id="imgAlt" value="' + U.esc(img.alt||'') + '" /></div>';
     html += '<div class="pager"><button type="submit" class="btn btn-primary">Save change</button><button type="button" class="btn btn-ghost" data-close="1">Cancel</button></div>';
@@ -193,7 +197,7 @@
 
   function renderAll(stage, data) {
     var html = '';
-    var notice = cloudinaryNotice(data.cloudinary);
+    var notice = storageNotice(data.storage);
     if (notice) {
       html += '<div class="notice-card"><div>' + U.esc(notice) + '</div></div>';
     }
@@ -206,7 +210,7 @@
       btn.addEventListener('click', function () {
         const key = btn.closest('.img-slot').dataset.key;
         const img = (data.images||[]).find(function (i){ return i.key===key; });
-        if (img) openEditor(img, data.cloudinary);
+        if (img) openEditor(img, data.storage);
       });
     });
     stage.querySelectorAll('[data-action="revert"]').forEach(function (btn) {
