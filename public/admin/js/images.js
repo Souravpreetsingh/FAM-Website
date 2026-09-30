@@ -43,8 +43,8 @@
         html += '<div class="small muted">Updated ' + esc(new Date(img.updatedAt).toLocaleString()) + (img.updatedByEmail ? ' by ' + esc(img.updatedByEmail) : '') + '</div>';
       }
       html += '<div class="img-actions">';
-      html += '<button class="btn btn-small btn-ghost" data-action="change">Replace</button>';
-      if (hasOverride) html += '<button class="btn btn-small btn-danger-ghost" data-action="revert">Revert</button>';
+      html += '<button class="btn btn-small btn-ghost" data-action="change">Change</button>';
+      if (hasOverride) html += '<button class="btn btn-small btn-danger-ghost" data-action="revert">Undo</button>';
       html += '</div>';
       html += '</div>';
       html += '</div>';
@@ -82,8 +82,20 @@
         // is gone by now. Carry the alt text across in state.
         const payload = { url: url, publicId: pid };
         if (state.alt) payload.alt = state.alt;
-        applyOverride(state.key, payload);
-        window.AdminUI.closeModal();
+        // Keep the modal open and the chosen tile marked until the save is
+        // confirmed, so a rejected save cannot look like it worked.
+        el.style.outline = '2px solid var(--brand)';
+        el.style.opacity = '0.6';
+        el.style.pointerEvents = 'none';
+        window.AdminUI.toast('Saving...');
+        applyOverride(state.key, payload).then(function () {
+          window.AdminUI.closeModal();
+        }).catch(function (err) {
+          window.AdminUI.toast(err.message, true);
+          el.style.outline = '';
+          el.style.opacity = '';
+          el.style.pointerEvents = '';
+        });
       });
     });
     const more = wrap.querySelector('[data-action="more"]');
@@ -109,14 +121,41 @@
     });
   }
 
-  function openEditor(img) {
+  function cloudinaryNotice(c) {
+    if (!c || c.ready) return '';
+
+    // Name each variable with its own problem, so a half-finished setup reads
+    // accurately instead of blaming all three for the one that is a placeholder.
+    var missing = c.missing || [];
+    var placeholder = c.placeholder || [];
+    var parts = [];
+    if (missing.length) {
+      parts.push(missing.join(', ') + (missing.length === 1 ? ' is not set' : ' are not set'));
+    }
+    if (placeholder.length) {
+      parts.push(placeholder.join(', ') + (placeholder.length === 1 ? ' still holds' : ' still hold') +
+        ' the placeholder value from the example file');
+    }
+    if (!parts.length) return '';
+
+    return 'Changing images needs the Cloudinary credentials. On this server ' + parts.join(', and ') +
+      '. You can still see every image below, but uploading and the image library will not work until that is fixed.';
+  }
+
+  function openEditor(img, cloudinary) {
+    var current = previewUrl(img.effectiveUrl);
+    var notice = cloudinaryNotice(cloudinary);
     var html = '';
-    html += '<div class="card"><div class="card-head"><h3>Replace ' + U.esc(img.label) + '</h3><button class="btn btn-ghost" data-close="1">Close</button></div>';
-    html += '<form id="imgForm" enctype="multipart/form-data">';
-    html += '<div class="field"><span>Upload a new image (JPG/PNG/WebP, up to 5MB)</span><input type="file" id="imgFile" accept="image/*" required /></div>';
-    html += '<div class="field"><span>Or choose from library</span><button type="button" class="btn btn-ghost" id="pickLib">Browse existing images</button></div>';
+    html += '<div class="card"><div class="card-head"><h3>Change image</h3><button class="btn btn-ghost" data-close="1">Close</button></div>';
+    html += '<div class="field"><span class="muted">' + U.esc(img.label) + '</span>';
+    if (current) html += '<div style="margin-top:8px;max-width:260px;border-radius:8px;overflow:hidden;border:1px solid var(--border)"><img src="' + U.esc(current) + '" alt="" style="width:100%;display:block" /></div>';
+    html += '</div>';
+    if (notice) html += '<div class="field"><div class="notice-card"><div>' + U.esc(notice) + '</div></div></div>';
+    html += '<form id="imgForm">';
+    html += '<div class="field"><span>Upload a new image (JPG/PNG/WebP, up to 5MB)</span><input type="file" id="imgFile" accept="image/*" /></div>';
+    html += '<div class="field"><span>Or choose one you already uploaded</span><button type="button" class="btn btn-ghost" id="pickLib">Choose from library</button></div>';
     html += '<div class="field"><span>Alt text (optional, leave blank to keep existing)</span><input id="imgAlt" value="' + U.esc(img.alt||'') + '" /></div>';
-    html += '<div class="pager"><button type="submit" class="btn btn-primary">Apply</button><button type="button" class="btn btn-ghost" data-close="1">Cancel</button></div>';
+    html += '<div class="pager"><button type="submit" class="btn btn-primary">Save change</button><button type="button" class="btn btn-ghost" data-close="1">Cancel</button></div>';
     html += '</form></div>';
     const wrap = window.AdminUI.openModal(html);
     const state = { key: img.key, alt: img.alt || '', library: [], libraryCursor: null };
@@ -129,10 +168,10 @@
       e.preventDefault();
       const file = wrap.querySelector('#imgFile').files[0];
       const alt = wrap.querySelector('#imgAlt').value;
-      if (!file) { window.AdminUI.toast('Choose an image to upload', true); return; }
+      if (!file) { window.AdminUI.toast('Pick a file to upload, or use "Choose from library"', true); return; }
       const fd = new FormData();
       fd.append('image', file);
-      window.AdminUI.toast('Uploading image...');
+      window.AdminUI.toast('Uploading...');
       api().upload('/site-images/upload', fd).then(function (up) {
         return applyOverride(img.key, { url: up.url, publicId: up.public_id, alt: alt });
       }).then(function () {
@@ -154,6 +193,10 @@
 
   function renderAll(stage, data) {
     var html = '';
+    var notice = cloudinaryNotice(data.cloudinary);
+    if (notice) {
+      html += '<div class="notice-card"><div>' + U.esc(notice) + '</div></div>';
+    }
     (data.pages || []).forEach(function (p) {
       const list = (data.images||[]).filter(function (i){ return i.page===p.id; });
       html += renderPageCard(p, list);
@@ -163,15 +206,15 @@
       btn.addEventListener('click', function () {
         const key = btn.closest('.img-slot').dataset.key;
         const img = (data.images||[]).find(function (i){ return i.key===key; });
-        if (img) openEditor(img);
+        if (img) openEditor(img, data.cloudinary);
       });
     });
     stage.querySelectorAll('[data-action="revert"]').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        if (!confirm('Revert this image back to the original version?')) return;
+        if (!confirm('Put the original image back?')) return;
         const key = btn.closest('.img-slot').dataset.key;
         api().post('/site-images/' + key + '/revert').then(function () {
-          window.AdminUI.toast('Restored to default');
+          window.AdminUI.toast('Original image restored');
           loadView();
         }).catch(function (e){ window.AdminUI.toast(e.message,true); });
       });

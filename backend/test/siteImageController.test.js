@@ -19,7 +19,11 @@ const SERVICE_PATH = require.resolve('../services/siteImageService');
 const CLOUDINARY_PATH = require.resolve('../services/cloudinaryService');
 
 const serviceStub = {
-  listImages: async () => ({ pages: [{ id: 'home', title: 'Home', count: 3 }], images: [{ key: 'home.story' }] }),
+  listImages: async () => ({
+    pages: [{ id: 'home', title: 'Home', count: 3 }],
+    cloudinary: { ready: true, missing: [], placeholder: [] },
+    images: [{ key: 'home.story' }],
+  }),
   getImage: async (key) => ({ key, effectiveUrl: '/images/old.jpg', isOverridden: false }),
   setOverride: async (key) => ({ key, effectiveUrl: 'https://res.cloudinary.com/demo/new.jpg', isOverridden: true }),
   revert: async (key) => ({ key, effectiveUrl: '/images/original.jpg', isOverridden: false }),
@@ -78,6 +82,10 @@ test('getSiteImages responds 200 with the pages/images envelope', async () => {
   assert.ok(Array.isArray(res.body.data.pages), 'pages array present');
   assert.ok(Array.isArray(res.body.data.images), 'images array present');
   assert.strictEqual(res.body.data.images.length, 1);
+  // The admin UI keys its "Cloudinary is not configured" notice off this object.
+  assert.strictEqual(res.body.data.cloudinary.ready, true);
+  assert.deepStrictEqual(res.body.data.cloudinary.missing, []);
+  assert.deepStrictEqual(res.body.data.cloudinary.placeholder, []);
 });
 
 test('getPublicOverrides responds 200 and sets a cacheable Cache-Control', async () => {

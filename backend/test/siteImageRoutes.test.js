@@ -24,7 +24,11 @@ const authCalls = [];
 const admin = { _id: 'u1', role: 'admin', email: 'owner@fam.test' };
 
 const serviceStub = {
-  listImages: async () => ({ pages: [{ id: 'home', title: 'Home', count: 3 }], images: [{ key: 'home.story' }] }),
+  listImages: async () => ({
+    pages: [{ id: 'home', title: 'Home', count: 3 }],
+    cloudinary: { ready: false, missing: [], placeholder: ['CLOUDINARY_CLOUD_NAME'] },
+    images: [{ key: 'home.story' }],
+  }),
   getImage: async (key) => ({ key, effectiveUrl: '/images/old.jpg', isOverridden: false }),
   setOverride: async (key) => ({ key, effectiveUrl: 'https://res.cloudinary.com/demo/new.jpg', isOverridden: true }),
   revert: async (key) => ({ key, effectiveUrl: '/images/original.jpg', isOverridden: false }),
@@ -83,6 +87,9 @@ test('admin image routes are mounted under /api/v1/admin', async () => {
   assert.strictEqual(res.json.success, true);
   assert.ok(Array.isArray(res.json.data.images), 'data.images present');
   assert.ok(Array.isArray(res.json.data.pages), 'data.pages present');
+  // The admin UI shows a notice instead of a broken flow when this is false.
+  assert.strictEqual(res.json.data.cloudinary.ready, false);
+  assert.deepStrictEqual(res.json.data.cloudinary.placeholder, ['CLOUDINARY_CLOUD_NAME']);
 });
 
 test('the auth gate runs before the handler for every admin image route', async () => {

@@ -2,6 +2,7 @@ const SiteImage = require('../models/SiteImage');
 const cloudinaryService = require('./cloudinaryService');
 const { PAGES, ALL_IMAGES, PAGE_BY_ID } = require('../config/siteImageRegistry');
 const ApiError = require('../utils/ApiError');
+const { cloudinaryStatus } = require('../config/cloudinaryStatus');
 
 const REGISTRY_KEYS = ALL_IMAGES.map((i) => i.key);
 
@@ -95,6 +96,11 @@ async function listImages() {
 
   return {
     pages: PAGES.map((p) => ({ id: p.id, title: p.title, count: images.filter((i) => i.page === p.id).length })),
+    // Tells the admin UI up front whether changing images can work, instead of
+    // letting the owner pick a file and only then discover a failed upload.
+    // cloudinaryStatus also rejects the "your-cloud-name" placeholders that ship
+    // in .env, which are non-empty but not usable.
+    cloudinary: cloudinaryStatus(),
     images: images,
   };
 }

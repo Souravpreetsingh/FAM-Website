@@ -1,5 +1,22 @@
 const { cloudinary } = require('../config/cloudinary');
+const { cloudinaryStatus } = require('../config/cloudinaryStatus');
 const ApiError = require('../utils/ApiError');
+
+/**
+ * Reject before the SDK does, with a message that names the actual problem.
+ * The SDK's own error for an unset cloud name is "cloud_name is disabled",
+ * which gives the owner no idea what to change.
+ */
+function assertCloudinaryUsable() {
+  const status = cloudinaryStatus();
+  if (status.ready) return;
+  if (status.missing.length) {
+    throw ApiError.internal('Cloudinary is not configured: missing ' + status.missing.join(', '));
+  }
+  throw ApiError.internal(
+    'Cloudinary is not configured: ' + status.placeholder.join(', ') + ' still hold the placeholder value from .env.example'
+  );
+}
 
 class CloudinaryService {
   async uploadImage(file, folder = 'fam/rooms') {
@@ -35,6 +52,7 @@ class CloudinaryService {
     if (!file) {
       throw ApiError.badRequest('No file provided');
     }
+    assertCloudinaryUsable();
 
     const result = await cloudinary.uploader.upload(file.path, {
       folder: 'fam/site',
@@ -57,9 +75,7 @@ class CloudinaryService {
   // Browsable library for the "pick an existing image" flow. Returns raw
   // Cloudinary resources, newest first.
   async listLibrary({ cursor, maxResults, prefix } = {}) {
-    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY) {
-      throw ApiError.internal('Cloudinary is not configured on this server');
-    }
+    assertCloudinaryUsable();
 
     const result = await cloudinary.api.resources({
       type: 'upload',
