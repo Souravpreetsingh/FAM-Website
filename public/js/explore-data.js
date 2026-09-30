@@ -109,17 +109,32 @@ var FAM_EXPLORE_PHOTOS = {
 
 /**
  * Get the full photo list for an explore destination.
+ *
+ * Each photo carries a stable `famKey` so the admin Images view can replace any
+ * single frame, and `src`/`alt` are routed through FamImages so a replacement
+ * made in the admin shows up without a rebuild. FamImages falls back to the
+ * hard-coded value when nothing is overridden, so the site is unchanged unless
+ * the owner actually swaps something.
+ *
  * @param {string} destinationId - e.g. 'jibhi-waterfall'
  * @param {string} basePath - resolved base path, e.g. '/' or '../'
- * @returns {Array<{src: string, alt: string}>}
+ * @returns {Array<{src: string, alt: string, famKey: string}>}
  */
 function FAMGetExplorePhotos(destinationId, basePath) {
   var dest = FAM_EXPLORE_PHOTOS[destinationId];
   if (!dest || !dest.photos || dest.photos.length === 0) return [];
   var base = basePath || '/';
   if (base.charAt(base.length - 1) !== '/') base += '/';
-  return dest.photos.map(function(p) {
-    return { src: base + dest.folder.substring(1) + '/' + p.file, alt: p.alt };
+  var famImages = window.FamImages;
+  return dest.photos.map(function(p, i) {
+    var fallback = base + dest.folder.substring(1) + '/' + p.file;
+    var famKey = 'explore.' + destinationId + '.' + (i + 1);
+    return {
+      src: famImages ? famImages.url(famKey, fallback) : fallback,
+      alt: famImages ? famImages.alt(famKey, p.alt) : p.alt,
+      famKey: famKey,
+      fallback: fallback,
+    };
   });
 }
 

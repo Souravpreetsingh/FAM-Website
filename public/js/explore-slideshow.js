@@ -52,7 +52,7 @@ var FAMExploreSlideshow = (function() {
     if (photos.length === 1) {
       imageContainer.innerHTML =
         '<div class="fam-explore-slide active">' +
-        '<img src="' + photos[0].src + '" alt="' + photos[0].alt + '" loading="eager" decoding="sync" />' +
+        '<img data-fam-img="' + photos[0].famKey + '" src="' + photos[0].src + '" alt="' + photos[0].alt + '" loading="eager" decoding="sync" />' +
         '</div>';
       return null;
     }
@@ -65,7 +65,7 @@ var FAMExploreSlideshow = (function() {
       var decoding = (i === 0) ? 'sync' : 'async';
       var kenClass = (i % 2 === 1) ? ' ken-alt' : '';
       html += '<div class="fam-explore-slide' + (i === 0 ? ' active' : '') + kenClass + '" data-index="' + i + '">' +
-        '<img src="' + p.src + '" alt="' + p.alt + '" loading="' + loading + '" decoding="' + decoding + '" /></div>';
+        '<img data-fam-img="' + p.famKey + '" src="' + p.src + '" alt="' + p.alt + '" loading="' + loading + '" decoding="' + decoding + '" /></div>';
     });
 
     html += '</div>';

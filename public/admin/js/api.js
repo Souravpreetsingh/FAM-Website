@@ -60,6 +60,32 @@ const AdminAPI = (function () {
     patch: function (path, data) {
       return request(path, { method: 'PATCH', body: JSON.stringify(data || {}) });
     },
+    upload: function (path, formData) {
+      const root = BASE;
+      const opts = { method: 'POST', body: formData, credentials: 'include' };
+      const headers = {};
+      return fetch(root + path, opts).then(function (res) {
+        return res.json().catch(function () { return null; }).then(function (body) {
+          if (res.status === 401) {
+            return attemptRefresh().then(function (refreshed) {
+              if (!refreshed) { window.AdminAuth.logout(); throw new Error('Session expired'); }
+              return fetch(root + path, opts).then(function (r2) {
+                return r2.json().catch(function(){return null}).then(function(b2){
+                  if (!r2.ok || (b2 && b2.success === false)) {
+                    throw new Error((b2 && b2.message) || ('Request failed (' + r2.status + ')'));
+                  }
+                  return b2 ? b2.data : null;
+                });
+              });
+            });
+          }
+          if (!res.ok || (body && body.success === false)) {
+            throw new Error((body && body.message) || ('Request failed (' + res.status + ')'));
+          }
+          return body ? body.data : null;
+        });
+      });
+    },
     del: function (path) {
       return request(path, { method: 'DELETE' });
     },

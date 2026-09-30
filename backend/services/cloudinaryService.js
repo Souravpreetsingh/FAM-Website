@@ -29,6 +29,61 @@ class CloudinaryService {
     return Promise.all(uploadPromises);
   }
 
+  // Uploads a site image and returns the dimensions/format too, so the admin
+  // Images view can show what was actually stored instead of guessing.
+  async uploadSiteImage(file) {
+    if (!file) {
+      throw ApiError.badRequest('No file provided');
+    }
+
+    const result = await cloudinary.uploader.upload(file.path, {
+      folder: 'fam/site',
+      use_filename: true,
+      unique_filename: true,
+      overwrite: false,
+      resource_type: 'image',
+    });
+
+    return {
+      public_id: result.public_id,
+      url: result.secure_url,
+      width: result.width || null,
+      height: result.height || null,
+      format: result.format || '',
+      bytes: result.bytes || 0,
+    };
+  }
+
+  // Browsable library for the "pick an existing image" flow. Returns raw
+  // Cloudinary resources, newest first.
+  async listLibrary({ cursor, maxResults, prefix } = {}) {
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY) {
+      throw ApiError.internal('Cloudinary is not configured on this server');
+    }
+
+    const result = await cloudinary.api.resources({
+      type: 'upload',
+      direction: 'desc',
+      max_results: Math.min(Number(maxResults) || 40, 100),
+      next_cursor: cursor || undefined,
+      prefix: prefix || 'fam/',
+    });
+
+    return {
+      nextCursor: result.next_cursor || null,
+      resources: (result.resources || []).map((r) => ({
+        public_id: r.public_id,
+        url: r.secure_url,
+        width: r.width || null,
+        height: r.height || null,
+        format: r.format || '',
+        bytes: r.bytes || 0,
+        folder: r.folder || '',
+        createdAt: r.created_at || null,
+      })),
+    };
+  }
+
   async deleteImage(publicId) {
     if (!publicId) return;
 

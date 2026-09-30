@@ -9,11 +9,11 @@
   <meta property="og:description" content="Discover the magic around every corner in Jibhi - waterfalls, mountain passes, lakes, and forest trails." />
   <meta property="og:url" content="https://fam-website-wq2e.onrender.com/pages/explore.html" />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://fam-website-wq2e.onrender.com/images/hero-bg.jpg" />
+  <meta property="og:image" content="https://fam-website-wq2e.onrender.com/images/hero-bg.jpg" data-fam-meta="explore.og" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Explore Around FAM - Flamingo aur Maina" />
   <meta name="twitter:description" content="Discover the magic around every corner in Jibhi." />
-  <meta name="twitter:image" content="https://fam-website-wq2e.onrender.com/images/hero-bg.jpg" />
+  <meta name="twitter:image" content="https://fam-website-wq2e.onrender.com/images/hero-bg.jpg" data-fam-meta="explore.og" />
   <link rel="canonical" href="https://fam-website-wq2e.onrender.com/pages/explore.html" />
   <script type="application/ld+json">
   {
@@ -140,7 +140,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
       <!-- Jibhi Waterfall -->
       <div class="explore-card reveal" data-explore-destination="jibhi-waterfall" style="transition-delay:0ms">
-        <img src="../images/explore/jibhi-waterfall/01.jpeg" alt="Jibhi Waterfall" />
+        <img data-fam-img="explore.jibhi-waterfall.cover" src="../images/explore/jibhi-waterfall/01.jpeg" alt="Jibhi Waterfall" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -157,7 +157,7 @@
 
       <!-- Jalori Pass -->
       <div class="explore-card reveal" data-explore-destination="jalori-pass" style="transition-delay:80ms">
-        <img src="../images/explore/jalori-pass/01.jpeg" alt="Jalori Pass" />
+        <img data-fam-img="explore.jalori-pass.cover" src="../images/explore/jalori-pass/01.jpeg" alt="Jalori Pass" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -174,7 +174,7 @@
 
       <!-- Serolsar Lake -->
       <div class="explore-card reveal" data-explore-destination="serolsar-lake" style="transition-delay:160ms">
-        <img src="../images/explore/serolsar-lake/01.jpg" alt="Serolsar Lake" />
+        <img data-fam-img="explore.serolsar-lake.cover" src="../images/explore/serolsar-lake/01.jpg" alt="Serolsar Lake" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -191,7 +191,7 @@
 
       <!-- Chehni Kothi -->
       <div class="explore-card reveal" data-explore-destination="chehni-kothi" style="transition-delay:240ms">
-        <img src="../images/explore/chehni-kothi/01.jpeg" alt="Chehni Kothi" />
+        <img data-fam-img="explore.chehni-kothi.cover" src="../images/explore/chehni-kothi/01.jpeg" alt="Chehni Kothi" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -208,7 +208,7 @@
 
       <!-- Mini Thailand -->
       <div class="explore-card reveal" data-explore-destination="mini-thailand" style="transition-delay:320ms">
-        <img src="../images/explore/mini-thailand/01.jpeg" alt="Mini Thailand" />
+        <img data-fam-img="explore.mini-thailand.cover" src="../images/explore/mini-thailand/01.jpeg" alt="Mini Thailand" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -225,7 +225,7 @@
 
       <!-- Tirthan Valley -->
       <div class="explore-card reveal" data-explore-destination="tirthan-valley" style="transition-delay:400ms">
-        <img src="../images/explore/tirthan-valley/01.jpg" alt="Tirthan Valley" />
+        <img data-fam-img="explore.tirthan-valley.cover" src="../images/explore/tirthan-valley/01.jpg" alt="Tirthan Valley" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -242,7 +242,7 @@
 
       <!-- Great Himalayan National Park -->
       <div class="explore-card reveal" data-explore-destination="great-himalayan-national-park" style="transition-delay:480ms">
-        <img src="../images/explore/great-himalayan-national-park/01.jpeg" alt="Great Himalayan National Park" />
+        <img data-fam-img="explore.great-himalayan-national-park.cover" src="../images/explore/great-himalayan-national-park/01.jpeg" alt="Great Himalayan National Park" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -259,7 +259,7 @@
 
       <!-- Forest Trails -->
       <div class="explore-card reveal" data-explore-destination="forest-trails" style="transition-delay:560ms">
-        <img src="../images/explore/forest-trails/01.jpg" alt="Forest Trails" />
+        <img data-fam-img="explore.forest-trails.cover" src="../images/explore/forest-trails/01.jpg" alt="Forest Trails" />
         <div class="overlay"></div>
         <div class="content">
           <div class="meta">
@@ -605,6 +605,7 @@
   <script src="../js/page-transitions.js"></script>
   <script src="../js/explore-data.js"></script>
   <script src="../js/explore-slideshow.js"></script>
-  <script src="/js/service-worker.js"></script>
+  <script src="/js/site-images.js?v=1" defer></script>
+<script src="/js/service-worker.js"></script>
 </body>
 </html>

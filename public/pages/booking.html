@@ -13,11 +13,11 @@
   <meta property="og:description" content="Select your perfect room at Flamingo aur Maina in Jibhi, Himachal Pradesh." />
   <meta property="og:url" content="https://fam-website-wq2e.onrender.com/pages/booking" />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://fam-website-wq2e.onrender.com/images/hero/luxury-hero.jpg" />
+  <meta property="og:image" content="https://fam-website-wq2e.onrender.com/images/hero/luxury-hero.jpg" data-fam-meta="booking.og" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Book Your Stay - Flamingo aur Maina" />
   <meta name="twitter:description" content="Select your perfect room at Flamingo aur Maina in Jibhi." />
-  <meta name="twitter:image" content="https://fam-website-wq2e.onrender.com/images/hero/luxury-hero.jpg" />
+  <meta name="twitter:image" content="https://fam-website-wq2e.onrender.com/images/hero/luxury-hero.jpg" data-fam-meta="booking.og" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -513,19 +513,32 @@
       desc: 'An elegant duplex featuring Himalayan sunrise views, a private living area, and premium comforts for an unforgettable stay.',
       image: '../images/rooms/flamingo-3/01.jpg',
       amenities: ['Sunrise View', 'Duplex Layout', 'Living Room', 'Wi-Fi', 'Heater', 'Hot Water', 'Premium Toiletries'] },
+    // Maina 1 and Maina 2 have no photographs on disk yet, so image is empty and
+    // the card falls back to a neutral panel. The owner can upload a cover for
+    // either room from Admin > Images without touching this file.
     { id: 'maina-1', name: 'Maina 1', type: 'Private Room', capacity: 2, price: 2500,
       desc: 'A serene private room with forest views, ideal for couples seeking quietude and connection with nature.',
-      image: '../images/rooms/maina-1/01.jpg',
+      image: '',
       amenities: ['Forest View', 'Queen Bed', 'Reading Nook', 'Wi-Fi', 'Heater', 'Hot Water'] },
     { id: 'maina-2', name: 'Maina 2', type: 'Private Room', capacity: 2, price: 2000,
-      desc: 'Minimalist comfort meets mountain charm in this cozy private room — a restful haven for budget-conscious travelers.',
-      image: '../images/rooms/maina-2/01.jpg',
+      desc: 'Minimalist comfort meets mountain charm in this cozy private room �?" a restful haven for budget-conscious travelers.',
+      image: '',
       amenities: ['Compact Design', 'Queen Bed', 'Mountain View', 'Wi-Fi', 'Heater', 'Hot Water'] },
     { id: 'maina-3', name: 'Maina 3', type: 'Private Room', capacity: 2, price: 2500,
       desc: 'A bright and airy private room with garden access, designed for peaceful mornings and tranquil evenings.',
       image: '../images/rooms/maina-3/01.jpg',
       amenities: ['Garden Access', 'Queen Bed', 'Workspace', 'Wi-Fi', 'Heater', 'Hot Water', 'Natural Light'] }
   ];
+
+  // Route each room's booking-card cover through the admin image overrides, and
+  // drop a stable key on the object so the slot is addressable from Admin > Images.
+  (function () {
+    var famImages = window.FamImages;
+    ROOMS.forEach(function (room) {
+      room.famKey = 'rooms.' + room.id + '.cover';
+      room.image = famImages ? famImages.url(room.famKey, room.image) : room.image;
+    });
+  })();
 
   // ====== AMENITY ICON MAP ======
   var AMENITY_ICONS = {
@@ -672,7 +685,12 @@
         '</div>' : '';
     return '<div class="room-card page-fade-in bg-surface-container-low rounded-[20px] overflow-hidden border border-outline-variant/20' + (sel ? ' selected' : '') + (down ? ' room-card-down' : '') + '" data-id="' + room.id + '" style="animation-delay:' + delay + 'ms">' +
       '<div class="relative h-56 md:h-64 overflow-hidden">' +
-        '<img src="' + room.image + '" alt="' + room.name + '" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />' +
+        (room.image
+          ? '<img data-fam-img="' + room.famKey + '" src="' + room.image + '" alt="' + room.name + '" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />'
+          : '<div class="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-surface-container text-on-surface-variant/60" role="img" aria-label="' + room.name + ' photo coming soon">' +
+            '<span class="material-symbols-outlined text-4xl">photo_camera</span>' +
+            '<span class="text-[12px]">Photo coming soon</span>' +
+            '</div>') +
         '<div class="absolute inset-0 bg-gradient-to-t from-surface/80 via-surface/20 to-transparent"></div>' +
         downBadge +
         selectedBadge +
@@ -715,7 +733,12 @@
     var downBadge = down ? '<div class="m-selected-badge" style="background:rgba(74,18,18,.88);width:auto;padding:5px 12px">Unavailable</div>' : '';
     return '<div class="room-card' + (sel ? ' selected' : '') + (down ? ' room-card-down' : '') + '" data-id="' + room.id + '" style="animation-delay:' + delay + 'ms">' +
       '<div class="m-card-image">' +
-        '<img src="' + room.image + '" alt="' + room.name + '" loading="lazy" />' +
+        (room.image
+          ? '<img data-fam-img="' + room.famKey + '" src="' + room.image + '" alt="' + room.name + '" loading="lazy" />'
+          : '<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--surface-container,#e8e4dc);color:rgba(0,0,0,.45)" role="img" aria-label="' + room.name + ' photo coming soon">' +
+            '<span class="material-symbols-outlined" style="font-size:28px">photo_camera</span>' +
+            '<span style="font-size:11px">Photo coming soon</span>' +
+            '</div>') +
         downBadge +
         selectedBadge +
         '<div class="m-price-badge">₹' + room.price.toLocaleString('en-IN') + '<span>/night</span></div>' +
@@ -1274,7 +1297,8 @@
   })();
   </script>
   <script>document.querySelectorAll('footer p').forEach(function(p){p.innerHTML=p.innerHTML.replace('2024',new Date().getFullYear());});</script>
-  <script src="/js/service-worker.js"></script>
+  <script src="/js/site-images.js?v=1" defer></script>
+<script src="/js/service-worker.js"></script>
   <script type="module" src="//instant.page/5.2.0"></script>
 </body>
 </html>

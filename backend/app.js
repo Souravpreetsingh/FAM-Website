@@ -17,6 +17,7 @@ const reviewRoutes = require('./routes/reviewRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const siteImageRoutes = require('./routes/siteImageRoutes');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
@@ -46,6 +47,7 @@ app.use(helmet({
       imgSrc: [
         "'self'",
         "data:",
+        "https://res.cloudinary.com",
         "https://*.googleusercontent.com",
         "https://*.supabase.co",
         "https://images.unsplash.com",
@@ -132,7 +134,25 @@ const limiter = rateLimit({
     message: 'Too many requests, please try again later.',
   },
 });
-app.use('/api/', limiter);
+const siteImageLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 6000,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many requests, please try again later.',
+  },
+});
+
+app.use('/api/', (req, res, next) => {
+  // The public image-override map is fetched by every page view, so it gets its
+  // own generous budget instead of sharing the general API limiter.
+  if (req.path === '/site-images' || req.path === '/site-images/') {
+    return siteImageLimiter(req, res, next);
+  }
+  return limiter(req, res, next);
+});
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -175,6 +195,7 @@ app.use('/api/v1/reviews', reviewRoutes);
 app.use('/api/v1/contact', contactRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/notifications', notificationRoutes);
+app.use('/api/v1/site-images', siteImageRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   explorer: true,

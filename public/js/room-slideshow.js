@@ -35,7 +35,7 @@ var FAMSlideshow = (function() {
     if (photos.length === 1) {
       container.innerHTML = '<div class="fam-slideshow">' +
         '<div class="fam-slide active">' +
-        '<img src="' + photos[0].src + '" alt="' + photos[0].alt + '" loading="eager" decoding="sync" />' +
+        '<img data-fam-img="' + photos[0].famKey + '" src="' + photos[0].src + '" alt="' + photos[0].alt + '" loading="eager" decoding="sync" />' +
         '</div></div>';
       return null;
     }
@@ -48,7 +48,7 @@ var FAMSlideshow = (function() {
       var loading = (i === 0) ? 'eager' : 'lazy';
       var decoding = (i === 0) ? 'sync' : 'async';
       html += '<div class="fam-slide' + (i === 0 ? ' active' : '') + '" data-index="' + i + '">' +
-        '<img src="' + p.src + '" alt="' + p.alt + '" loading="' + loading + '" decoding="' + decoding + '" /></div>';
+        '<img data-fam-img="' + p.famKey + '" src="' + p.src + '" alt="' + p.alt + '" loading="' + loading + '" decoding="' + decoding + '" /></div>';
     });
 
     // Subtle dots indicator

@@ -8,6 +8,8 @@ const availabilityController = require('../controllers/availabilityController');
 const { authenticate, authorizeAdmin } = require('../middleware/auth');
 const validate = require('../middleware/validate');
 const adminValidation = require('../validations/adminValidation');
+const upload = require('../middleware/upload');
+const siteImageController = require('../controllers/siteImageController');
 
 router.post('/login', validate(adminValidation.adminLoginSchema), adminController.adminLogin);
 
@@ -74,6 +76,15 @@ router.post('/bookings/:id/cancel', bookingController.cancelBooking);
 router.get('/bookings/calendar', bookingController.getBookingCalendar);
 
 router.get('/audit-logs', adminController.getAuditLogs);
+
+// Site-wide image manager. Every public image slot is addressable by a stable
+// key; these routes list them, upload replacements to Cloudinary and apply or
+// revert an override.
+router.get('/site-images', siteImageController.getSiteImages);
+router.get('/site-images/library', siteImageController.getLibrary);
+router.post('/site-images/upload', upload.single('image'), siteImageController.uploadImage);
+router.put('/site-images/:key', siteImageController.updateImage);
+router.post('/site-images/:key/revert', siteImageController.revertImage);
 
 router.get('/revenue', adminController.getRevenueAnalytics);
 router.get('/reports/bookings', adminController.getBookingReports);

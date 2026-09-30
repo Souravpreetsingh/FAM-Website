@@ -25,6 +25,7 @@
     rooms: { title: 'Rooms', render: function (el) { return AdminViews.rooms(el); } },
     customers: { title: 'Customers', render: function (el) { return AdminViews.customers(el); } },
     reports: { title: 'Reports', render: function (el) { return AdminViews.reports(el); } },
+    images: { title: 'Images', render: function (el) { return AdminViews.images(el); } },
     settings: { title: 'Settings', render: function (el) { return AdminViews.settings(el); } },
   };
 

@@ -11,17 +11,17 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='8' fill='%23f8f4ec'/><path d='M24 4C24 4 10 14 10 28C10 36 16 44 24 44C32 44 38 36 38 28C38 14 24 4 24 4Z' fill='%230a341d'/><path d='M24 8C24 8 14 18 14 28C14 35 18 40 24 40C30 40 34 35 34 28C34 18 24 8 24 8Z' fill='%23234b32'/></svg>" />
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='8' fill='%23f8f4ec'/><path d='M24 4C24 4 10 14 10 28C10 36 16 44 24 44C32 44 38 36 38 28C38 14 24 4 24 4Z' fill='%230a341d'/><path d='M24 8C24 8 14 18 14 28C14 35 18 40 24 40C30 40 34 35 34 28C34 18 24 8 24 8Z' fill='%23234b32'/></svg>" />
-  <link rel="preload" as="image" href="/images/hero/hero-video-poster.jpg" />
+  <link rel="preload" as="image" data-fam-img="home.hero.poster" data-fam-attr="href" href="/images/hero/hero-video-poster.jpg" />
   <title>Flamingo aur Maina | Boutique Stays in Jibhi</title>
   <meta property="og:title" content="Flamingo aur Maina | Boutique Stays in Jibhi" />
   <meta property="og:description" content="A sanctuary of refined luxury and untold stories amidst nature's embrace. Boutique stays in Jibhi, Himachal Pradesh." />
   <meta property="og:url" content="https://fam-website-wq2e.onrender.com/" />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://fam-website-wq2e.onrender.com/images/hero/luxury-hero.jpg" />
+  <meta property="og:image" content="https://fam-website-wq2e.onrender.com/images/hero/luxury-hero.jpg" data-fam-meta="home.og" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Flamingo aur Maina | Boutique Stays in Jibhi" />
   <meta name="twitter:description" content="A sanctuary of refined luxury and untold stories amidst nature's embrace." />
-  <meta name="twitter:image" content="https://fam-website-wq2e.onrender.com/images/hero/luxury-hero.jpg" />
+  <meta name="twitter:image" content="https://fam-website-wq2e.onrender.com/images/hero/luxury-hero.jpg" data-fam-meta="home.og" />
   <link rel="canonical" href="https://fam-website-wq2e.onrender.com/" />
   <script type="application/ld+json">
   {
@@ -221,6 +221,7 @@
 <body class="antialiased overflow-x-hidden bg-background text-on-surface">
 <a href="#main-content" class="skip-link">Skip to main content</a>
 <div id="pt-overlay" aria-hidden="true"></div>
+<script src="/js/site-images.js?v=1" defer></script>
 <script src="/js/service-worker.js"></script>
 <script type="module" src="//instant.page/5.2.0"></script>
 
@@ -277,7 +278,7 @@
   <main id="main-content">
   <!-- ====== CINEMATIC SCROLL HERO ====== -->
   <section class="hero-root" id="hero" data-scroll-hero>
-    <video id="hero-video" class="hero-canvas" autoplay muted loop playsinline preload="auto" fetchpriority="high" aria-hidden="true" poster="/images/hero/hero-video-poster.jpg" tabindex="-1">
+    <video id="hero-video" class="hero-canvas" autoplay muted loop playsinline preload="auto" fetchpriority="high" aria-hidden="true" poster="/images/hero/hero-video-poster.jpg" data-fam-img="home.hero.poster" data-fam-attr="poster" tabindex="-1">
       <source src="/videos/hero-home.mp4" type="video/mp4" />
     </video>
     <div class="hero-gradient-overlay"></div>
@@ -333,7 +334,7 @@
   <section id="welcome" class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-section-gap">
     <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center reveal">
       <div class="md:col-span-7 img-container rounded-lg shadow-xl h-[400px] md:h-[600px] relative">
-        <img src="/images/fam-big-pic.jpg" alt="Morning sunlight over Himalayan mountains from the property" class="w-full h-full object-cover absolute inset-0" loading="lazy" decoding="async" />
+        <img data-fam-img="home.story" src="/images/fam-big-pic.jpg" alt="Morning sunlight over Himalayan mountains from the property" class="w-full h-full object-cover absolute inset-0" loading="lazy" decoding="async" />
       </div>
       <div class="md:col-span-5 md:pl-12 mb-8 md:mb-0">
         <span class="font-label-sm text-accent-gold uppercase tracking-widest mb-2 block">Welcome Home</span>
@@ -364,7 +365,7 @@
         <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">Karanvir Singh Sapra and Rahul Yadav returned to the mountains, seeking the quiet strength of nature. What started as a personal retreat evolved into a shared sanctuary&mdash;a space curated with intentionality and profound respect for the landscape.</p>
       </div>
       <div class="md:col-span-7 img-container rounded-lg shadow-xl h-[400px] md:h-[600px] relative">
-        <img src="/images/founders-tea.jpg" alt="Founders enjoying tea on a wooden balcony overlooking mountains" class="w-full h-full object-cover absolute inset-0" loading="lazy" />
+        <img data-fam-img="home.founders" src="/images/founders-tea.jpg" alt="Founders enjoying tea on a wooden balcony overlooking mountains" class="w-full h-full object-cover absolute inset-0" loading="lazy" />
       </div>
     </div>
   </section>
@@ -388,7 +389,7 @@
       <h2 class="font-headline-lg text-4xl md:text-5xl text-primary leading-tight">Built Around Nature</h2>
       <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mt-6">1.5 acres of open land, 360-degree mountain views. Architecture that doesn't dominate the landscape, but invites it inside.</p>
     </div>
-    <div class="w-full h-[50vh] md:h-[70vh] relative parallax-bg rounded-none" data-parallax="true" style="background-image: url('/images/parallax-dji.jpg')">
+    <div class="w-full h-[50vh] md:h-[70vh] relative parallax-bg rounded-none" data-parallax="true" data-fam-bg="home.parallax" style="background-image: url('/images/parallax-dji.jpg')">
       <div class="absolute inset-0 bg-black/10"></div>
     </div>
   </section>
@@ -400,13 +401,13 @@
     <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-16">Every corner of FAM tells a story. From the misty mountains to the quiet corners of our cozy retreat.</p>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div class="img-container rounded-xl h-[300px] md:h-[500px] relative reveal" style="transition-delay:100ms">
-        <img src="images/paradise/paradise-left.jpg" alt="Mountain view from the left side of the retreat" class="w-full h-full object-cover absolute inset-0" loading="lazy" />
+        <img data-fam-img="home.paradise.left" src="images/paradise/paradise-left.jpg" alt="Mountain view from the left side of the retreat" class="w-full h-full object-cover absolute inset-0" loading="lazy" />
       </div>
       <div class="img-container rounded-xl h-[300px] md:h-[500px] relative reveal" style="transition-delay:200ms">
-        <img src="images/paradise/paradise-center.jpg" alt="Centre view across the retreat" class="w-full h-full object-cover absolute inset-0" loading="lazy" />
+        <img data-fam-img="home.paradise.center" src="images/paradise/paradise-center.jpg" alt="Centre view across the retreat" class="w-full h-full object-cover absolute inset-0" loading="lazy" />
       </div>
       <div class="img-container rounded-xl h-[300px] md:h-[500px] relative reveal" style="transition-delay:300ms">
-        <img src="images/paradise/paradise-right.jpg" alt="View from the right side of the retreat" class="w-full h-full object-cover absolute inset-0" loading="lazy" />
+        <img data-fam-img="home.paradise.right" src="images/paradise/paradise-right.jpg" alt="View from the right side of the retreat" class="w-full h-full object-cover absolute inset-0" loading="lazy" />
       </div>
     </div>
     <a href="pages/gallery.html" class="btn-secondary mt-12 inline-flex">View Full Gallery</a>
@@ -545,7 +546,7 @@
       <!-- LEFT: Illustration -->
       <div class="tp-illustration">
         <svg viewBox="0 0 500 550" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <image x="0" y="0" width="500" height="550" preserveAspectRatio="xMidYMid slice" href="/images/tp-bg-img6872.jpg"/>
+          <image x="0" y="0" width="500" height="550" preserveAspectRatio="xMidYMid slice" data-fam-img="home.tripplanner" data-fam-attr="href" href="/images/tp-bg-img6872.jpg"/>
         </svg>
       </div>
 
@@ -1146,7 +1147,7 @@
   <!-- ====== CTA SECTION ====== -->
   <section class="max-w-max-width mx-auto px-4 md:px-margin-desktop py-section-gap reveal">
     <div class="relative w-full h-[500px] rounded-[3rem] overflow-hidden flex flex-col justify-center items-center text-center px-8">
-      <div class="absolute inset-0 z-0 parallax-bg" data-parallax="true" style="background-image: url('images/paradise/cta-bg.jpg')"></div>
+      <div class="absolute inset-0 z-0 parallax-bg" data-parallax="true" data-fam-bg="home.cta" style="background-image: url('images/paradise/cta-bg.jpg')"></div>
       <div class="absolute inset-0 bg-surface/80 z-10"></div>
       <div class="relative z-20 max-w-2xl">
         <h2 class="font-headline-lg text-4xl md:text-5xl text-primary mb-6">Find Your Perfect Stay.</h2>

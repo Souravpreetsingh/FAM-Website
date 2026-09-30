@@ -47,6 +47,18 @@ const startServer = async () => {
     configureCloudinary();
     await ensureAdmin();
 
+    // Keep the image-slot registry in step with the code. Idempotent and it
+    // never touches an owner's existing overrides, so it is safe on every boot.
+    try {
+      const siteImageService = require('./services/siteImageService');
+      const result = await siteImageService.syncRegistry();
+      console.log(
+        `[siteImages] registry synced - ${result.total} slots (${result.upserted} changed)`
+      );
+    } catch (err) {
+      console.error('[siteImages] registry sync failed:', err.message);
+    }
+
     const http = require('http');
     const server = http.createServer(app);
 

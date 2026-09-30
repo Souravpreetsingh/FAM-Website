@@ -17,7 +17,7 @@ const auditLogSchema = new mongoose.Schema(
     },
     entity: {
       type: String,
-      enum: ['booking', 'room', 'user', 'availability', 'review', 'payment', 'auth'],
+      enum: ['booking', 'room', 'user', 'availability', 'review', 'payment', 'auth', 'image'],
       default: 'booking',
     },
     entityId: {
