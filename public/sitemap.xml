@@ -7,4 +7,16 @@
   <url><loc>https://flamingoaurmaina.com/pages/explore.html</loc><lastmod>2026-10-01</lastmod><priority>0.8</priority></url>
   <url><loc>https://flamingoaurmaina.com/pages/gallery.html</loc><lastmod>2026-10-01</lastmod><priority>0.7</priority></url>
   <url><loc>https://flamingoaurmaina.com/pages/amenities.html</loc><lastmod>2026-10-01</lastmod><priority>0.7</priority></url>
+  <!-- FAM Journal: managed by backend/scripts/buildJournal.js -->
+  <url><loc>https://flamingoaurmaina.com/pages/blog.html</loc><lastmod>2026-10-01</lastmod><priority>0.8</priority></url>
+  <url><loc>https://flamingoaurmaina.com/pages/blog/a-slower-morning-in-jibhi.html</loc><lastmod>2026-09-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://flamingoaurmaina.com/pages/blog/the-road-to-jalori-pass.html</loc><lastmod>2026-09-12</lastmod><priority>0.6</priority></url>
+  <url><loc>https://flamingoaurmaina.com/pages/blog/mountain-mornings.html</loc><lastmod>2026-08-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://flamingoaurmaina.com/pages/blog/life-among-the-apple-orchards.html</loc><lastmod>2026-08-14</lastmod><priority>0.6</priority></url>
+  <url><loc>https://flamingoaurmaina.com/pages/blog/a-quiet-guide-to-exploring-jibhi.html</loc><lastmod>2026-07-30</lastmod><priority>0.6</priority></url>
+  <url><loc>https://flamingoaurmaina.com/pages/blog/the-people-and-stories-behind-fam.html</loc><lastmod>2026-07-18</lastmod><priority>0.6</priority></url>
+  <url><loc>https://flamingoaurmaina.com/pages/blog/monsoon-in-the-mountains.html</loc><lastmod>2026-07-02</lastmod><priority>0.6</priority></url>
+  <url><loc>https://flamingoaurmaina.com/pages/blog/where-the-forest-begins.html</loc><lastmod>2026-06-19</lastmod><priority>0.6</priority></url>
+  <url><loc>https://flamingoaurmaina.com/pages/blog/a-weekend-without-a-hurry.html</loc><lastmod>2026-06-04</lastmod><priority>0.6</priority></url>
+  <!-- /FAM Journal -->
 </urlset>
