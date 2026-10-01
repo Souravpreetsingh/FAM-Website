@@ -221,3 +221,23 @@ body {
 .library-item { cursor: pointer; transition: transform 0.12s, box-shadow 0.12s; }
 .library-item:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
 .modal { width: 860px; }
+
+/* ---- Journal editor -------------------------------------------------------
+   The Journal is a long-form editor, so the form is taller than the modal the
+   rest of the admin uses and scrolls on its own. */
+.modal:has(.journal-editor) { width: 900px; max-height: 90vh; overflow: auto; }
+.journal-editor h3 { margin: 0 0 12px; }
+.journal-form-error { background: #fef2f2; border: 1px solid var(--danger); color: var(--danger); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 12px; font-size: 13px; }
+.journal-img-row { display: grid; grid-template-columns: 1fr 120px; gap: 10px; align-items: start; }
+.journal-img-thumb { aspect-ratio: 4 / 3; background: #f1f5f9; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.journal-img-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.journal-img-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
+.journal-block { display: grid; grid-template-columns: 130px 1fr auto; gap: 8px; align-items: start; padding: 8px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; }
+.journal-block-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.journal-editor-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 8px; }
+@media (max-width: 720px) {
+  .field-row { grid-template-columns: 1fr; }
+  .journal-img-row { grid-template-columns: 1fr; }
+  .journal-img-meta { grid-template-columns: repeat(2, 1fr); }
+  .journal-block { grid-template-columns: 1fr; }
+}

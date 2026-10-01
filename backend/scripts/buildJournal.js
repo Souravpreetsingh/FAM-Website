@@ -10,6 +10,13 @@
 
    Output is committed plain HTML with no runtime dependency on this script,
    so the pages keep working if the data layer is ever replaced.
+
+   Only PUBLISHED articles are written. An article is published unless it is a
+   draft or has been soft deleted, so the starter content keeps building with no
+   lifecycle fields present at all.
+
+   The module is importable (main() only runs when invoked directly) so the admin
+   preview endpoint reuses these exact renderers instead of duplicating markup.
    ========================================================================== */
 
 'use strict';
@@ -60,10 +67,29 @@ function absoluteUrl(file) {
   return `${SITE}/${file}`;
 }
 
+/* ------------------------------------------------------------ publication */
+
+/* Drafts and soft-deleted articles are invisible to the public site: they are
+   not written as pages, not counted on the landing page, not listed as related
+   reading and not added to the sitemap. An article with no lifecycle fields is
+   published, which is what the original starter data has. */
+function isPublished(article) {
+  return article.status !== 'draft' && !article.deletedAt;
+}
+
+const PUBLISHED = ARTICLES.filter(isPublished);
+
 /* ------------------------------------------------------------------- head */
 
-function head({ title, description, canonical, ogImage, jsonLd, prefix }) {
+function head({ title, description, canonical, ogImage, jsonLd, prefix, noindex }) {
   const css = up(prefix);
+  // Preview pages are reachable only with an admin session, but they must also
+  // ask crawlers to stay away in case a preview URL is ever shared.
+  // Empty when indexing is allowed, so published output stays byte-identical.
+  const robots = noindex
+    ? '\n  <meta name="robots" content="noindex, nofollow" />' +
+      '\n  <meta name="googlebot" content="noindex, nofollow" />'
+    : '';
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,7 +97,7 @@ function head({ title, description, canonical, ogImage, jsonLd, prefix }) {
   <meta charset="utf-8" />
   <script>try{var m=localStorage.getItem('fam-seasonal-mode');if(m==='winter'){document.documentElement.classList.add('mode-winter')}else if(m==='green'){document.documentElement.classList.add('mode-green')}}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="${metaText(description)}" />
+  <meta name="description" content="${metaText(description)}" />${robots}
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <title>${esc(title)}</title>
   <meta property="og:title" content="${esc(title)}" />
@@ -338,15 +364,19 @@ function card(article, prefix, featured) {
 
 /* ---------------------------------------------------------- landing page */
 
-function renderLanding() {
+/* Nothing published yet is a legitimate state (everything is still a draft), so
+   the landing page renders an empty-state hero instead of dereferencing a
+   missing featured article. */
+function buildLandingHtml() {
   const prefix = 1;
+  const empty = PUBLISHED.length === 0;
   const canonical = absoluteUrl('pages/blog.html');
   const title = 'FAM Journal — Stories from Jibhi | Flamingo aur Maina';
   const description =
     'Stories, travel notes and mountain life from Flamingo aur Maina in Jibhi — the places worth walking to, the seasons worth timing, and the mornings worth slowing down for.';
 
-  const featured = ARTICLES.find((a) => a.featured) || ARTICLES[0];
-  const rest = ARTICLES.filter((a) => a !== featured);
+  const featured = PUBLISHED.find((a) => a.featured) || PUBLISHED[0];
+  const rest = PUBLISHED.filter((a) => a !== featured);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -360,7 +390,7 @@ function renderLanding() {
       name: 'Flamingo aur Maina',
       url: `${SITE}/`
     },
-    blogPost: ARTICLES.map((a) => ({
+    blogPost: PUBLISHED.map((a) => ({
       '@type': 'BlogPosting',
       headline: a.title,
       url: absoluteUrl(`pages/blog/${a.slug}.html`),
@@ -405,11 +435,11 @@ ${nav(prefix, 'journal')}
         <div class="journal-filters" role="group" aria-label="Filter articles by category">
 ${filters}
         </div>
-        <p class="journal-count" id="journal-count" role="status" aria-live="polite">${ARTICLES.length} stories</p>
+        <p class="journal-count" id="journal-count" role="status" aria-live="polite">${PUBLISHED.length} stories</p>
       </div>
     </section>
 
-    <section class="journal-section max-w-max-width mx-auto px-4 md:px-margin-desktop" id="journal-featured-section">
+    <section class="journal-section max-w-max-width mx-auto px-4 md:px-margin-desktop" id="journal-featured-section"${empty ? ' hidden' : ''}>
       <h2 class="journal-section-title reveal">Featured</h2>
       <div class="journal-featured" id="journal-featured">
 ${card(featured, prefix, true)}
@@ -421,7 +451,7 @@ ${card(featured, prefix, true)}
       <div class="journal-grid" id="journal-grid">
 ${rest.map((a) => card(a, prefix, false)).join('\n')}
       </div>
-      <p class="journal-empty" id="journal-empty" hidden>No stories in this category yet. Try another.</p>
+      <p class="journal-empty" id="journal-empty"${empty ? '' : ' hidden'}>${empty ? 'No stories have been published yet.' : 'No stories in this category yet. Try another.'}</p>
     </section>
 
 ${bookingCta(prefix)}
@@ -432,6 +462,11 @@ ${footer(prefix)}
 ${scripts(prefix, `${up(prefix)}js/journal.js?v=1`)}
 `;
 
+  return html;
+}
+
+function renderLanding() {
+  const html = buildLandingHtml();
   fs.writeFileSync(path.join(PAGES, 'blog.html'), html, 'utf8');
   return { file: 'public/pages/blog.html', count: 0 };
 }
@@ -439,14 +474,16 @@ ${scripts(prefix, `${up(prefix)}js/journal.js?v=1`)}
 /* --------------------------------------------------------- article pages */
 
 function related(article, count) {
-  const same = ARTICLES.filter((a) => a.slug !== article.slug && a.category === article.category);
-  const others = ARTICLES.filter(
+  const same = PUBLISHED.filter((a) => a.slug !== article.slug && a.category === article.category);
+  const others = PUBLISHED.filter(
     (a) => a.slug !== article.slug && a.category !== article.category
   );
   return same.concat(others).slice(0, count);
 }
 
-function renderArticle(article) {
+/* Pure: returns one article page as markup. noindex is only ever set for the
+   admin preview of a draft, never for a generated public page. */
+function buildArticleHtml(article, { noindex = false } = {}) {
   const prefix = 2;
   const canonical = absoluteUrl(`pages/blog/${article.slug}.html`);
   const title = `${article.title} | FAM Journal — Flamingo aur Maina`;
@@ -506,7 +543,8 @@ function renderArticle(article) {
     canonical,
     ogImage: absoluteUrl(article.hero.src.replace(/^\//, '')),
     jsonLd,
-    prefix
+    prefix,
+    noindex
   })}
 <body class="antialiased overflow-x-hidden bg-background text-on-surface">
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -569,6 +607,11 @@ ${footer(prefix)}
 ${scripts(prefix)}
 `;
 
+  return html;
+}
+
+function renderArticle(article) {
+  const html = buildArticleHtml(article);
   const file = path.join(BLOG_DIR, `${article.slug}.html`);
   fs.writeFileSync(file, html, 'utf8');
   return { file: `public/pages/blog/${article.slug}.html`, count: null };
@@ -591,7 +634,7 @@ function updateSitemap() {
   const today = new Date().toISOString().slice(0, 10);
   const rows = [
     `  <url><loc>${absoluteUrl('pages/blog.html')}</loc><lastmod>${today}</lastmod><priority>0.8</priority></url>`,
-    ...ARTICLES.map(
+    ...PUBLISHED.map(
       (a) =>
         `  <url><loc>${absoluteUrl(`pages/blog/${a.slug}.html`)}</loc>` +
         `<lastmod>${a.date}</lastmod><priority>0.6</priority></url>`
@@ -624,24 +667,51 @@ function updateSitemap() {
 function main() {
   fs.mkdirSync(BLOG_DIR, { recursive: true });
 
-  // Remove stale article pages from a previous run.
-  const keep = new Set(ARTICLES.map((a) => `${a.slug}.html`));
+  // Remove stale article pages from a previous run. This is what takes a
+  // draft or a soft-deleted article back out of the public site.
+  const keep = new Set(PUBLISHED.map((a) => `${a.slug}.html`));
   fs.readdirSync(BLOG_DIR)
     .filter((f) => f.endsWith('.html') && !keep.has(f))
     .forEach((f) => fs.unlinkSync(path.join(BLOG_DIR, f)));
 
-  const written = [renderLanding(), ...ARTICLES.map(renderArticle)];
+  const written = [renderLanding(), ...PUBLISHED.map(renderArticle)];
   updateSitemap();
 
   const categories = new Set();
-  ARTICLES.forEach((a) => categories.add(a.category));
+  ARTICLES.forEach((a) => {
+    if (isPublished(a)) categories.add(a.category);
+  });
   const unknown = [...categories].filter((c) => !CATEGORIES.includes(c));
   if (unknown.length) {
     throw new Error(`Category not declared in CATEGORIES: ${unknown.join(', ')}`);
   }
 
-  console.log(`FAM Journal: wrote ${written.length} files (${ARTICLES.length} articles)`);
+  const draftCount = ARTICLES.length - PUBLISHED.length;
+  const draftNote = draftCount ? `, ${draftCount} draft/hidden` : '';
+  console.log(`FAM Journal: wrote ${written.length} files (${PUBLISHED.length} articles${draftNote})`);
   written.forEach((w) => console.log(`  ${w.file}`));
 }
 
-main();
+/* Exported so the admin preview endpoint renders drafts with the same markup as
+   the public build, and so tests can assert on generation without shelling out. */
+module.exports = {
+  SITE,
+  ROOT,
+  PAGES,
+  BLOG_DIR,
+  CATEGORIES,
+  LANDING_HERO,
+  ARTICLES,
+  PUBLISHED,
+  isPublished,
+  buildLandingHtml,
+  buildArticleHtml,
+  renderLanding,
+  renderArticle,
+  updateSitemap,
+  main
+};
+
+if (require.main === module) {
+  main();
+}

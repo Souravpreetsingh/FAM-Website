@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const rateLimit = require('express-rate-limit');
 const adminController = require('../controllers/adminController');
 const reviewController = require('../controllers/reviewController');
 const bookingController = require('../controllers/bookingController');
@@ -10,6 +11,8 @@ const validate = require('../middleware/validate');
 const adminValidation = require('../validations/adminValidation');
 const upload = require('../middleware/upload');
 const siteImageController = require('../controllers/siteImageController');
+const journalController = require('../controllers/journalController');
+const journalValidation = require('../validations/journalValidation');
 
 router.post('/login', validate(adminValidation.adminLoginSchema), adminController.adminLogin);
 
@@ -85,6 +88,74 @@ router.get('/site-images/library', siteImageController.getLibrary);
 router.post('/site-images/upload', upload.single('image'), siteImageController.uploadImage);
 router.put('/site-images/:key', siteImageController.updateImage);
 router.post('/site-images/:key/revert', siteImageController.revertImage);
+
+/* Journal. The data lives in backend/scripts/journalData.js and every write
+   re-runs backend/scripts/buildJournal.js, so all of these sit after
+   router.use(authenticate, authorizeAdmin) and are admin-only.
+
+   The slug is the article's identity in the data file and in its public URL, so
+   it is validated on every route that carries one. Mutations are serialised in
+   the service, because two builds writing the same files would race. */
+// A Journal write shells out to the generator and rewrites every article page,
+// so it is both slow and worth capping. Reads are cheap and stay on the global
+// limiter that app.js already applies to /api/.
+const journalLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many Journal changes in a row. Wait a minute and try again.' },
+});
+
+router.get('/journal', journalController.getJournal);
+router.get('/journal/images', journalController.getJournalImages);
+router.post('/journal/rebuild', journalLimiter, journalController.rebuildJournal);
+router.get(
+  '/journal/preview/:slug',
+  validate(journalValidation.slugParamsSchema),
+  journalController.previewArticle
+);
+router.post(
+  '/journal',
+  journalLimiter,
+  validate(journalValidation.createJournalArticleSchema),
+  journalController.createArticle
+);
+router.get(
+  '/journal/:slug',
+  validate(journalValidation.slugParamsSchema),
+  journalController.getJournalArticle
+);
+router.put(
+  '/journal/:slug',
+  journalLimiter,
+  validate(journalValidation.updateJournalArticleSchema),
+  journalController.updateArticle
+);
+router.put(
+  '/journal/:slug/publish',
+  journalLimiter,
+  validate(journalValidation.publishSchema),
+  journalController.publishArticle
+);
+router.put(
+  '/journal/:slug/feature',
+  journalLimiter,
+  validate(journalValidation.slugParamsSchema),
+  journalController.featureArticle
+);
+router.delete(
+  '/journal/:slug',
+  journalLimiter,
+  validate(journalValidation.slugParamsSchema),
+  journalController.deleteArticle
+);
+router.post(
+  '/journal/:slug/restore',
+  journalLimiter,
+  validate(journalValidation.slugParamsSchema),
+  journalController.restoreArticle
+);
 
 router.get('/revenue', adminController.getRevenueAnalytics);
 router.get('/reports/bookings', adminController.getBookingReports);

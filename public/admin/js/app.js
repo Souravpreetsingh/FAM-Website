@@ -26,6 +26,7 @@
     customers: { title: 'Customers', render: function (el) { return AdminViews.customers(el); } },
     reports: { title: 'Reports', render: function (el) { return AdminViews.reports(el); } },
     images: { title: 'Images', render: function (el) { return AdminViews.images(el); } },
+    journal: { title: 'Journal', render: function (el) { return AdminViews.journal(el); } },
     settings: { title: 'Settings', render: function (el) { return AdminViews.settings(el); } },
   };
 
