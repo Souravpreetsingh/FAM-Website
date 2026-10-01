@@ -72,12 +72,30 @@ html.mode-winter .journal-cta a:focus-visible { outline-color: #1e3a8a; }
 
 /* ---------- landing hero ---------- */
 
+/* The landing hero is full-bleed: it starts at the very top of the page and
+   runs behind the floating pill nav, exactly like the home hero. The nav is
+   position:fixed, so it needs no reserved space above the hero - reserving it
+   (main.pt-24) is what used to leave a bare strip of page background behind
+   the bar. Article pages still use pt-24, because their content is in normal
+   flow and genuinely needs to clear the bar. */
+.journal-landing-main {
+  padding-top: 0;
+}
+
 .journal-hero {
   position: relative;
   display: grid;
   place-items: center;
   overflow: hidden;
-  min-height: clamp(420px, 64vh, 700px);
+  min-height: clamp(460px, 100vh, 1000px);
+}
+
+/* svh keeps the hero exactly one screen tall on mobile, where 100vh includes
+   the area behind the collapsing browser chrome. */
+@supports (min-height: 100svh) {
+  .journal-hero {
+    min-height: clamp(460px, 100svh, 1000px);
+  }
 }
 
 .journal-hero > img {
