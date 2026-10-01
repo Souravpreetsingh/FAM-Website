@@ -1,6 +1,6 @@
-# Flamingo aur Maina — Luxury Boutique Café & Mountain Retreat
+﻿# Flamingo aur Maina â€” Luxury Boutique CafÃ© & Mountain Retreat
 
-A luxury hospitality website for Flamingo aur Maina, a boutique café and mountain retreat in Jibhi, Himachal Pradesh.
+A luxury hospitality website for Flamingo aur Maina, a boutique cafÃ© and mountain retreat in Jibhi, Himachal Pradesh.
 
 ## Tech Stack
 
@@ -15,23 +15,21 @@ A luxury hospitality website for Flamingo aur Maina, a boutique café and mounta
 | Email        | Nodemailer (SMTP)                                   |
 | Animations   | GSAP, ScrollTrigger                                 |
 | AI           | Custom knowledge base chatbot                        |
-| Deployment   | Netlify (frontend), Render (backend)                 |
+| Deployment   | Render (single service: static site + Express API)    |
 
 ## Project Structure
 
 ```
 .
-├── public/              # Static HTML site (deployed to Netlify)
-│   ├── assets/frames/   # 240 hero frame images
-│   ├── css/             # Stylesheets
-│   ├── js/              # JavaScript (transitions, hero, animations)
-│   └── pages/           # HTML pages (booking, rooms, explore, etc.)
-├── src/                 # React app (in development, not deployed)
-├── api/                 # Netlify Functions wrapper
-├── backend/             # Express API server (deployed on Render)
-├── .github/workflows/   # CI/CD pipelines
-├── netlify.toml         # Netlify deployment config
-└── render.yaml          # Render deployment config
+â”œâ”€â”€ public/              # Static HTML site (served by Render)
+â”‚   â”œâ”€â”€ assets/frames/   # 240 hero frame images
+â”‚   â”œâ”€â”€ css/             # Stylesheets
+â”‚   â”œâ”€â”€ js/              # JavaScript (transitions, hero, animations)
+â”‚   â””â”€â”€ pages/           # HTML pages (booking, rooms, explore, etc.)
+â”œâ”€â”€ src/                 # React app (in development, not deployed)
+â”œâ”€â”€ backend/             # Express API + static hosting (deployed on Render)
+â”œâ”€â”€ .github/workflows/   # CI pipelines
+â””â”€â”€ render.yaml          # Render deployment config
 ```
 
 ## Getting Started
@@ -75,30 +73,29 @@ npm start
 | Workflow    | Trigger         | Purpose                                   |
 | ----------- | --------------- | ----------------------------------------- |
 | `ci.yml`    | Pull Request    | Validate required files exist             |
-| `deploy.yml` | Push to `main`  | Deploy `public/` to Netlify               |
 
-### Required GitHub Secrets
+There is no Netlify deployment workflow. Deployment is handled entirely by Render.
 
-| Secret                | Description                                  |
-| --------------------- | -------------------------------------------- |
-| `NETLIFY_AUTH_TOKEN`  | Netlify Personal Access Token                |
-| `NETLIFY_SITE_ID`     | Netlify site ID                              |
+### GitHub secrets
+
+No deployment secrets are stored in GitHub. Render's environment variables are
+configured in the Render dashboard and synced via `render.yaml`.
 
 ## Deployment
 
-### Frontend (Static Site)
+### Render (single service)
 
-Every push to `main` triggers an automatic deployment via GitHub Actions:
+Render builds and serves both the static site and the API from one service:
 
-1. Deploy `public/` to Netlify
-2. Clean URLs: `/pages/room` → `/pages/room.html`
-3. API proxy: `/api/*` → Render backend
+- Build: `npm install --prefix backend`
+- Start: `node backend/server.js`
+- Static files are served from `public/` by Express
+- API routes are mounted at `/api/v1`
 
-Preview deployments are available via Netlify's GitHub integration.
+Every push to `main` triggers an automatic Render deploy. The production host
+is `https://flamingoaurmaina.com`; `www` redirects to the apex via a Render
+custom-domain rule.
 
-### Backend (Render)
-
-The backend API is deployed separately on Render (configured via `render.yaml`).
 
 ## Environment Variables
 
@@ -126,10 +123,10 @@ FRONTEND_URL=http://localhost:3000
 
 ## API
 
-The frontend communicates with the backend via a Netlify proxy:
+The frontend calls the backend same-origin; Render serves both from one service:
 
 ```
-/api/* → https://fam-backend.onrender.com/api/*
+/api/* â†’ https://flamingoaurmaina.com/api/*
 ```
 
 For local development, the backend runs directly on `http://localhost:5000`.
