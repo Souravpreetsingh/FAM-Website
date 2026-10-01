@@ -93,10 +93,10 @@ app.use('/api/v1/payments/webhook', (req, res, next) => {
 const corsOptions = {
   origin(origin, callback) {
     const allowedOrigins = [
-      'https://www.flamingoaurmaina.com',
       'https://flamingoaurmaina.com',
+      // The live Render service hostname. Not a production host, but the app is
+      // still reachable there and removing it would break the old URL.
       'https://fam-website-wq2e.onrender.com',
-      'https://famorg-website.onrender.com',
       'http://localhost:5173',
       'http://localhost:5000',
       'http://localhost:5051',

@@ -8,9 +8,15 @@ services:
       - key: NODE_ENV
         value: production
       - key: FRONTEND_URL
-        value: https://fam-website-wq2e.onrender.com
+        value: https://www.flamingoaurmaina.com
       - key: APP_URL
-        value: https://fam-website-wq2e.onrender.com
+        value: https://www.flamingoaurmaina.com
+      # Set to https://www.flamingoaurmaina.com to 301 the Render host to the
+      # custom domain. Left empty on purpose: Render's health check hits "/"
+      # over the onrender.com host, and a redirect there can mark the service
+      # unhealthy. Only enable after the custom domain resolves and serves.
+      - key: CANONICAL_HOST
+        value: ""
       - key: SESSION_SECRET
         sync: false
       - key: GOOGLE_CLIENT_ID

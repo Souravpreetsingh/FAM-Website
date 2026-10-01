@@ -25,7 +25,7 @@ const loadTemplate = (templateName, replacements) => {
 
 class EmailService {
   async sendVerificationEmail(user, token) {
-    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+    const verificationUrl = `${process.env.FRONTEND_URL}/pages/verify-email.html?token=${token}`;
     const html = loadTemplate('verification.html', {
       name: user.name,
       verificationUrl,
@@ -55,7 +55,7 @@ class EmailService {
   }
 
   async sendPasswordResetEmail(user, token) {
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+    const resetUrl = `${process.env.FRONTEND_URL}/pages/reset-password.html?token=${token}`;
     const html = loadTemplate('forgotPassword.html', {
       name: user.name,
       resetUrl,

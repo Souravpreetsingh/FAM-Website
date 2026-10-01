@@ -9,8 +9,8 @@
 // Tailwind's generated data: URI textures are deliberately absent: they are not
 // owner-managed photography and should not be swappable from this screen.
 
-const OG_HERO = 'https://www.flamingoaurmaina.com/images/hero/luxury-hero.jpg';
-const OG_HERO_BG = 'https://www.flamingoaurmaina.com/images/hero-bg.jpg';
+const OG_HERO = 'https://flamingoaurmaina.com/images/hero/luxury-hero.jpg';
+const OG_HERO_BG = 'https://flamingoaurmaina.com/images/hero-bg.jpg';
 
 const ROOM_COVERS = ['flamingo-1', 'flamingo-2', 'flamingo-3', 'maina-1', 'maina-2', 'maina-3'];
 
