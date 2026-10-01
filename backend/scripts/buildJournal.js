@@ -119,7 +119,7 @@ function head({ title, description, canonical, ogImage, jsonLd, prefix, noindex 
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="${css}css/style.css?v=24" />
   <link rel="stylesheet" href="${css}css/transitions.css?v=3" />
-  <link rel="stylesheet" href="${css}css/journal.css?v=2" />
+  <link rel="stylesheet" href="${css}css/journal.css?v=3" />
   <style>
     body { margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f4ec; color: #1a1c1a; }
     img { max-width: 100%; height: auto; }
