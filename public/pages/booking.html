@@ -516,16 +516,13 @@
       desc: 'An elegant duplex featuring Himalayan sunrise views, a private living area, and premium comforts for an unforgettable stay.',
       image: '../images/rooms/flamingo-3/01.jpg',
       amenities: ['Sunrise View', 'Duplex Layout', 'Living Room', 'Wi-Fi', 'Heater', 'Hot Water', 'Premium Toiletries'] },
-    // Maina 1 and Maina 2 have no photographs on disk yet, so image is empty and
-    // the card falls back to a neutral panel. The owner can upload a cover for
-    // either room from Admin > Images without touching this file.
     { id: 'maina-1', name: 'Maina 1', type: 'Private Room', capacity: 2, price: 2500,
       desc: 'A serene private room with forest views, ideal for couples seeking quietude and connection with nature.',
-      image: '',
+      image: '../images/rooms/maina-1/01.jpg',
       amenities: ['Forest View', 'Queen Bed', 'Reading Nook', 'Wi-Fi', 'Heater', 'Hot Water'] },
     { id: 'maina-2', name: 'Maina 2', type: 'Private Room', capacity: 2, price: 2000,
       desc: 'Minimalist comfort meets mountain charm in this cozy private room — a restful haven for budget-conscious travelers.',
-      image: '',
+      image: '../images/rooms/maina-2/01.jpg',
       amenities: ['Compact Design', 'Queen Bed', 'Mountain View', 'Wi-Fi', 'Heater', 'Hot Water'] },
     { id: 'maina-3', name: 'Maina 3', type: 'Private Room', capacity: 2, price: 2500,
       desc: 'A bright and airy private room with garden access, designed for peaceful mornings and tranquil evenings.',
@@ -543,10 +540,9 @@
     });
 
     // The override map arrives over the network, so on a cold load the covers
-    // above are still the built-in ones. The Maina rooms have no built-in cover
-    // at all, which means they render a "Photo coming soon" panel with no image
-    // element for the loader to correct. Re-resolve once the map lands and
-    // repaint the grid so a cover uploaded from Admin > Images shows up.
+    // above are still the built-in ones. A cover uploaded from Admin > Images
+    // therefore has nothing to correct on first paint. Re-resolve once the map
+    // lands and repaint the grid so the override shows up.
     if (!famImages || !famImages.ready) return;
     famImages.ready.then(function () {
       var changed = false;
