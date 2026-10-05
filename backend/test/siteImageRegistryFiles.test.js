@@ -77,9 +77,11 @@ test('every local fallback resolves to a file that exists on disk', () => {
 });
 
 test('every fallback is previewable by the admin panel', () => {
-  // Slots with no image yet (the two Maina room covers) are legitimately empty.
+  // Every slot now has a real file on disk, including the Maina 1 and Maina 2
+  // covers (both rooms have photographs as of the Maina 1/2 photo import).
+  // If a new room is added without photos, its cover key must be listed here.
   const empty = ALL_IMAGES.filter((i) => !i.fallback).map((i) => i.key);
-  assert.deepStrictEqual(empty.sort(), ['rooms.maina-1.cover', 'rooms.maina-2.cover']);
+  assert.deepStrictEqual(empty.sort(), []);
 
   for (const img of ALL_IMAGES) {
     if (!img.fallback) continue;

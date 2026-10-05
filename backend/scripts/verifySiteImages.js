@@ -27,7 +27,7 @@ const run = async () => {
 
   console.log('\nRegistry');
   check('pages registered', PAGES.length, 10);
-  check('slots registered', ALL_IMAGES.length, 132);
+  check('slots registered', ALL_IMAGES.length, 142);
   check('no duplicate keys', new Set(ALL_IMAGES.map((i) => i.key)).size, ALL_IMAGES.length);
 
   console.log('\nSeed state');

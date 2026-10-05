@@ -41,11 +41,23 @@ var FAM_ROOM_PHOTOS = {
   },
   'maina-1': {
     folder: '/images/rooms/maina-1',
-    photos: []
+    photos: [
+      { file: '01.jpg', alt: 'Maina 1 room interior with natural light at Flamingo aur Maina' },
+      { file: '02.jpg', alt: 'Maina 1 bedroom and seating area at Flamingo aur Maina' },
+      { file: '03.jpg', alt: 'Maina 1 wooden interiors and warm decor at Flamingo aur Maina' },
+      { file: '04.jpg', alt: 'Maina 1 comfortable bed and reading space at Flamingo aur Maina' },
+      { file: '05.jpg', alt: 'Maina 1 room overview with mountain light at Flamingo aur Maina' }
+    ]
   },
   'maina-2': {
     folder: '/images/rooms/maina-2',
-    photos: []
+    photos: [
+      { file: '01.jpg', alt: 'Maina 2 room interior at Flamingo aur Maina' },
+      { file: '02.jpg', alt: 'Maina 2 bedroom with bright natural light at Flamingo aur Maina' },
+      { file: '03.jpg', alt: 'Maina 2 warm wooden decor and cosy atmosphere at Flamingo aur Maina' },
+      { file: '04.jpg', alt: 'Maina 2 comfortable seating and bed layout at Flamingo aur Maina' },
+      { file: '05.jpg', alt: 'Maina 2 private room overview at Flamingo aur Maina' }
+    ]
   },
   'maina-3': {
     folder: '/images/rooms/maina-3',

@@ -10,7 +10,11 @@ const read = (rel) => {
 };
 
 const htmlFiles = [path.join(PUB, 'index.html'), path.join(PUB, '404.html')].concat(
-  fs.readdirSync(path.join(PUB, 'pages')).map((f) => path.join(PUB, 'pages', f))
+  // pages/ also holds subdirectories (e.g. blog/ with the generated Journal
+  // articles), so filter to files only or readFileSync throws EISDIR.
+  fs.readdirSync(path.join(PUB, 'pages'), { withFileTypes: true })
+    .filter((e) => e.isFile())
+    .map((e) => path.join(PUB, 'pages', e.name))
 );
 
 // Every JS file that can emit a data-fam-* attribute at runtime.

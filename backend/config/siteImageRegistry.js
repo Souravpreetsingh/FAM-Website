@@ -23,13 +23,16 @@ const ROOM_NAMES = {
   'maina-3': 'Maina 3',
 };
 
-// Folder + ordered file list per room. maina-1 and maina-2 have no photographs
-// on disk yet, so they intentionally have no entries here; their booking cover
-// slots are still listed below so the owner can fill them in from this screen.
+// Folder + ordered file list per room. Order must stay identical to
+// public/js/room-data.js: the famKey is positional ('rooms.<slug>.<n>'), so
+// inserting or renumbering a file would silently repoint every stored admin
+// override onto a different photograph. Only ever append.
 const ROOM_PHOTOS = {
   'flamingo-1': ['01.jpg', '02.jpg', '03.jpg', '04.jpg'],
   'flamingo-2': ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg', '06.jpg', '07.jpg', '08.jpg'],
   'flamingo-3': ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg'],
+  'maina-1': ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg'],
+  'maina-2': ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg'],
   'maina-3': ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg', '06.jpg', '07.jpg', '08.jpg'],
 };
 

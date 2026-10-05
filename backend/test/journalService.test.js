@@ -492,7 +492,12 @@ test('the generator still runs cleanly and leaves the committed pages untouched'
     stdio: 'pipe'
   });
   assert.equal(fs.readFileSync(LANDING, 'utf8'), originalLanding);
-  assert.equal(fs.readFileSync(SITEMAP, 'utf8'), originalSitemap);
+  // Compare the sitemap with <lastmod> stripped: the generator refreshes the
+  // blog block's lastmod to the day it runs, so a byte comparison would fail
+  // on any day after the committed sitemap was generated. Every URL, priority
+  // and the surrounding markup must still be byte-identical.
+  const withoutLastmod = (xml) => xml.replace(/<lastmod>[^<]*<\/lastmod>/g, '');
+  assert.equal(withoutLastmod(fs.readFileSync(SITEMAP, 'utf8')), withoutLastmod(originalSitemap));
 });
 
 test('the sitemap contains no duplicate or malformed URLs', () => {
